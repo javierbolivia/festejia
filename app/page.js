@@ -1,96 +1,124 @@
 'use client'
-import { useEffect } from 'react'
 
 export default function Home() {
-  useEffect(() => {
-    const navbar = document.querySelector('.navbar')
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        navbar?.classList.add('scrolled')
-      } else {
-        navbar?.classList.remove('scrolled')
-      }
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
   return (
     <>
       {/* NAVIGATION */}
       <nav className="navbar">
         <a href="#" className="nav-logo">Feste<span>jia</span></a>
         <ul className="nav-links">
-          <li><a href="#coleccion">Coleccion</a></li>
-          <li><a href="#planes">Planes</a></li>
-          <li><a href="#proceso">Proceso</a></li>
-          <li><a href="#contacto" className="nav-cta">Solicitar</a></li>
+          <li><a href="#bodas">Bodas</a></li>
+          <li><a href="#quince">15 Años</a></li>
+          <li><a href="#graduaciones">Graduaciones</a></li>
+          <li><a href="#bautizos">Bautizos</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+          <li><a href="/login" className="nav-cta">Iniciar Sesión</a></li>
         </ul>
       </nav>
 
       {/* HERO */}
       <section className="hero">
         <div className="hero-content">
-          <span className="hero-badge">Experiencias digitales para momentos irrepetibles</span>
-          <h1>
-            El arte de <strong>invitar</strong> reinventado
-          </h1>
-          <p>
-            Diseñamos invitaciones web que cautivan desde el primer instante. 
-            Cada detalle pensado para que tu celebración comience mucho antes del gran día.
-          </p>
-          <div className="hero-buttons">
-            <a href="#contacto" className="btn-primary">Solicitar Cotización</a>
-            <a href="#coleccion" className="btn-secondary">Explorar Colección</a>
+          <div className="hero-text">
+            <div className="hero-social">
+              <a href="#">f Facebook</a>
+              <a href="#">◎ Instagram</a>
+              <a href="#">♪ TikTok</a>
+            </div>
+            <div className="hero-brand">
+              <h2>Festejia</h2>
+            </div>
+            <p className="hero-tagline">Celebra con elegancia</p>
+            <h1 className="hero-headline">invita con estilo</h1>
+            <div className="hero-year">2026</div>
+          </div>
+          <div className="hero-visual">
+            <div className="hero-mockup">
+              <div className="hero-mockup-content">
+                <h3>José & Victoria</h3>
+                <p>Nuestra Boda</p>
+              </div>
+              <span className="hero-mockup-badge">Muestra</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CATEGORIES */}
+      <section className="categories" id="bodas">
+        <div className="section-title">
+          <h2>Invitaciones para cada momento</h2>
+          <p>Diseños exclusivos para cada tipo de celebración</p>
+        </div>
+        <div className="categories-grid">
+          <div className="category-card">
+            <div className="category-image" style={{background: 'linear-gradient(135deg, #f5efe6, #e8d5b0)'}}>💍</div>
+            <h3>Bodas</h3>
+            <p>Invitaciones que reflejan la magia de tu unión</p>
+          </div>
+          <div className="category-card" id="quince">
+            <div className="category-image" style={{background: 'linear-gradient(135deg, #f5eef2, #e8c4d4)'}}>👑</div>
+            <h3>15 Años</h3>
+            <p>Celebra tu presentación en sociedad con estilo</p>
+          </div>
+          <div className="category-card" id="graduaciones">
+            <div className="category-image" style={{background: 'linear-gradient(135deg, #e6eef5, #b8d4e8)'}}>🎓</div>
+            <h3>Graduaciones</h3>
+            <p>Comparte tu logro con quienes te acompañaron</p>
+          </div>
+          <div className="category-card" id="bautizos">
+            <div className="category-image" style={{background: 'linear-gradient(135deg, #eef5eb, #c8d8c0)'}}>✝</div>
+            <h3>Bautizos</h3>
+            <p>Una bendición merece una invitación especial</p>
           </div>
         </div>
       </section>
 
       {/* FEATURES */}
-      <section className="features" id="servicios">
+      <section id="servicios">
         <div className="section-title">
-          <h2>Una experiencia completa, no solo una invitación</h2>
-          <p>Cada pieza digital que creamos integra diseño, tecnología y emoción</p>
+          <h2>Una experiencia completa</h2>
+          <p>Más que una invitación: una plataforma de gestión para tu evento</p>
         </div>
         <div className="features-grid">
           <div className="feature-card">
             <div className="feature-icon">✦</div>
             <h3>Portada Cinematográfica</h3>
-            <p>Una apertura envolvente con animaciones sutiles que marcan el tono de tu celebración desde el primer segundo.</p>
+            <p>Apertura envolvente con animaciones que marcan el tono de tu celebración.</p>
           </div>
           <div className="feature-card">
             <div className="feature-icon">◈</div>
             <h3>Panel del Anfitrión</h3>
-            <p>Tu centro de mando privado. Gestiona invitados, genera enlaces únicos y envía por WhatsApp con un solo clic.</p>
+            <p>Gestiona invitados, genera enlaces únicos y envía por WhatsApp desde un solo lugar.</p>
           </div>
           <div className="feature-card">
             <div className="feature-icon">◇</div>
             <h3>Confirmación Inteligente</h3>
-            <p>Sin mensajes interminables. Cada invitado confirma desde su propia invitación y tú lo ves en tiempo real.</p>
+            <p>Cada invitado confirma desde su invitación. Tú lo ves en tiempo real.</p>
           </div>
           <div className="feature-card">
             <div className="feature-icon">⬡</div>
             <h3>Acceso con QR</h3>
-            <p>Al confirmar, cada invitado recibe un código QR único. Escanea en la puerta para un registro impecable.</p>
+            <p>Código QR único al confirmar. Escanea en la puerta para un registro impecable.</p>
           </div>
           <div className="feature-card">
             <div className="feature-icon">❖</div>
             <h3>Diseño a Medida</h3>
-            <p>No usamos plantillas genéricas. Cada invitación refleja la esencia de tu historia y el espíritu de tu evento.</p>
+            <p>Cada invitación refleja la esencia de tu historia y el espíritu de tu evento.</p>
           </div>
           <div className="feature-card">
             <div className="feature-icon">◆</div>
             <h3>Cuenta Regresiva</h3>
-            <p>Un reloj elegante que alimenta la anticipación. Tus invitados sentirán la emoción crecer día tras día.</p>
+            <p>Un reloj elegante que alimenta la anticipación día tras día.</p>
           </div>
         </div>
       </section>
 
-      {/* COLLECTION */}
+      {/* DESIGNS */}
       <section id="coleccion">
         <div className="section-title">
           <h2>Nuestra Colección</h2>
-          <p>Tres líneas de diseño concebidas para distintas sensibilidades</p>
+          <p>Diseños concebidos para distintas sensibilidades</p>
         </div>
         <div className="designs-grid">
           <div className="design-card">
@@ -99,7 +127,7 @@ export default function Home() {
             </div>
             <div className="design-info">
               <h3>Serenata</h3>
-              <p>Sofisticación atemporal en tonos dorados y marfil</p>
+              <p>Sofisticación atemporal en tonos dorados</p>
             </div>
           </div>
           <div className="design-card">
@@ -108,7 +136,7 @@ export default function Home() {
             </div>
             <div className="design-info">
               <h3>Jardín</h3>
-              <p>Frescura natural con la delicadeza de lo orgánico</p>
+              <p>Frescura natural con delicadeza orgánica</p>
             </div>
           </div>
           <div className="design-card">
@@ -127,7 +155,7 @@ export default function Home() {
       <section className="pricing" id="planes">
         <div className="section-title">
           <h2>Elige tu Experiencia</h2>
-          <p>Tres niveles de servicio diseñados para distintas necesidades</p>
+          <p>Tres niveles de servicio para distintas necesidades</p>
         </div>
         <div className="pricing-grid">
           <div className="pricing-card">
@@ -152,7 +180,7 @@ export default function Home() {
               <li>Todo lo del plan Esencial</li>
               <li>Panel del Anfitrión completo</li>
               <li>Enlaces personalizados ilimitados</li>
-              <li>Sistema de confirmación inteligente</li>
+              <li>Confirmación inteligente</li>
               <li>Paleta de colores personalizada</li>
               <li>Galería fotográfica</li>
               <li>Mensaje de envío editable</li>
@@ -178,36 +206,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PROCESS */}
-      <section id="proceso">
-        <div className="section-title">
-          <h2>Así de Simple</h2>
-          <p>De la idea a la invitación perfecta en cuatro pasos</p>
-        </div>
-        <div className="features-grid">
-          <div className="feature-card">
-            <div className="feature-icon">01</div>
-            <h3>Conversamos</h3>
-            <p>Nos cuentas sobre tu evento, tu estilo y tus necesidades. Sin compromiso, sin presión.</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon">02</div>
-            <h3>Diseñamos</h3>
-            <p>Nuestro equipo crea tu invitación con dedicación artesanal. Cada píxel importa.</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon">03</div>
-            <h3>Ajustamos</h3>
-            <p>Te presentamos el resultado y refinamos cada detalle hasta que sea exactamente lo que imaginaste.</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon">04</div>
-            <h3>Celebras</h3>
-            <p>Tu invitación está lista. Comparte, gestiona confirmaciones y disfruta la anticipación.</p>
-          </div>
-        </div>
-      </section>
-
       {/* FAQ */}
       <section id="faq">
         <div className="section-title">
@@ -216,27 +214,23 @@ export default function Home() {
         <div className="faq-list">
           <details className="faq-item">
             <summary>¿Qué diferencia una invitación web de un PDF o Canva?</summary>
-            <p>Una invitación web es una experiencia interactiva completa: tiene animaciones, música, cuenta regresiva, mapa, confirmación de asistencia y funciona como un sitio web privado diseñado exclusivamente para tu evento. Un PDF es estático, una invitación web cobra vida.</p>
+            <p>Una invitación web es una experiencia interactiva completa: animaciones, música, cuenta regresiva, mapa, confirmación de asistencia. Un PDF es estático, una invitación web cobra vida.</p>
           </details>
           <details className="faq-item">
             <summary>¿Cómo la envío a mis invitados?</summary>
-            <p>Recibes un enlace único que compartes por WhatsApp, correo o redes sociales. En los planes Premium y Exclusive, cada invitado recibe su propio enlace personalizado con su nombre y cantidad de pases.</p>
+            <p>Recibes un enlace que compartes por WhatsApp, correo o redes sociales. En los planes Premium y Exclusive, cada invitado recibe su propio enlace personalizado.</p>
           </details>
           <details className="faq-item">
             <summary>¿Qué es el Panel del Anfitrión?</summary>
-            <p>Es tu centro de control privado. Desde ahí agregas invitados, generas enlaces personalizados, envías invitaciones por WhatsApp, ves quién confirmó en tiempo real, asignas mesas y controlas el ingreso al evento mediante QR.</p>
+            <p>Tu centro de control privado. Agregas invitados, generas enlaces, envías por WhatsApp, ves confirmaciones en tiempo real y controlas el ingreso con QR.</p>
           </details>
           <details className="faq-item">
-            <summary>¿En cuánto tiempo estará lista mi invitación?</summary>
-            <p>El tiempo estándar es de 5 a 7 días laborales una vez que recibimos toda tu información. Si necesitas urgencia, ofrecemos entrega express garantizada en 48 horas.</p>
-          </details>
-          <details className="faq-item">
-            <summary>¿Puedo solicitar cambios después de ver el resultado?</summary>
-            <p>Por supuesto. Cada plan incluye rondas de revisión para que todo quede perfecto. El plan Exclusive incluye ajustes ilimitados hasta que estés completamente satisfecho.</p>
+            <summary>¿En cuánto tiempo estará lista?</summary>
+            <p>5 a 7 días laborales. Con entrega express: 48 horas garantizadas.</p>
           </details>
           <details className="faq-item">
             <summary>¿Se ve bien en cualquier teléfono?</summary>
-            <p>Absolutamente. Cada invitación está optimizada para verse impecable en iPhone, Android, tablets y computadoras. La experiencia es fluida en cualquier dispositivo.</p>
+            <p>Sí. Optimizada para iPhone, Android, tablets y computadoras.</p>
           </details>
         </div>
       </section>
@@ -244,8 +238,8 @@ export default function Home() {
       {/* CTA */}
       <section className="cta-section" id="contacto">
         <h2>Tu celebración merece algo extraordinario</h2>
-        <p>Conversemos sobre tu evento. Sin compromiso, con toda la inspiración.</p>
-        <a href="https://wa.me/59100000000?text=Hola%20Festejia!%20Me%20interesa%20una%20invitación%20digital%20para%20mi%20evento.%20¿Podemos%20conversar?" className="btn-primary" target="_blank" rel="noopener noreferrer">
+        <p>Conversemos sobre tu evento. Sin compromiso.</p>
+        <a href="https://wa.me/59100000000?text=Hola%20Festejia!%20Me%20interesa%20una%20invitación%20digital%20para%20mi%20evento." className="btn-primary" target="_blank" rel="noopener noreferrer">
           Escribir por WhatsApp
         </a>
       </section>
@@ -255,9 +249,11 @@ export default function Home() {
         <div className="footer-logo">Feste<span>jia</span></div>
         <p>Experiencias digitales para momentos irrepetibles</p>
         <div className="footer-links">
-          <a href="#coleccion">Colección</a>
+          <a href="#bodas">Bodas</a>
+          <a href="#quince">15 Años</a>
+          <a href="#graduaciones">Graduaciones</a>
+          <a href="#bautizos">Bautizos</a>
           <a href="#planes">Planes</a>
-          <a href="#proceso">Proceso</a>
           <a href="#contacto">Contacto</a>
         </div>
         <p style={{marginTop: '2rem', fontSize: '0.75rem'}}>© 2025 Festejia. Todos los derechos reservados.</p>
