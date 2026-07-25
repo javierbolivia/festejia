@@ -114,8 +114,7 @@ export default function Home() {
       <section className="detail-section">
         <div className="detail-content">
           <div className="detail-visual">
-            <div className="phone-mockup-large" style={{background: 'linear-gradient(135deg, #e8d5b0, #f5efe6)'}}>
-              <span style={{fontSize: '1.2rem'}}>MARÍA<br/>&<br/>VINCENT</span>
+            <div className="phone-mockup-large" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=400&q=80)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
             </div>
           </div>
           <div className="detail-text">
@@ -237,8 +236,7 @@ export default function Home() {
             <a href="#contacto" className="link-gold">Ver servicios adicionales</a>
           </div>
           <div className="detail-visual">
-            <div className="phone-mockup-large" style={{background: 'linear-gradient(135deg, #2c3e5a, #5a7bad)'}}>
-              <span style={{fontSize: '1rem', color: 'white'}}>Diseño<br/>Exclusivo</span>
+            <div className="phone-mockup-large" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&q=80)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
             </div>
           </div>
         </div>

@@ -27,7 +27,7 @@ body { font-family: var(--font-sans); color: var(--color-dark); background: var(
 .nav-cta { background: var(--color-primary) !important; color: var(--color-dark) !important; padding: 0.5rem 1.2rem; border-radius: 4px; font-weight: 500 !important; }
 
 /* HERO */
-.hero { min-height: 100vh; display: flex; align-items: center; padding: 6rem 5% 4rem; background: linear-gradient(135deg, #3d3528 0%, #5c4f3a 30%, #8b7b5e 60%, #b8a88c 100%); position: relative; }
+.hero { min-height: 100vh; display: flex; align-items: center; padding: 6rem 5% 4rem; background: linear-gradient(135deg, rgba(45,35,25,0.92) 0%, rgba(70,55,40,0.88) 50%, rgba(120,100,70,0.85) 100%), url('https://images.unsplash.com/photo-1519741497674-611481863552?w=1920&q=80') center/cover no-repeat; position: relative; }
 .hero-content { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; max-width: 1300px; margin: 0 auto; align-items: center; width: 100%; }
 .hero-text { color: white; }
 .hero-social { display: flex; gap: 1.5rem; margin-bottom: 3rem; }
@@ -38,7 +38,7 @@ body { font-family: var(--font-sans); color: var(--color-dark); background: var(
 .hero-year { display: flex; align-items: center; gap: 1rem; color: rgba(255,255,255,0.7); font-size: 1.1rem; letter-spacing: 2px; }
 .hero-year::after { content: ''; flex: 1; height: 1px; background: var(--color-primary); max-width: 100px; }
 .hero-visual { display: flex; justify-content: center; }
-.hero-mockup { width: 100%; max-width: 400px; aspect-ratio: 4/3; background: linear-gradient(145deg, #2a2320, #3d3528); border-radius: 20px; border: 3px solid rgba(201,169,110,0.3); display: flex; align-items: center; justify-content: center; box-shadow: 0 30px 60px rgba(0,0,0,0.4); position: relative; }
+.hero-mockup { width: 100%; max-width: 400px; aspect-ratio: 4/3; background: url('https://images.unsplash.com/photo-1606800052052-a08af7148866?w=800&q=80') center/cover no-repeat; border-radius: 20px; border: 3px solid rgba(201,169,110,0.3); display: flex; align-items: center; justify-content: center; box-shadow: 0 30px 60px rgba(0,0,0,0.4); position: relative; }
 .hero-mockup-content { text-align: center; padding: 2rem; }
 .hero-mockup-content h3 { font-family: var(--font-serif); font-size: 1.8rem; color: var(--color-primary); font-weight: 400; margin-bottom: 0.5rem; }
 .hero-mockup-content p { font-family: var(--font-serif); color: rgba(255,255,255,0.6); font-size: 1rem; font-style: italic; }
@@ -76,7 +76,7 @@ section { padding: 5rem 5%; }
 .detail-content.reverse > * { direction: ltr; }
 .detail-text h2 { font-family: var(--font-serif); font-size: 2rem; color: var(--color-primary-dark); margin-bottom: 1.5rem; }
 .detail-text p { color: var(--color-gray); font-weight: 300; line-height: 1.8; font-size: 0.95rem; }
-.phone-mockup-large { width: 200px; height: 380px; margin: 0 auto; border-radius: 25px; border: 4px solid #ddd; display: flex; align-items: center; justify-content: center; font-family: var(--font-serif); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+.phone-mockup-large { width: 200px; height: 380px; margin: 0 auto; border-radius: 25px; border: 4px solid #333; display: flex; align-items: center; justify-content: center; font-family: var(--font-serif); box-shadow: 0 15px 40px rgba(0,0,0,0.15); background-size: cover; background-position: center; }
 .link-gold { color: var(--color-primary-dark); font-weight: 500; text-decoration: none; display: inline-block; margin-top: 1.5rem; font-size: 0.9rem; }
 
 /* CONFIRMATION SECTION */
@@ -146,7 +146,7 @@ section { padding: 5rem 5%; }
 .faq-item p { padding: 0 1.5rem 1.2rem; color: var(--color-gray); font-weight: 300; font-size: 0.88rem; line-height: 1.7; }
 
 /* CONTACT */
-.contact-section { background: var(--color-beige-bg); }
+.contact-section { background: linear-gradient(135deg, rgba(160,140,110,0.95), rgba(140,120,90,0.95)), url('https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=1920&q=80') center/cover no-repeat; }
 .contact-content { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; max-width: 1100px; margin: 0 auto; align-items: center; }
 .contact-form-wrap h2 { font-family: var(--font-serif); font-size: 2rem; color: var(--color-dark); letter-spacing: 2px; margin-bottom: 0.5rem; }
 .contact-sub { color: var(--color-primary-dark); font-size: 0.9rem; margin-bottom: 2rem; font-style: italic; }
