@@ -7,10 +7,10 @@ export default function Home() {
       <nav className="navbar">
         <a href="#" className="nav-logo">Feste<span>jia</span></a>
         <ul className="nav-links">
-          <li><a href="#bodas">Bodas</a></li>
-          <li><a href="#quince">15 Años</a></li>
-          <li><a href="#graduaciones">Graduaciones</a></li>
-          <li><a href="#bautizos">Bautizos</a></li>
+          <li><a href="/bodas">Bodas</a></li>
+          <li><a href="/quince">15 Años</a></li>
+          <li><a href="/graduaciones">Graduaciones</a></li>
+          <li><a href="/bautizos">Bautizos</a></li>
           <li><a href="#contacto">Contacto</a></li>
           <li><a href="/login" className="nav-cta">Iniciar Sesión</a></li>
         </ul>
