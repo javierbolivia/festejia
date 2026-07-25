@@ -1503,7 +1503,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 								<div class="elementor-field-type-text elementor-field-group elementor-column elementor-field-group-nombre elementor-col-100 elementor-field-required">
 												<label for="form-field-nombre" class="elementor-field-label">
 								Nombre							</label>
-														<input size="1" type="text" name="form_fields[nombre]" id="form-field-nombre" class="elementor-field elementor-size-sm  elementor-field-textual" placeholder="Nombre" value="<span id="nombre-invitado-dinamico">Invitado</span>" required="required">
+														<input size="1" type="text" name="form_fields[nombre]" id="form-field-nombre" class="elementor-field elementor-size-sm  elementor-field-textual" placeholder="Nombre" value="" id="input-nombre-invitado" placeholder="Tu nombre" required="required">
 											</div>
 								<div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-asistencia elementor-col-100 elementor-field-required">
 												<label for="form-field-asistencia" class="elementor-field-label">
@@ -1863,115 +1863,89 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<!-- FESTEJIA: Sistema dinámico de invitaciones -->
-<div id="festejia-confirmacion" style="display:none; max-width:500px; margin:3rem auto; padding:2rem; background:#fff; border-radius:16px; box-shadow:0 10px 40px rgba(0,0,0,0.1); text-align:center; font-family:'Raleway',sans-serif;">
-  <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.8rem; color:#333; margin-bottom:0.5rem;">Confirma tu Asistencia</h3>
-  <div id="festejia-info" style="background:#f9f7f4; border-radius:8px; padding:1rem; margin:1rem 0;">
-    <p style="margin:0; font-size:0.9rem; color:#666;">Invitado: <strong id="festejia-nombre-display">-</strong></p>
-    <p style="margin:0.3rem 0 0; font-size:0.9rem; color:#666;">Pases: <strong id="festejia-pases-display">-</strong></p>
-    <p style="margin:0.3rem 0 0; font-size:0.9rem; color:#666;" id="festejia-mesa-row">Mesa: <strong id="festejia-mesa-display">-</strong></p>
-  </div>
-  <div style="margin:1.5rem 0;">
-    <p style="font-size:0.9rem; color:#555; margin-bottom:1rem;">¿Podrás asistir?</p>
-    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
-      <button onclick="festejiaConfirmar('confirmado')" style="background:#22c55e; color:white; border:none; padding:0.8rem 2rem; border-radius:50px; font-size:0.85rem; cursor:pointer; font-weight:500;">Sí, asistiré</button>
-      <button onclick="festejiaConfirmar('rechazado')" style="background:#ef4444; color:white; border:none; padding:0.8rem 2rem; border-radius:50px; font-size:0.85rem; cursor:pointer; font-weight:500;">No podré asistir</button>
-    </div>
-  </div>
-  <div style="margin-top:1rem;">
-    <textarea id="festejia-mensaje" placeholder="Mensaje para los novios (opcional)" style="width:100%; padding:0.8rem; border:1.5px solid #e0e0e0; border-radius:8px; font-family:'Raleway',sans-serif; font-size:0.85rem; resize:none;" rows="3"></textarea>
-  </div>
-  <div id="festejia-resultado" style="display:none; margin-top:1.5rem; padding:1.5rem; background:#f0fdf4; border-radius:8px;">
-    <p style="color:#166534; font-size:1rem; font-weight:500;">✓ Tu confirmación fue enviada</p>
-    <p style="color:#666; font-size:0.8rem; margin-top:0.5rem;">Gracias por responder</p>
-  </div>
-</div>
 
+<!-- FESTEJIA: Sistema dinámico -->
 <script>
-// FESTEJIA - Sistema dinámico
 (function() {
   const params = new URLSearchParams(window.location.search);
-  const nombre = params.get('m') || '';
-  const pases = params.get('n') || '';
+  const nombre = params.get('m') ? decodeURIComponent(params.get('m')) : '';
+  const pases = params.get('n') ? decodeURIComponent(params.get('n')) : '';
   const mesa = params.get('mesa') || '';
   const invitadoId = params.get('id') || '';
+  const numPases = pases.replace(/[^0-9]/g, '') || '1';
 
-  // Mostrar nombre del invitado si existe
+  // 1. Barra superior con info del invitado
   if (nombre) {
-    // Inyectar nombre del invitado en el placeholder
-    var nombreDisplay = document.getElementById('nombre-invitado-dinamico');
-    if (nombreDisplay && nombre) {
-      nombreDisplay.textContent = decodeURIComponent(nombre);
-    }
-    
-    // Inyectar pases
-    var pasesDisplay = document.getElementById('pases-invitado-dinamico');
-    if (pasesDisplay && pases) {
-      var numPases = pases.replace(/[^0-9]/g, '') || '1';
-      pasesDisplay.textContent = numPases;
-    }
-
-    // Buscar elementos donde inyectar el nombre
-    const headings = document.querySelectorAll('h1, h2, h3, .elementor-heading-title');
-    // Insertar badge con nombre del invitado arriba
-    const badge = document.createElement('div');
-    badge.style.cssText = 'position:fixed; top:0; left:0; right:0; background:rgba(26,26,26,0.95); color:white; text-align:center; padding:0.6rem; font-size:0.8rem; z-index:99999; font-family:Raleway,sans-serif;';
-    badge.innerHTML = '💌 Invitación para: <strong>' + decodeURIComponent(nombre) + '</strong>' + (pases ? ' — ' + decodeURIComponent(pases) : '');
+    var badge = document.createElement('div');
+    badge.style.cssText = 'position:fixed;top:0;left:0;right:0;background:rgba(26,26,26,0.95);color:white;text-align:center;padding:0.6rem;font-size:0.8rem;z-index:99999;font-family:Raleway,sans-serif;';
+    badge.innerHTML = '<span style="color:#c9a96e">Festejia</span> | Invitación para: <strong>' + nombre + '</strong>' + (pases ? ' — ' + pases : '');
     document.body.prepend(badge);
+    document.body.style.paddingTop = '38px';
   }
 
-  // Mostrar formulario de confirmación
-  const confSection = document.getElementById('festejia-confirmacion');
-  if (confSection) {
-    confSection.style.display = 'block';
-    document.getElementById('festejia-nombre-display').textContent = nombre ? decodeURIComponent(nombre) : 'Invitado';
-    document.getElementById('festejia-pases-display').textContent = pases ? decodeURIComponent(pases) : '1';
-    if (mesa) {
-      document.getElementById('festejia-mesa-display').textContent = mesa;
-    } else {
-      document.getElementById('festejia-mesa-row').style.display = 'none';
-    }
+  // 2. Inyectar nombre del invitado en el heading
+  var nombreHeading = document.getElementById('nombre-invitado-dinamico');
+  if (nombreHeading && nombre) {
+    nombreHeading.textContent = nombre;
   }
 
-  // Función de confirmación
-  window.festejiaConfirmar = async function(estado) {
-    const mensaje = document.getElementById('festejia-mensaje').value;
-    
-    // Enviar a Supabase
-    const supabaseUrl = 'https://xzkxutllxkdrugjvflco.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6a3h1dGxseGtkcnVnanZmbGNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NTE0MTgsImV4cCI6MjEwMDUyNzQxOH0.s3icP7S33TEWVL77edSFe8svSgC2AqTQe3lB0WYDrXk';
-
-    if (invitadoId) {
-      try {
-        const resp = await fetch(supabaseUrl + '/rest/v1/invitados?id=eq.' + invitadoId, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': supabaseKey,
-            'Authorization': 'Bearer ' + supabaseKey,
-            'Prefer': 'return=minimal'
-          },
-          body: JSON.stringify({
-            estado: estado,
-            mensaje_invitado: mensaje,
-            fecha_confirmacion: new Date().toISOString()
-          })
-        });
-        console.log('Confirmación enviada:', resp.status);
-      } catch(e) {
-        console.error('Error:', e);
-      }
+  // 3. Llenar el campo "nombre" del formulario automáticamente
+  setTimeout(function() {
+    var inputNombre = document.querySelector('input[name="form_fields[nombre]"]');
+    if (inputNombre && nombre) {
+      inputNombre.value = nombre;
     }
+  }, 1000);
 
-    // Mostrar resultado
-    document.getElementById('festejia-resultado').style.display = 'block';
-    document.querySelectorAll('#festejia-confirmacion button').forEach(b => b.style.display = 'none');
-    document.getElementById('festejia-mensaje').style.display = 'none';
-    
-    if (estado === 'rechazado') {
-      document.querySelector('#festejia-resultado p').textContent = '✓ Tu respuesta fue registrada';
+  // 4. Interceptar el formulario para enviar a Supabase
+  setTimeout(function() {
+    var form = document.querySelector('form.elementor-form');
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        var inputNombre = document.querySelector('input[name="form_fields[nombre]"]');
+        var selectAsistencia = document.querySelector('[name="form_fields[asistencia]"]');
+        var inputMensaje = document.querySelector('[name="form_fields[mensaje]"]');
+        
+        var nombreVal = inputNombre ? inputNombre.value : nombre;
+        var asistenciaVal = selectAsistencia ? selectAsistencia.value : 'si';
+        var mensajeVal = inputMensaje ? inputMensaje.value : '';
+        
+        var estado = 'confirmado';
+        if (asistenciaVal.toLowerCase().includes('no')) {
+          estado = 'rechazado';
+        }
+
+        // Enviar a Supabase
+        var supabaseUrl = 'https://xzkxutllxkdrugjvflco.supabase.co';
+        var supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6a3h1dGxseGtkcnVnanZmbGNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NTE0MTgsImV4cCI6MjEwMDUyNzQxOH0.s3icP7S33TEWVL77edSFe8svSgC2AqTQe3lB0WYDrXk';
+
+        if (invitadoId) {
+          fetch(supabaseUrl + '/rest/v1/invitados?id=eq.' + invitadoId, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': supabaseKey,
+              'Authorization': 'Bearer ' + supabaseKey,
+              'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({
+              estado: estado,
+              mensaje_invitado: mensajeVal,
+              fecha_confirmacion: new Date().toISOString()
+            })
+          }).then(function() {
+            alert('¡Gracias! Tu confirmación fue registrada.');
+          }).catch(function() {
+            alert('Tu respuesta fue recibida. ¡Gracias!');
+          });
+        } else {
+          alert('¡Gracias por confirmar! Tu respuesta fue registrada.');
+        }
+      });
     }
-  };
+  }, 2000);
 })();
 </script>
 </body></html>

@@ -85,8 +85,8 @@ export default function Panel() {
   }
 
   function copyInvitation(guest) {
-    const baseUrl = 'https://festejia.vercel.app/invitacion'
-    const link = `${baseUrl}?n=${encodeURIComponent(guest.num_pases + ' pases')}&m=${encodeURIComponent(guest.nombre_completo)}`
+    const baseUrl = 'https://festejia.vercel.app/plantilla1'
+    const link = `${baseUrl}/?m=${encodeURIComponent(guest.nombre_completo)}&n=${encodeURIComponent(guest.num_pases + ' pases')}&mesa=${encodeURIComponent(guest.mesa || '')}&id=${guest.id}`
     const mensaje = evento?.mensaje_personalizado || 'Estás invitado a nuestra celebración.'
     const text = `${mensaje}\n\n${link}`
     navigator.clipboard.writeText(text)
@@ -94,8 +94,8 @@ export default function Panel() {
   }
 
   function shareWhatsApp(guest) {
-    const baseUrl = 'https://festejia.vercel.app/invitacion'
-    const link = `${baseUrl}?n=${encodeURIComponent(guest.num_pases + ' pases')}&m=${encodeURIComponent(guest.nombre_completo)}`
+    const baseUrl = 'https://festejia.vercel.app/plantilla1'
+    const link = `${baseUrl}/?m=${encodeURIComponent(guest.nombre_completo)}&n=${encodeURIComponent(guest.num_pases + ' pases')}&mesa=${encodeURIComponent(guest.mesa || '')}&id=${guest.id}`
     const mensaje = evento?.mensaje_personalizado || 'Estás invitado a nuestra celebración.'
     const text = encodeURIComponent(`${mensaje}\n\n${link}`)
     window.open(`https://wa.me/?text=${text}`, '_blank')
