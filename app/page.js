@@ -43,8 +43,9 @@ export default function Home() {
           <div className="hero-visual">
             <div className="hero-mockup">
               <div className="hero-mockup-content">
+                <p style={{fontSize: '0.65rem', color: '#999', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '0.8rem'}}>Bienvenidos a nuestra boda</p>
                 <h3>José & Victoria</h3>
-                <p>Nuestra Boda</p>
+                <p style={{fontSize: '0.8rem', color: '#c9a96e', fontStyle: 'italic', marginTop: '0.3rem'}}>22 de Agosto, 2026</p>
               </div>
               <span className="hero-mockup-badge">Muestra</span>
             </div>
