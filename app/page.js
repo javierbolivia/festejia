@@ -1,11 +1,19 @@
 'use client'
+import { useState } from 'react'
 
 export default function Home() {
+  const [currency, setCurrency] = useState('usd')
+
+  const prices = {
+    usd: { plus: 45, premium: 90, exclusive: 150 },
+    bs: { plus: 310, premium: 620, exclusive: 1035 }
+  }
+
   return (
     <>
       {/* NAVIGATION */}
       <nav className="navbar">
-        <a href="#" className="nav-logo">Feste<span>jia</span></a>
+        <a href="/" className="nav-logo">Feste<span>jia</span></a>
         <ul className="nav-links">
           <li><a href="/bodas">Bodas</a></li>
           <li><a href="/quince">15 Años</a></li>
@@ -44,204 +52,293 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CATEGORIES */}
-      <section className="categories" id="bodas">
+      {/* DESIGNS SHOWCASE */}
+      <section className="designs-showcase">
+        <span className="section-label">TU DÍA ESPECIAL</span>
         <div className="section-title">
-          <h2>Invitaciones para cada momento</h2>
-          <p>Diseños exclusivos para cada tipo de celebración</p>
+          <h2>Invitaciones Únicas</h2>
+          <p>Descubre diseños únicos creados por nuestro equipo para tus momentos más especiales</p>
         </div>
-        <div className="categories-grid">
-          <div className="category-card">
-            <div className="category-image" style={{background: 'linear-gradient(135deg, #f5efe6, #e8d5b0)'}}>💍</div>
-            <h3>Bodas</h3>
-            <p>Invitaciones que reflejan la magia de tu unión</p>
+        <div className="showcase-grid">
+          {['Serenata','Aurora','Jardín','Allegria','Napoli','Terra','Rose Gold','Euforia'].map((name, i) => (
+            <div className="showcase-item" key={i}>
+              <div className="phone-mockup" style={{background: [
+                'linear-gradient(135deg, #e8d5b0, #f5efe6)',
+                'linear-gradient(135deg, #d4b8c4, #f5eef2)',
+                'linear-gradient(135deg, #c8d8c0, #eef5eb)',
+                'linear-gradient(135deg, #80958E, #c8d8d0)',
+                'linear-gradient(135deg, #d4a574, #f0e0c8)',
+                'linear-gradient(135deg, #a08060, #d4c0a8)',
+                'linear-gradient(135deg, #b76e79, #e8c4cc)',
+                'linear-gradient(135deg, #6b8dad, #b8d4e8)',
+              ][i]}}>
+                <span>{name}</span>
+              </div>
+              <p className="showcase-name">{name}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className="testimonials">
+        <div className="section-title">
+          <h2>Lo que dicen nuestros clientes</h2>
+        </div>
+        <div className="testimonials-grid">
+          <div className="testimonial-card">
+            <div className="testimonial-avatar">M</div>
+            <h4>María González</h4>
+            <p className="testimonial-time">hace 2 meses</p>
+            <p className="testimonial-badge">⭐ recomienda</p>
+            <p className="testimonial-text">"Quedamos encantados con nuestra invitación. El diseño superó nuestras expectativas y el sistema de confirmación nos facilitó todo."</p>
           </div>
-          <div className="category-card" id="quince">
-            <div className="category-image" style={{background: 'linear-gradient(135deg, #f5eef2, #e8c4d4)'}}>👑</div>
-            <h3>15 Años</h3>
-            <p>Celebra tu presentación en sociedad con estilo</p>
+          <div className="testimonial-card">
+            <div className="testimonial-avatar">C</div>
+            <h4>Carlos Mendoza</h4>
+            <p className="testimonial-time">hace 1 mes</p>
+            <p className="testimonial-badge">⭐ recomienda</p>
+            <p className="testimonial-text">"Excelente servicio. Muy profesionales, atentos a cada detalle. Nuestros invitados quedaron impresionados con la invitación."</p>
           </div>
-          <div className="category-card" id="graduaciones">
-            <div className="category-image" style={{background: 'linear-gradient(135deg, #e6eef5, #b8d4e8)'}}>🎓</div>
-            <h3>Graduaciones</h3>
-            <p>Comparte tu logro con quienes te acompañaron</p>
-          </div>
-          <div className="category-card" id="bautizos">
-            <div className="category-image" style={{background: 'linear-gradient(135deg, #eef5eb, #c8d8c0)'}}>✝</div>
-            <h3>Bautizos</h3>
-            <p>Una bendición merece una invitación especial</p>
+          <div className="testimonial-card">
+            <div className="testimonial-avatar">A</div>
+            <h4>Ana Rodríguez</h4>
+            <p className="testimonial-time">hace 3 semanas</p>
+            <p className="testimonial-badge">⭐ recomienda</p>
+            <p className="testimonial-text">"Súper recomendados. El panel de gestión es increíble, pudimos controlar todo sin estrés. ¡Gracias Festejia!"</p>
           </div>
         </div>
       </section>
 
-      {/* FEATURES */}
-      <section id="servicios">
-        <div className="section-title">
-          <h2>Una experiencia completa</h2>
-          <p>Más que una invitación: una plataforma de gestión para tu evento</p>
-        </div>
-        <div className="features-grid">
-          <div className="feature-card">
-            <div className="feature-icon">✦</div>
-            <h3>Portada Cinematográfica</h3>
-            <p>Apertura envolvente con animaciones que marcan el tono de tu celebración.</p>
+      {/* PRIMER DETALLE */}
+      <section className="detail-section">
+        <div className="detail-content">
+          <div className="detail-visual">
+            <div className="phone-mockup-large" style={{background: 'linear-gradient(135deg, #e8d5b0, #f5efe6)'}}>
+              <span style={{fontSize: '1.2rem'}}>MARÍA<br/>&<br/>VINCENT</span>
+            </div>
           </div>
-          <div className="feature-card">
-            <div className="feature-icon">◈</div>
-            <h3>Panel del Anfitrión</h3>
-            <p>Gestiona invitados, genera enlaces únicos y envía por WhatsApp desde un solo lugar.</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon">◇</div>
-            <h3>Confirmación Inteligente</h3>
-            <p>Cada invitado confirma desde su invitación. Tú lo ves en tiempo real.</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon">⬡</div>
-            <h3>Acceso con QR</h3>
-            <p>Código QR único al confirmar. Escanea en la puerta para un registro impecable.</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon">❖</div>
-            <h3>Diseño a Medida</h3>
-            <p>Cada invitación refleja la esencia de tu historia y el espíritu de tu evento.</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon">◆</div>
-            <h3>Cuenta Regresiva</h3>
-            <p>Un reloj elegante que alimenta la anticipación día tras día.</p>
+          <div className="detail-text">
+            <h2><em>primer detalle</em></h2>
+            <p>Nuestro equipo de <strong>diseñadores y programadores</strong> sabe que cada invitación es el primer detalle de un momento inolvidable. Para un toque aún más personal, nuestra tecnología permite <strong>personalizar la invitación con el nombre de cada invitado</strong>, haciendo que cada destinatario se sienta parte especial de su historia.</p>
           </div>
         </div>
       </section>
 
-      {/* DESIGNS */}
-      <section id="coleccion">
+      {/* SISTEMA CONFIRMACION */}
+      <section className="confirmation-section">
         <div className="section-title">
-          <h2>Nuestra Colección</h2>
-          <p>Diseños concebidos para distintas sensibilidades</p>
+          <h2>Sistema de Confirmación <em>inteligente</em></h2>
+          <p>Paquete: <span className="badge-exclusive">EXCLUSIVE</span></p>
         </div>
-        <div className="designs-grid">
-          <div className="design-card">
-            <div className="design-preview" style={{background: 'linear-gradient(135deg, #e8d5b0, #f5efe6)'}}>
-              Serenata
-            </div>
-            <div className="design-info">
-              <h3>Serenata</h3>
-              <p>Sofisticación atemporal en tonos dorados</p>
-            </div>
+        <div className="confirmation-cards">
+          <div className="conf-card">
+            <div className="conf-icon">💌</div>
+            <p>Confirmaciones de asistencia únicas e intransferibles</p>
           </div>
-          <div className="design-card">
-            <div className="design-preview" style={{background: 'linear-gradient(135deg, #c8d8c0, #eef5eb)'}}>
-              Jardín
-            </div>
-            <div className="design-info">
-              <h3>Jardín</h3>
-              <p>Frescura natural con delicadeza orgánica</p>
-            </div>
+          <div className="conf-card">
+            <div className="conf-icon">🎫</div>
+            <p>Nombres, Tickets y Mesas Personalizados</p>
           </div>
-          <div className="design-card">
-            <div className="design-preview" style={{background: 'linear-gradient(135deg, #d4b8c4, #f5eef2)'}}>
-              Aurora
-            </div>
-            <div className="design-info">
-              <h3>Aurora</h3>
-              <p>Romanticismo contemporáneo en matices cálidos</p>
-            </div>
+          <div className="conf-card">
+            <div className="conf-icon">📱</div>
+            <p>QR de Acceso Personal</p>
           </div>
+          <div className="conf-card">
+            <div className="conf-icon">✅</div>
+            <p>Conoce quién confirma, rechaza o queda pendiente</p>
+          </div>
+        </div>
+        <div style={{textAlign: 'center', marginTop: '2rem'}}>
+          <a href="https://www.youtube.com/watch?v=AwtEkh4Kq50" className="btn-outline" target="_blank" rel="noopener noreferrer">▶ VER MÁS</a>
         </div>
       </section>
 
       {/* PRICING */}
       <section className="pricing" id="planes">
         <div className="section-title">
-          <h2>Elige tu Experiencia</h2>
-          <p>Tres niveles de servicio para distintas necesidades</p>
+          <h2>3 Paquetes</h2>
+        </div>
+        <div className="currency-toggle">
+          <button className={currency === 'bs' ? 'active' : ''} onClick={() => setCurrency('bs')}>Bolivianos</button>
+          <button className={currency === 'usd' ? 'active' : ''} onClick={() => setCurrency('usd')}>Dólares</button>
         </div>
         <div className="pricing-grid">
           <div className="pricing-card">
-            <h3>Esencial</h3>
-            <div className="pricing-price">$45 <span>USD</span></div>
-            <ul className="pricing-features">
-              <li>Invitación web con diseño exclusivo</li>
-              <li>Portada con animación de apertura</li>
-              <li>Reloj de cuenta regresiva</li>
-              <li>Ubicación con mapa interactivo</li>
-              <li>Ambientación musical</li>
-              <li>Confirmación vía WhatsApp</li>
-              <li>Enlace compartible universal</li>
-              <li>2 rondas de ajustes</li>
-            </ul>
-            <a href="#contacto" className="btn-pricing">Comenzar</a>
+            <h3>PLUS</h3>
+            <div className="pricing-price">{currency === 'usd' ? 'USD' : 'Bs.'} {prices[currency].plus}</div>
           </div>
           <div className="pricing-card featured">
-            <h3>Premium</h3>
-            <div className="pricing-price">$90 <span>USD</span></div>
-            <ul className="pricing-features">
-              <li>Todo lo del plan Esencial</li>
-              <li>Panel del Anfitrión completo</li>
-              <li>Enlaces personalizados ilimitados</li>
-              <li>Confirmación inteligente</li>
-              <li>Paleta de colores personalizada</li>
-              <li>Galería fotográfica</li>
-              <li>Mensaje de envío editable</li>
-              <li>3 rondas de ajustes</li>
-            </ul>
-            <a href="#contacto" className="btn-pricing">Comenzar</a>
+            <h3>PREMIUM</h3>
+            <div className="pricing-price">{currency === 'usd' ? 'USD' : 'Bs.'} {prices[currency].premium}</div>
           </div>
           <div className="pricing-card">
-            <h3>Exclusive</h3>
-            <div className="pricing-price">$150 <span>USD</span></div>
-            <ul className="pricing-features">
-              <li>Todo lo del plan Premium</li>
-              <li>QR de acceso y check-in digital</li>
-              <li>Control de ingreso y salida</li>
-              <li>Asignación inteligente de mesas</li>
-              <li>Diseño creado desde cero</li>
-              <li>Dominio propio incluido</li>
-              <li>Atención prioritaria</li>
-              <li>Ajustes ilimitados</li>
-            </ul>
-            <a href="#contacto" className="btn-pricing">Comenzar</a>
+            <h3>EXCLUSIVE</h3>
+            <div className="pricing-price">{currency === 'usd' ? 'USD' : 'Bs.'} {prices[currency].exclusive}</div>
+          </div>
+        </div>
+        <div className="pricing-note">
+          <p><strong>RESERVA CON 20 DÓLARES</strong></p>
+          <p>Paga el resto cuando tu invitación esté finalizada</p>
+          <a href="#contacto" className="btn-outline-light">◎ QUIERO RESERVAR</a>
+        </div>
+      </section>
+
+      {/* COMPARISON TABLE */}
+      <section className="comparison">
+        <div className="table-wrapper">
+          <table className="comparison-table">
+            <thead>
+              <tr>
+                <th>Función</th>
+                <th>Exclusive</th>
+                <th>Premium</th>
+                <th>Plus</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ['Sistema de Confirmación Inteligente', true, false, false],
+                ['Confirmación por WhatsApp', false, true, true],
+                ['Personalización de Color', true, true, false],
+                ['Ubicación Maps', true, true, true],
+                ['Cuenta Regresiva', true, true, true],
+                ['Itinerario', true, true, true],
+                ['Dress Code', true, true, true],
+                ['Sugerencia de Regalos', true, true, true],
+                ['Envíos Ilimitados', true, true, true],
+                ['Música de fondo', true, true, true],
+                ['Nombres de los Invitados', true, true, false],
+                ['Tickets / Pases', true, true, false],
+                ['Número de mesa', true, false, false],
+                ['Galería de fotos (max 20)', true, false, false],
+                ['Galería de fotos (max 8)', false, true, false],
+                ['Agendar evento (Google Calendar)', true, true, false],
+                ['QR de Acceso al evento', true, false, false],
+              ].map(([feature, exc, pre, plu], i) => (
+                <tr key={i}>
+                  <td>{feature}</td>
+                  <td>{exc ? '✓' : '✕'}</td>
+                  <td>{pre ? '✓' : '✕'}</td>
+                  <td>{plu ? '✓' : '✕'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* PERSONALIZATION */}
+      <section className="personalization">
+        <div className="detail-content reverse">
+          <div className="detail-text">
+            <h2><em>personalización</em></h2>
+            <p>Le ofrecemos un servicio personalizado de creación de invitaciones digitales, diseñadas para ser el comienzo de un momento inolvidable. Con opciones elegantes y cuidadosamente diseñadas, su invitación capturará la esencia y emoción de su gran día.</p>
+            <a href="#contacto" className="link-gold">Ver servicios adicionales</a>
+          </div>
+          <div className="detail-visual">
+            <div className="phone-mockup-large" style={{background: 'linear-gradient(135deg, #2c3e5a, #5a7bad)'}}>
+              <span style={{fontSize: '1rem', color: 'white'}}>Diseño<br/>Exclusivo</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ADDITIONAL SERVICES */}
+      <section className="additional-services">
+        <div className="section-title">
+          <h2>Servicios Adicionales</h2>
+        </div>
+        <div className="services-list">
+          {[
+            ['Personalización Total', 'Diseñamos su invitación desde cero, asegurando que cada detalle sea un reflejo fiel de su evento.', 100],
+            ['Entrega Express', 'Recibe tu invitación web completa en un plazo garantizado de 48 horas.', 30],
+            ['Menú de Navegación', 'Organiza tu invitación en secciones claras para que tus invitados encuentren toda la información.', 15],
+            ['Save the Date', 'Mini sitio exclusivo con contador regresivo y formulario de pre-confirmación.', 30],
+            ['Dominio propio', 'Tu invitación en una dirección web única (ej: www.nombrenovios.com). Incluye registro y hosting.', 120],
+            ['Visibilidad Extendida', 'Mantén tu invitación web activa 3 meses adicionales después del evento.', 30],
+            ['Ajustes Post-Entrega', 'Cambios menores (textos, fechas o imágenes) después de la aprobación y entrega final.', 10],
+          ].map(([name, desc, price], i) => (
+            <div className="service-item" key={i}>
+              <div className="service-info">
+                <h4>{name}</h4>
+                <p>{desc}</p>
+              </div>
+              <div className="service-price">+ ${price}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* HOW TO START */}
+      <section className="how-to-start">
+        <div className="section-title">
+          <h2>¿Cómo Empezar?</h2>
+        </div>
+        <div className="steps-grid">
+          <div className="step-card">
+            <div className="step-number">1</div>
+            <div className="step-icon">📞</div>
+            <p>Elige el estilo de invitación</p>
+          </div>
+          <div className="step-card">
+            <div className="step-number">2</div>
+            <div className="step-icon">📋</div>
+            <p>Completa un formulario con los datos de tu evento</p>
+          </div>
+          <div className="step-card">
+            <div className="step-number">3</div>
+            <div className="step-icon">🎉</div>
+            <p>Entrega en 5 - 7 días laborales</p>
           </div>
         </div>
       </section>
 
       {/* FAQ */}
-      <section id="faq">
+      <section className="faq-section" id="faq">
         <div className="section-title">
-          <h2>Preguntas Frecuentes</h2>
+          <h2>Ayuda</h2>
+          <p className="section-label">Preguntas frecuentes</p>
         </div>
         <div className="faq-list">
-          <details className="faq-item">
-            <summary>¿Qué diferencia una invitación web de un PDF o Canva?</summary>
-            <p>Una invitación web es una experiencia interactiva completa: animaciones, música, cuenta regresiva, mapa, confirmación de asistencia. Un PDF es estático, una invitación web cobra vida.</p>
-          </details>
-          <details className="faq-item">
-            <summary>¿Cómo la envío a mis invitados?</summary>
-            <p>Recibes un enlace que compartes por WhatsApp, correo o redes sociales. En los planes Premium y Exclusive, cada invitado recibe su propio enlace personalizado.</p>
-          </details>
-          <details className="faq-item">
-            <summary>¿Qué es el Panel del Anfitrión?</summary>
-            <p>Tu centro de control privado. Agregas invitados, generas enlaces, envías por WhatsApp, ves confirmaciones en tiempo real y controlas el ingreso con QR.</p>
-          </details>
-          <details className="faq-item">
-            <summary>¿En cuánto tiempo estará lista?</summary>
-            <p>5 a 7 días laborales. Con entrega express: 48 horas garantizadas.</p>
-          </details>
-          <details className="faq-item">
-            <summary>¿Se ve bien en cualquier teléfono?</summary>
-            <p>Sí. Optimizada para iPhone, Android, tablets y computadoras.</p>
-          </details>
+          {[
+            ['¿Qué es exactamente una "invitación web"? ¿Es un PDF o un diseño de Canva?', 'Nuestras invitaciones son páginas web reales, completas y privadas. A diferencia de un PDF o Canva, son interactivas con animaciones, música, cuenta regresiva, mapa y confirmación de asistencia.'],
+            ['¿Puedo personalizar cada invitación con el nombre de un invitado diferente?', 'Sí. En los planes Premium y Exclusive puedes generar invitaciones personalizadas ilimitadas con nombre y número de pases únicos para cada invitado.'],
+            ['¿Cómo funciona el "Sistema de Confirmación Inteligente"?', 'Es un panel completo donde ves en tiempo real quién confirmó, quién está pendiente y quién rechazó. Incluye gestión de pases, mesas y envío directo por WhatsApp.'],
+            ['¿Cómo recibo las confirmaciones de asistencia?', 'Plan Plus: por WhatsApp. Plan Premium: en planilla online. Plan Exclusive: en tu panel de administración privado con base de datos completa.'],
+            ['¿Cuánto tiempo tarda la entrega?', '5 a 7 días laborales. Con entrega express: 48 horas garantizadas.'],
+            ['¿Mis invitados podrán usar la invitación fácilmente?', 'Absolutamente. Están optimizadas para verse perfectamente en cualquier celular o computadora. La navegación es clara e intuitiva.'],
+            ['Formas de Pago', 'Transferencia bancaria, QR, Binance (USDC), tarjeta de crédito/débito, PayPal y más.'],
+            ['¿Puedo cambiar de diseño una vez elegido?', 'La elección del diseño se considera definitiva una vez que comenzamos. Las revisiones son para ajustes sobre el diseño elegido. Para un diseño completamente nuevo, se puede contratar Personalización Total.'],
+          ].map(([q, a], i) => (
+            <details className="faq-item" key={i}>
+              <summary>{q}</summary>
+              <p>{a}</p>
+            </details>
+          ))}
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="cta-section" id="contacto">
-        <h2>Tu celebración merece algo extraordinario</h2>
-        <p>Conversemos sobre tu evento. Sin compromiso.</p>
-        <a href="https://wa.me/59100000000?text=Hola%20Festejia!%20Me%20interesa%20una%20invitación%20digital%20para%20mi%20evento." className="btn-primary" target="_blank" rel="noopener noreferrer">
-          Escribir por WhatsApp
-        </a>
+      {/* CONTACT */}
+      <section className="contact-section" id="contacto">
+        <div className="contact-content">
+          <div className="contact-form-wrap">
+            <h2>Escríbenos</h2>
+            <p className="contact-sub">Atenderemos tus dudas</p>
+            <form className="contact-form" onSubmit={(e) => { e.preventDefault(); window.open('https://wa.me/59100000000?text=Hola Festejia! Quiero información.', '_blank') }}>
+              <input type="text" placeholder="Nombre" required />
+              <input type="text" placeholder="País" />
+              <input type="email" placeholder="Email" />
+              <textarea placeholder="Mensaje" rows="4"></textarea>
+              <button type="submit" className="btn-submit">ENVIAR</button>
+            </form>
+          </div>
+          <div className="contact-visual">
+            <div className="phone-mockup-large" style={{background: 'linear-gradient(135deg, #1a1a3e, #3a2a5e)'}}>
+              <span style={{fontSize: '1rem', color: 'white'}}>LORENZO<br/>&<br/>ISABELLA</span>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* FOOTER */}
@@ -249,10 +346,10 @@ export default function Home() {
         <div className="footer-logo">Feste<span>jia</span></div>
         <p>Experiencias digitales para momentos irrepetibles</p>
         <div className="footer-links">
-          <a href="#bodas">Bodas</a>
-          <a href="#quince">15 Años</a>
-          <a href="#graduaciones">Graduaciones</a>
-          <a href="#bautizos">Bautizos</a>
+          <a href="/bodas">Bodas</a>
+          <a href="/quince">15 Años</a>
+          <a href="/graduaciones">Graduaciones</a>
+          <a href="/bautizos">Bautizos</a>
           <a href="#planes">Planes</a>
           <a href="#contacto">Contacto</a>
         </div>
