@@ -1868,84 +1868,119 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 (function() {
   const params = new URLSearchParams(window.location.search);
-  const nombre = params.get('m') ? decodeURIComponent(params.get('m')) : '';
-  const pases = params.get('n') ? decodeURIComponent(params.get('n')) : '';
-  const mesa = params.get('mesa') || '';
   const invitadoId = params.get('id') || '';
-  const numPases = pases.replace(/[^0-9]/g, '') || '1';
+  let nombre = params.get('m') ? decodeURIComponent(params.get('m')) : '';
+  let pases = params.get('n') ? decodeURIComponent(params.get('n')) : '';
+  let mesa = params.get('mesa') || '';
+  let numPases = pases.replace(/[^0-9]/g, '') || '1';
 
-  // 1. Barra superior con info del invitado
-  if (nombre) {
+  const supabaseUrl = 'https://xzkxutllxkdrugjvflco.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6a3h1dGxseGtkcnVnanZmbGNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NTE0MTgsImV4cCI6MjEwMDUyNzQxOH0.s3icP7S33TEWVL77edSFe8svSgC2AqTQe3lB0WYDrXk';
+
+  // Si tiene ID, leer datos actualizados de Supabase
+  if (invitadoId) {
+    fetch(supabaseUrl + '/rest/v1/invitados?id=eq.' + invitadoId + '&select=*', {
+      headers: { 'apikey': supabaseKey, 'Authorization': 'Bearer ' + supabaseKey }
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data && data.length > 0) {
+        var inv = data[0];
+        nombre = inv.nombre_completo || nombre;
+        numPases = String(inv.num_pases || numPases);
+        mesa = inv.mesa || mesa;
+        actualizarUI();
+      }
+    })
+    .catch(() => { actualizarUI(); });
+  } else {
+    actualizarUI();
+  }
+
+  function actualizarUI() {
+    // 1. Barra superior
     var badge = document.createElement('div');
     badge.style.cssText = 'position:fixed;top:0;left:0;right:0;background:rgba(26,26,26,0.95);color:white;text-align:center;padding:0.6rem;font-size:0.8rem;z-index:99999;font-family:Raleway,sans-serif;';
-    badge.innerHTML = '<span style="color:#c9a96e">Festejia</span> | Invitación para: <strong>' + nombre + '</strong>' + (pases ? ' — ' + pases : '');
+    badge.innerHTML = '<span style="color:#c9a96e">Festejia</span> | Invitación para: <strong>' + nombre + '</strong> — ' + numPases + ' pases';
     document.body.prepend(badge);
     document.body.style.paddingTop = '38px';
-  }
 
-  // 2. Inyectar nombre del invitado en el heading
-  var nombreHeading = document.getElementById('nombre-invitado-dinamico');
-  if (nombreHeading && nombre) {
-    nombreHeading.textContent = nombre;
-  }
-
-  // 3. Llenar el campo "nombre" del formulario automáticamente
-  setTimeout(function() {
-    var inputNombre = document.querySelector('input[name="form_fields[nombre]"]');
-    if (inputNombre && nombre) {
-      inputNombre.value = nombre;
+    // 2. Nombre del invitado en el heading
+    var nombreHeading = document.getElementById('nombre-invitado-dinamico');
+    if (nombreHeading && nombre) {
+      nombreHeading.textContent = nombre;
     }
-  }, 1000);
 
-  // 4. Interceptar el formulario para enviar a Supabase
-  setTimeout(function() {
-    var form = document.querySelector('form.elementor-form');
-    if (form) {
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        var inputNombre = document.querySelector('input[name="form_fields[nombre]"]');
-        var selectAsistencia = document.querySelector('[name="form_fields[asistencia]"]');
-        var inputMensaje = document.querySelector('[name="form_fields[mensaje]"]');
-        
-        var nombreVal = inputNombre ? inputNombre.value : nombre;
-        var asistenciaVal = selectAsistencia ? selectAsistencia.value : 'si';
-        var mensajeVal = inputMensaje ? inputMensaje.value : '';
-        
-        var estado = 'confirmado';
-        if (asistenciaVal.toLowerCase().includes('no')) {
-          estado = 'rechazado';
+    // 3. Pases - buscar el elemento que dice PASE(S) y actualizar el número
+    var allElements = document.querySelectorAll('*');
+    allElements.forEach(function(el) {
+      if (el.textContent.trim() === '2' && el.nextElementSibling && el.nextElementSibling.textContent.includes('PASE')) {
+        el.textContent = numPases;
+      }
+    });
+    // También buscar elementos con clase que contenga el número de pases
+    document.querySelectorAll('.elementor-heading-title').forEach(function(el) {
+      if (el.textContent.trim() === '2' && el.closest('.elementor-element')) {
+        var next = el.closest('.elementor-element').nextElementSibling;
+        if (next && next.textContent.includes('PASE')) {
+          el.textContent = numPases;
         }
+      }
+    });
 
-        // Enviar a Supabase
-        var supabaseUrl = 'https://xzkxutllxkdrugjvflco.supabase.co';
-        var supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6a3h1dGxseGtkcnVnanZmbGNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NTE0MTgsImV4cCI6MjEwMDUyNzQxOH0.s3icP7S33TEWVL77edSFe8svSgC2AqTQe3lB0WYDrXk';
+    // 4. Input del formulario
+    setTimeout(function() {
+      var inputNombre = document.querySelector('#input-nombre-invitado');
+      if (!inputNombre) inputNombre = document.querySelector('input[name="form_fields[nombre]"]');
+      if (inputNombre && nombre) {
+        inputNombre.value = nombre;
+      }
+    }, 1000);
 
-        if (invitadoId) {
-          fetch(supabaseUrl + '/rest/v1/invitados?id=eq.' + invitadoId, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-              'apikey': supabaseKey,
-              'Authorization': 'Bearer ' + supabaseKey,
-              'Prefer': 'return=minimal'
-            },
-            body: JSON.stringify({
-              estado: estado,
-              mensaje_invitado: mensajeVal,
-              fecha_confirmacion: new Date().toISOString()
-            })
-          }).then(function() {
-            alert('¡Gracias! Tu confirmación fue registrada.');
-          }).catch(function() {
-            alert('Tu respuesta fue recibida. ¡Gracias!');
-          });
-        } else {
-          alert('¡Gracias por confirmar! Tu respuesta fue registrada.');
-        }
-      });
-    }
-  }, 2000);
+    // 5. Interceptar formulario de confirmación
+    setTimeout(function() {
+      var form = document.querySelector('form.elementor-form');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          var selectAsistencia = document.querySelector('[name="form_fields[asistencia]"]');
+          var inputMensaje = document.querySelector('[name="form_fields[mensaje]"]');
+          
+          var asistenciaVal = selectAsistencia ? selectAsistencia.value : 'si';
+          var mensajeVal = inputMensaje ? inputMensaje.value : '';
+          
+          var estado = 'confirmado';
+          if (asistenciaVal.toLowerCase().includes('no')) {
+            estado = 'rechazado';
+          }
+
+          if (invitadoId) {
+            fetch(supabaseUrl + '/rest/v1/invitados?id=eq.' + invitadoId, {
+              method: 'PATCH',
+              headers: {
+                'Content-Type': 'application/json',
+                'apikey': supabaseKey,
+                'Authorization': 'Bearer ' + supabaseKey,
+                'Prefer': 'return=minimal'
+              },
+              body: JSON.stringify({
+                estado: estado,
+                mensaje_invitado: mensajeVal,
+                fecha_confirmacion: new Date().toISOString()
+              })
+            }).then(function() {
+              alert('¡Gracias! Tu confirmación fue registrada exitosamente.');
+            }).catch(function() {
+              alert('¡Gracias por confirmar!');
+            });
+          } else {
+            alert('¡Gracias por tu respuesta!');
+          }
+        });
+      }
+    }, 2000);
+  }
 })();
 </script>
 </body></html>
