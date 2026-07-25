@@ -35,6 +35,16 @@ export default function Panel() {
     if (eventos && eventos.length > 0) {
       setEvento(eventos[0])
       await loadInvitados(eventos[0].id)
+    } else {
+      // Crear evento automáticamente si no existe
+      const { data: newEvento } = await supabase
+        .from('eventos')
+        .insert([{ user_id: userId, nombre_evento: 'Mi Evento', tipo: 'boda' }])
+        .select()
+      
+      if (newEvento && newEvento.length > 0) {
+        setEvento(newEvento[0])
+      }
     }
   }
 
