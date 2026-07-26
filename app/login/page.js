@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { supabase } from '../../lib/supabase'
 
 export default function Login() {
-  const [email, setEmail] = useState('')
+  const [usuario, setUsuario] = useState('')
   const [password, setPassword] = useState('')
   const [showPass, setShowPass] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -14,13 +14,16 @@ export default function Login() {
     setLoading(true)
     setError('')
 
+    // Si tiene @, es el admin o un email real. Si no, agregar @festejia.local
+    const email = usuario.includes('@') ? usuario : usuario + '@festejia.local'
+
     const { data, error: authError } = await supabase.auth.signInWithPassword({
       email,
       password
     })
 
     if (authError) {
-      setError('Correo o contraseña incorrectos')
+      setError('Usuario o contraseña incorrectos')
       setLoading(false)
       return
     }
@@ -43,12 +46,12 @@ export default function Login() {
 
           <form onSubmit={handleLogin} className="login-form">
             <div className="form-group">
-              <label>Correo electrónico</label>
+              <label>Usuario</label>
               <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="tu@email.com"
+                type="text"
+                value={usuario}
+                onChange={(e) => setUsuario(e.target.value)}
+                placeholder="tu_usuario"
                 required
               />
             </div>
