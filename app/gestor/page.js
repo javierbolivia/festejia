@@ -50,7 +50,7 @@ export default function GestorLite() {
   }
 
   function getLink(guest) {
-    return `https://festejia.vercel.app/plantilla1/?m=${encodeURIComponent(guest.nombre_completo)}&n=${encodeURIComponent(guest.num_pases + ' pases')}&id=${guest.id}`
+    return `https://festejia.vercel.app/invitacion/${guest.id}`
   }
 
   function copyLink(guest) {
