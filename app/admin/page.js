@@ -11,6 +11,7 @@ export default function AdminPanel() {
   const [eventos, setEventos] = useState([])
   const [allInvitados, setAllInvitados] = useState([])
   const [showCreateClient, setShowCreateClient] = useState(false)
+  const [editingEvent, setEditingEvent] = useState(null)
   const [newClient, setNewClient] = useState({ usuario: '', password: '', nombre: '', plan: 'plus', nombre_evento: '', tipo: 'boda' })
 
   useEffect(() => { checkAdmin() }, [])
@@ -99,6 +100,10 @@ export default function AdminPanel() {
   async function toggleClientActive(clientId, current) {
     await supabase.from('profiles').update({ activo: !current }).eq('id', clientId)
     setClients(clients.map(c => c.id === clientId ? { ...c, activo: !current } : c))
+  }
+
+  async function updateEventField(eventoId, field, value) {
+    await supabase.from('eventos').update({ [field]: value }).eq('id', eventoId)
   }
 
   async function deleteClient(clientId) {
@@ -299,6 +304,20 @@ export default function AdminPanel() {
                       <span>{evtInvitados.length} invitados</span>
                       <span>{evtConfirmados} confirmados</span>
                     </div>
+                    <button className="btn-edit-event" onClick={() => setEditingEvent(editingEvent === evt.id ? null : evt.id)}>✏️ Editar Diseño</button>
+                    {editingEvent === evt.id && (
+                      <div className="event-edit-form">
+                        <div className="form-grid">
+                          <div><label>Novio/a 1</label><input defaultValue={evt.nombre_novio1||''} onChange={e => updateEventField(evt.id, 'nombre_novio1', e.target.value)} placeholder="María" /></div>
+                          <div><label>Novio/a 2</label><input defaultValue={evt.nombre_novio2||''} onChange={e => updateEventField(evt.id, 'nombre_novio2', e.target.value)} placeholder="Juan" /></div>
+                          <div><label>Lugar Ceremonia</label><input defaultValue={evt.lugar_ceremonia||''} onChange={e => updateEventField(evt.id, 'lugar_ceremonia', e.target.value)} placeholder="Iglesia San Pedro" /></div>
+                          <div><label>Hora Ceremonia</label><input defaultValue={evt.hora_ceremonia||''} onChange={e => updateEventField(evt.id, 'hora_ceremonia', e.target.value)} placeholder="17:00" /></div>
+                          <div><label>Lugar Recepción</label><input defaultValue={evt.lugar_recepcion||''} onChange={e => updateEventField(evt.id, 'lugar_recepcion', e.target.value)} placeholder="Salón Imperial" /></div>
+                          <div><label>Hora Recepción</label><input defaultValue={evt.hora_recepcion||''} onChange={e => updateEventField(evt.id, 'hora_recepcion', e.target.value)} placeholder="20:00" /></div>
+                        </div>
+                        <button className="btn-save" onClick={() => { alert('Guardado'); setEditingEvent(null); }}>Guardar Diseño</button>
+                      </div>
+                    )}
                     <p className="event-plantilla">Plantilla: {evt.plantilla || 'plantilla1'}</p>
                   </div>
                 )
@@ -406,6 +425,12 @@ export default function AdminPanel() {
         .event-date { color: #999; font-size: 0.8rem; margin: 0.5rem 0; }
         .event-stats { display: flex; gap: 1rem; font-size: 0.8rem; color: #666; margin: 0.5rem 0; }
         .event-plantilla { font-size: 0.75rem; color: #999; margin-top: 0.5rem; }
+        .btn-edit-event { background: #c9a96e; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.75rem; margin-top: 0.5rem; }
+        .event-edit-form { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee; }
+        .event-edit-form .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+        .event-edit-form label { display: block; font-size: 0.65rem; font-weight: 600; color: #555; text-transform: uppercase; margin-bottom: 0.2rem; }
+        .event-edit-form input { width: 100%; padding: 0.5rem; border: 1.5px solid #e0e0e0; border-radius: 4px; font-size: 0.8rem; }
+        .event-edit-form .btn-save { margin-top: 0.8rem; }
         .guests-count { color: #666; font-size: 0.9rem; margin-bottom: 1rem; }
         @media (max-width: 768px) {
           .admin-page { flex-direction: column; }
