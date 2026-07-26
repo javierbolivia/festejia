@@ -536,7 +536,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 				</div>
 				<div class="elementor-element elementor-element-45ec4eee zoom-animar elementor-countdown--label-block elementor-widget elementor-widget-countdown zoom-out" data-id="45ec4eee" data-element_type="widget" data-e-type="widget" data-widget_type="countdown.default">
 				<div class="elementor-widget-container">
-							<div class="elementor-countdown-wrapper" data-date="1790535600">
+							<div class="elementor-countdown-wrapper" data-date="0" id="countdown-element">
 			<div class="elementor-countdown-item"><span class="elementor-countdown-digits elementor-countdown-days">65</span> <span class="elementor-countdown-label">DIAS</span></div><div class="elementor-countdown-item"><span class="elementor-countdown-digits elementor-countdown-hours">21</span> <span class="elementor-countdown-label">HRS.</span></div><div class="elementor-countdown-item"><span class="elementor-countdown-digits elementor-countdown-minutes">14</span> <span class="elementor-countdown-label">MIN.</span></div><div class="elementor-countdown-item"><span class="elementor-countdown-digits elementor-countdown-seconds">47</span> <span class="elementor-countdown-label">SEG.</span></div>		</div>
 						</div>
 				</div>
@@ -1896,10 +1896,14 @@ document.addEventListener('DOMContentLoaded', function() {
       if(e.nombre_novio1){var x=document.getElementById('nombre-novio1');if(x)x.textContent=e.nombre_novio1;}
       if(e.nombre_novio2){var x=document.getElementById('nombre-novio2');if(x)x.textContent=e.nombre_novio2;}
       if(e.fecha_evento){var f=new Date(e.fecha_evento);var x=document.getElementById('fecha-mes');if(x)x.textContent=ms[f.getMonth()];var c=document.querySelector('[data-date]');if(c){c.setAttribute('data-date',Math.floor(f.getTime()/1000));
-              // Recalcular countdown
-              var now=new Date().getTime();var dist=f.getTime()-now;
-              var days=Math.floor(dist/(1000*60*60*24));var hrs=Math.floor((dist%(1000*60*60*24))/(1000*60*60));var mins=Math.floor((dist%(1000*60*60))/(1000*60));var secs=Math.floor((dist%(1000*60))/1000);
-              var spans=c.querySelectorAll('.elementor-countdown-digits');if(spans.length>=4){spans[0].textContent=String(days).padStart(2,'0');spans[1].textContent=String(hrs).padStart(2,'0');spans[2].textContent=String(mins).padStart(2,'0');spans[3].textContent=String(secs).padStart(2,'0');}
+              // Recalcular countdown con setInterval
+              function actualizarCountdown(){
+                var now=new Date().getTime();var dist=f.getTime()-now;
+                var days=Math.floor(dist/(1000*60*60*24));var hrs=Math.floor((dist%(1000*60*60*24))/(1000*60*60));var mins=Math.floor((dist%(1000*60*60))/(1000*60));var secs=Math.floor((dist%(1000*60))/1000);
+                var spans=c.querySelectorAll('.elementor-countdown-digits');if(spans.length>=4){spans[0].textContent=String(days).padStart(2,'0');spans[1].textContent=String(hrs).padStart(2,'0');spans[2].textContent=String(mins).padStart(2,'0');spans[3].textContent=String(secs).padStart(2,'0');}
+              }
+              actualizarCountdown();
+              setInterval(actualizarCountdown, 1000);
             }}
       if(e.lugar_ceremonia){var x=document.getElementById('lugar-ceremonia');if(x)x.innerHTML=e.lugar_ceremonia;}
       if(e.lugar_recepcion){var x=document.getElementById('lugar-recepcion');if(x)x.innerHTML=e.lugar_recepcion;}
