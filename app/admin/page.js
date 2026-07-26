@@ -43,40 +43,51 @@ export default function AdminPanel() {
     e.preventDefault()
     
     try {
-      // 1. Crear perfil directamente (sin Auth)
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .insert({
-          id: crypto.randomUUID(),
-          email: newClient.usuario + '@festejia.local',
-          nombre: newClient.nombre,
-          role: 'client',
-          plan: newClient.plan
-        })
-        .select()
-        .single()
+      const email = newClient.usuario + '@festejia.local'
+      
+      // 1. Crear usuario en Supabase Auth via fetch directo
+      const response = await fetch('https://xzkxutllxkdrugjvflco.supabase.co/auth/v1/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6a3h1dGxseGtkcnVnanZmbGNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NTE0MTgsImV4cCI6MjEwMDUyNzQxOH0.s3icP7S33TEWVL77edSFe8svSgC2AqTQe3lB0WYDrXk'
+        },
+        body: JSON.stringify({ email, password: newClient.password })
+      })
+      
+      const authData = await response.json()
+      
+      if (!response.ok || !authData.user?.id) {
+        alert('Error al crear usuario: ' + (authData.msg || authData.message || 'Error desconocido'))
+        return
+      }
+      
+      const userId = authData.user.id
 
-      if (profileError) { alert('Error perfil: ' + profileError.message); return }
+      // 2. Crear perfil
+      await supabase.from('profiles').upsert({
+        id: userId,
+        email: email,
+        nombre: newClient.nombre,
+        role: 'client',
+        plan: newClient.plan
+      })
 
-      // 2. Guardar credenciales en clientes_login
-      const { error: loginError } = await supabase
-        .from('clientes_login')
-        .insert({
-          usuario: newClient.usuario,
-          password: newClient.password,
-          profile_id: profileData.id
-        })
+      // 3. Guardar credenciales en clientes_login
+      await supabase.from('clientes_login').insert({
+        usuario: newClient.usuario,
+        password: newClient.password,
+        profile_id: userId
+      })
 
-      if (loginError) { alert('Error login: ' + loginError.message); return }
-
-      // 3. Crear evento
+      // 4. Crear evento
       await supabase.from('eventos').insert({
-        user_id: profileData.id,
+        user_id: userId,
         nombre_evento: newClient.nombre_evento || 'Mi Evento',
         tipo: newClient.tipo
       })
 
-      alert('✓ Cliente creado\n\nUsuario: ' + newClient.usuario + '\nContraseña: ' + newClient.password)
+      alert('✓ Cliente creado exitosamente\n\nUsuario: ' + newClient.usuario + '\nContraseña: ' + newClient.password)
       setNewClient({ usuario: '', password: '', nombre: '', plan: 'plus', nombre_evento: '', tipo: 'boda' })
       setShowCreateClient(false)
       await loadData()
