@@ -9,7 +9,6 @@ export async function generateMetadata({ params }) {
   const { id } = await params
   
   try {
-    // Buscar invitado
     const { data: invitado } = await supabase
       .from('invitados')
       .select('*, evento_id')
@@ -20,7 +19,6 @@ export async function generateMetadata({ params }) {
       return { title: 'Invitación - Festejia' }
     }
 
-    // Buscar evento
     const { data: evento } = await supabase
       .from('eventos')
       .select('*')
@@ -32,11 +30,8 @@ export async function generateMetadata({ params }) {
     const titulo = novio2 ? `${novio1} & ${novio2} — ¡Nos Casamos!` : `${novio1} — Celebración`
     const descripcion = evento?.mensaje_personalizado || `Te invitamos a ser parte de este día tan especial. ${evento?.fecha_evento ? new Date(evento.fecha_evento).toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' }) : ''}`
     
-    // Imagen OG dinámica generada por nuestra API
-    const baseUrl = process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}` 
-      : 'https://festejia.vercel.app'
-    const ogImage = `${baseUrl}/api/og?id=${id}`
+    // URL absoluta de la imagen OG
+    const ogImage = `https://festejia.vercel.app/api/og?id=${id}`
 
     return {
       title: titulo,
@@ -44,15 +39,30 @@ export async function generateMetadata({ params }) {
       openGraph: {
         title: titulo,
         description: descripcion,
-        images: [{ url: ogImage, width: 1200, height: 630, alt: titulo }],
+        url: `https://festejia.vercel.app/invitacion/${id}`,
+        images: [
+          {
+            url: ogImage,
+            width: 1200,
+            height: 630,
+            alt: titulo,
+            type: 'image/png',
+          }
+        ],
         type: 'website',
-        siteName: 'Festejia'
+        siteName: 'Festejia',
+        locale: 'es_ES',
       },
       twitter: {
         card: 'summary_large_image',
         title: titulo,
         description: descripcion,
-        images: [ogImage]
+        images: [ogImage],
+      },
+      other: {
+        'og:image:width': '1200',
+        'og:image:height': '630',
+        'og:image:type': 'image/png',
       }
     }
   } catch (e) {
@@ -63,7 +73,6 @@ export async function generateMetadata({ params }) {
 export default async function InvitacionPage({ params }) {
   const { id } = await params
   
-  // Obtener datos del invitado para pasar a la plantilla
   let nombre = ''
   let pases = '1'
   let eventoId = ''
@@ -85,18 +94,17 @@ export default async function InvitacionPage({ params }) {
   const redirectUrl = `/plantilla1/?m=${encodeURIComponent(nombre)}&n=${encodeURIComponent(pases + ' pases')}&id=${id}&evento=${eventoId}`
   
   return (
-    <>
-      <meta httpEquiv="refresh" content={`0;url=${redirectUrl}`} />
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        fontFamily: 'serif',
-        color: '#333'
-      }}>
-        <p>Abriendo tu invitación...</p>
-      </div>
-    </>
+    <div style={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      height: '100vh',
+      fontFamily: 'serif',
+      color: '#333',
+      background: '#f5f5f5'
+    }}>
+      <p>Abriendo tu invitación...</p>
+      <script dangerouslySetInnerHTML={{ __html: `window.location.replace("${redirectUrl}")` }} />
+    </div>
   )
 }
