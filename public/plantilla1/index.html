@@ -1850,15 +1850,8 @@ document.addEventListener('DOMContentLoaded', function() {
   var digits = document.querySelectorAll('.elementor-countdown-digits');
   if (digits.length >= 4) {
     var targetDate = new Date('2026-08-22T16:00:00');
-    function updateCD() {
-      var diff = targetDate - new Date();
-      if (diff <= 0) return;
-      digits[0].textContent = Math.floor(diff/(1000*60*60*24));
-      digits[1].textContent = Math.floor((diff%(1000*60*60*24))/(1000*60*60));
-      digits[2].textContent = Math.floor((diff%(1000*60*60))/(1000*60));
-      digits[3].textContent = Math.floor((diff%(1000*60))/1000);
-    }
-    updateCD(); setInterval(updateCD, 1000);
+    function updateCD(){} // desactivado
+    updateCD(); // countdown desactivado - manejado por FESTEJIA
   }
 });
 </script>
