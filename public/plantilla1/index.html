@@ -1865,270 +1865,75 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-<!-- FESTEJIA: Invitación dinámica vinculada con panel -->
+<!-- FESTEJIA: Invitacion dinamica -->
 <script>
-(function() {
-  var params = new URLSearchParams(window.location.search);
-  var invitadoId = params.get('id') || '';
-  var nombre = params.get('m') ? decodeURIComponent(params.get('m')) : '';
-  var pases = params.get('n') ? decodeURIComponent(params.get('n')) : '';
-  var mesa = params.get('mesa') ? decodeURIComponent(params.get('mesa')) : '';
-  var numPases = (pases.match(/\d+/) || ['1'])[0];
+(function(){
+  var params=new URLSearchParams(window.location.search);
+  var invitadoId=params.get('id')||'';
+  var eventoId=params.get('evento')||'';
+  var nombre=params.get('m')?decodeURIComponent(params.get('m')):'';
+  var pases=params.get('n')?decodeURIComponent(params.get('n')):'';
+  var numPases=(pases.match(/\d+/)||['1'])[0];
+  var SU='https://xzkxutllxkdrugjvflco.supabase.co';
+  var SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6a3h1dGxseGtkcnVnanZmbGNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NTE0MTgsImV4cCI6MjEwMDUyNzQxOH0.s3icP7S33TEWVL77edSFe8svSgC2AqTQe3lB0WYDrXk';
+  var H={'apikey':SK,'Authorization':'Bearer '+SK};
 
-  var SUPABASE_URL = 'https://xzkxutllxkdrugjvflco.supabase.co';
-  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6a3h1dGxseGtkcnVnanZmbGNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NTE0MTgsImV4cCI6MjEwMDUyNzQxOH0.s3icP7S33TEWVL77edSFe8svSgC2AqTQe3lB0WYDrXk';
+  if(invitadoId){
+    fetch(SU+'/rest/v1/invitados?id=eq.'+invitadoId+'&select=*',{headers:H})
+    .then(function(r){return r.json();}).then(function(d){
+      if(d&&d[0]){nombre=d[0].nombre_completo||nombre;numPases=String(d[0].num_pases||numPases);if(!eventoId)eventoId=d[0].evento_id;}
+      cargarEvento();renderUI();
+    }).catch(function(){renderUI();});
+  } else if(eventoId){cargarEvento();renderUI();}
+  else{renderUI();}
 
-  // Si hay ID, consultar datos actualizados de Supabase
-  if (invitadoId) {
-    fetch(SUPABASE_URL + '/rest/v1/invitados?id=eq.' + invitadoId + '&select=*', {
-      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (data && data.length > 0) {
-        nombre = data[0].nombre_completo || nombre;
-        numPases = String(data[0].num_pases || numPases);
-        mesa = data[0].mesa || mesa;
-      }
-      renderUI();
-    })
-    .catch(function() { renderUI(); });
-  } else {
-    renderUI();
+  function cargarEvento(){
+    if(!eventoId)return;
+    fetch(SU+'/rest/v1/eventos?id=eq.'+eventoId+'&select=*',{headers:H})
+    .then(function(r){return r.json();}).then(function(ev){
+      if(!ev||!ev[0])return;var e=ev[0];
+      var ms=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+      if(e.nombre_novio1){var x=document.getElementById('nombre-novio1');if(x)x.textContent=e.nombre_novio1;}
+      if(e.nombre_novio2){var x=document.getElementById('nombre-novio2');if(x)x.textContent=e.nombre_novio2;}
+      if(e.fecha_evento){var f=new Date(e.fecha_evento);var x=document.getElementById('fecha-mes');if(x)x.textContent=ms[f.getMonth()];var c=document.querySelector('[data-date]');if(c)c.setAttribute('data-date',Math.floor(f.getTime()/1000));}
+      if(e.lugar_ceremonia){var x=document.getElementById('lugar-ceremonia');if(x)x.innerHTML=e.lugar_ceremonia;}
+      if(e.lugar_recepcion){var x=document.getElementById('lugar-recepcion');if(x)x.innerHTML=e.lugar_recepcion;}
+      if(e.hora_ceremonia){var x=document.getElementById('hora-ceremonia');if(x)x.textContent=e.hora_ceremonia;}
+      if(e.hora_recepcion){var x=document.getElementById('hora-recepcion');if(x)x.textContent=e.hora_recepcion;}
+    });
   }
 
-  function renderUI() {
-    // 0. Actualizar TODOS los datos del evento desde Supabase
-    if (invitadoId) {
-      fetch(SUPABASE_URL + '/rest/v1/invitados?id=eq.' + invitadoId + '&select=evento_id', {
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
-      })
-      .then(function(r) { return r.json(); })
-      .then(function(invData) {
-        if (invData && invData[0] && invData[0].evento_id) {
-          fetch(SUPABASE_URL + '/rest/v1/eventos?id=eq.' + invData[0].evento_id + '&select=*', {
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
-          })
-          .then(function(r) { return r.json(); })
-          .then(function(evtData) {
-            if (evtData && evtData[0]) {
-              var evt = evtData[0];
-              var meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-              
-              // Nombres de novios
-              if (evt.nombre_novio1) {
-                var el1 = document.getElementById('nombre-novio1');
-                if (el1) el1.textContent = evt.nombre_novio1;
-              }
-              if (evt.nombre_novio2) {
-                var el2 = document.getElementById('nombre-novio2');
-                if (el2) el2.textContent = evt.nombre_novio2;
-              }
-              
-              // Fecha
-              if (evt.fecha_evento) {
-                var fecha = new Date(evt.fecha_evento);
-                var diaEl = document.getElementById('fecha-dia');
-                var mesEl = document.getElementById('fecha-mes');
-                var anioEl = document.getElementById('fecha-anio');
-                if (diaEl) diaEl.textContent = fecha.getDate();
-                if (mesEl) mesEl.textContent = meses[fecha.getMonth()];
-                if (anioEl) anioEl.textContent = fecha.getFullYear();
-                
-                // Countdown
-                var cdEl = document.querySelector('[data-date]');
-                if (cdEl) cdEl.setAttribute('data-date', Math.floor(fecha.getTime() / 1000));
-              }
-              
-              // Lugares
-              if (evt.lugar_ceremonia) {
-                var lcEl = document.getElementById('lugar-ceremonia');
-                if (lcEl) lcEl.innerHTML = evt.lugar_ceremonia.replace(/\n/g, '<br>');
-              }
-              if (evt.lugar_recepcion) {
-                var lrEl = document.getElementById('lugar-recepcion');
-                if (lrEl) lrEl.innerHTML = evt.lugar_recepcion.replace(/\n/g, '<br>');
-              }
-              
-              // Horas
-              if (evt.hora_ceremonia) {
-                var hcEl = document.getElementById('hora-ceremonia');
-                if (hcEl) hcEl.textContent = evt.hora_ceremonia;
-              }
-              if (evt.hora_recepcion) {
-                var hrEl = document.getElementById('hora-recepcion');
-                if (hrEl) hrEl.textContent = evt.hora_recepcion;
-              }
-            }
-          });
-        }
+  function renderUI(){
+    var bar=document.createElement('div');
+    bar.style.cssText='position:fixed;top:0;left:0;right:0;background:rgba(26,26,26,0.95);color:white;text-align:center;padding:0.5rem;font-size:0.75rem;z-index:99999;font-family:Raleway,sans-serif;';
+    bar.innerHTML='<span style="color:#c9a96e">Festejia</span>';
+    document.body.insertBefore(bar,document.body.firstChild);
+    document.body.style.paddingTop='32px';
+    var ne=document.getElementById('nombre-invitado-dinamico');if(ne&&nombre)ne.textContent=nombre;
+    var allH=document.querySelectorAll('.elementor-heading-title');
+    for(var i=0;i<allH.length;i++){var el=allH[i];if((el.textContent.trim()==='2'||el.textContent.trim()==='1')&&el.closest('.elementor-element')&&el.closest('.elementor-element').nextElementSibling&&el.closest('.elementor-element').nextElementSibling.textContent.toUpperCase().indexOf('PASE')>=0)el.textContent=numPases;}
+    setTimeout(function(){var inp=document.getElementById('input-nombre-invitado');if(!inp)inp=document.querySelector('input[name="form_fields[nombre]"]');if(inp&&nombre)inp.value=nombre;},1500);
+    setTimeout(function(){
+      var form=document.querySelector('form.elementor-form');if(!form)return;
+      form.addEventListener('submit',function(ev){
+        ev.preventDefault();ev.stopPropagation();
+        var sel=document.querySelector('[name="form_fields[asistencia]"]');
+        var msg=document.querySelector('[name="form_fields[mensaje]"]');
+        var estado=(sel&&sel.value.toLowerCase().indexOf('no')>=0)?'rechazado':'confirmado';
+        var mensaje=msg?msg.value:'';
+        if(invitadoId){
+          fetch(SU+'/rest/v1/invitados?id=eq.'+invitadoId,{method:'PATCH',headers:Object.assign({'Content-Type':'application/json','Prefer':'return=minimal'},H),body:JSON.stringify({estado:estado,mensaje_invitado:mensaje,fecha_confirmacion:new Date().toISOString()})})
+          .then(function(){mostrarExito(estado);}).catch(function(){mostrarExito(estado);});
+        }else{mostrarExito(estado);}
       });
-    }
-
-    // LEGACY: Actualizar countdown con fecha del evento
-    if (invitadoId) {
-      fetch(SUPABASE_URL + '/rest/v1/invitados?id=eq.' + invitadoId + '&select=evento_id', {
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
-      })
-      .then(function(r) { return r.json(); })
-      .then(function(invData) {
-        if (invData && invData[0] && invData[0].evento_id) {
-          fetch(SUPABASE_URL + '/rest/v1/eventos?id=eq.' + invData[0].evento_id + '&select=fecha_evento', {
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
-          })
-          .then(function(r) { return r.json(); })
-          .then(function(evtData) {
-            if (evtData && evtData[0] && evtData[0].fecha_evento) {
-              var cdEl = document.querySelector('[data-date]');
-              if (cdEl) {
-                var fechaEvento = new Date(evtData[0].fecha_evento);
-                cdEl.setAttribute('data-date', Math.floor(fechaEvento.getTime() / 1000));
-              }
-            }
-          });
-        }
-      });
-    }
-
-    // 0. Cargar datos del evento desde Supabase
-    if (invitadoId) {
-      fetch(SUPABASE_URL + '/rest/v1/invitados?id=eq.' + invitadoId + '&select=evento_id', {
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
-      })
-      .then(function(r) { return r.json(); })
-      .then(function(invData) {
-        if (invData && invData[0] && invData[0].evento_id) {
-          fetch(SUPABASE_URL + '/rest/v1/eventos?id=eq.' + invData[0].evento_id + '&select=*', {
-            headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
-          })
-          .then(function(r) { return r.json(); })
-          .then(function(evtData) {
-            if (evtData && evtData[0]) {
-              var evt = evtData[0];
-              var meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-              if (evt.nombre_novio1) { var e1 = document.getElementById('nombre-novio1'); if(e1) e1.textContent = evt.nombre_novio1; }
-              if (evt.nombre_novio2) { var e2 = document.getElementById('nombre-novio2'); if(e2) e2.textContent = evt.nombre_novio2; }
-              if (evt.fecha_evento) {
-                var f = new Date(evt.fecha_evento);
-                var mesEl = document.getElementById('fecha-mes'); if(mesEl) mesEl.textContent = meses[f.getMonth()];
-                var cdEl = document.querySelector('[data-date]'); if(cdEl) cdEl.setAttribute('data-date', Math.floor(f.getTime()/1000));
-              }
-              if (evt.lugar_ceremonia) { var lc = document.getElementById('lugar-ceremonia'); if(lc) lc.innerHTML = evt.lugar_ceremonia; }
-              if (evt.lugar_recepcion) { var lr = document.getElementById('lugar-recepcion'); if(lr) lr.innerHTML = evt.lugar_recepcion; }
-              if (evt.hora_ceremonia) { var hc = document.getElementById('hora-ceremonia'); if(hc) hc.textContent = evt.hora_ceremonia; }
-              if (evt.hora_recepcion) { var hr = document.getElementById('hora-recepcion'); if(hr) hr.textContent = evt.hora_recepcion; }
-            }
-          });
-        }
-      });
-    }
-
-    // 1. Barra superior con datos del invitado
-    if (nombre) {
-      var bar = document.createElement('div');
-      bar.style.cssText = 'position:fixed;top:0;left:0;right:0;background:rgba(26,26,26,0.95);color:white;text-align:center;padding:0.5rem;font-size:0.75rem;z-index:99999;font-family:Raleway,sans-serif;';
-      bar.innerHTML = '<span style="color:#c9a96e">Festejia</span>';
-      document.body.insertBefore(bar, document.body.firstChild);
-      document.body.style.paddingTop = '32px';
-    }
-
-    // 2. Reemplazar nombre del invitado en el heading
-    var nombreEl = document.getElementById('nombre-invitado-dinamico');
-    if (nombreEl && nombre) {
-      nombreEl.textContent = nombre;
-    }
-
-    // 3. Reemplazar número de pases
-    var allHeadings = document.querySelectorAll('.elementor-heading-title');
-    for (var i = 0; i < allHeadings.length; i++) {
-      var el = allHeadings[i];
-      var text = el.textContent.trim();
-      // Buscar el número antes de "PASE"
-      if (text === '2' || text === '1') {
-        var parent = el.closest('.elementor-element');
-        if (parent && parent.nextElementSibling) {
-          var nextText = parent.nextElementSibling.textContent || '';
-          if (nextText.toUpperCase().indexOf('PASE') >= 0) {
-            el.textContent = numPases;
-          }
-        }
-      }
-    }
-
-    // 4. Llenar campo nombre del formulario
-    setTimeout(function() {
-      var inputNombre = document.getElementById('input-nombre-invitado');
-      if (!inputNombre) inputNombre = document.querySelector('input[name="form_fields[nombre]"]');
-      if (inputNombre && nombre) {
-        inputNombre.value = nombre;
-      }
-    }, 1500);
-
-    // 5. Interceptar envío del formulario
-    setTimeout(function() {
-      var form = document.querySelector('form.elementor-form');
-      if (!form) return;
-
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        var inputNombre = document.querySelector('input[name="form_fields[nombre]"]');
-        var selectAsistencia = document.querySelector('[name="form_fields[asistencia]"]');
-        var inputMensaje = document.querySelector('[name="form_fields[mensaje]"]');
-
-        var nombreVal = inputNombre ? inputNombre.value : nombre;
-        var asistenciaVal = selectAsistencia ? selectAsistencia.value : '';
-        var mensajeVal = inputMensaje ? inputMensaje.value : '';
-
-        var estado = 'confirmado';
-        if (asistenciaVal.toLowerCase().indexOf('no') >= 0) {
-          estado = 'rechazado';
-        }
-
-        // Enviar a Supabase
-        if (invitadoId) {
-          fetch(SUPABASE_URL + '/rest/v1/invitados?id=eq.' + invitadoId, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-              'apikey': SUPABASE_KEY,
-              'Authorization': 'Bearer ' + SUPABASE_KEY,
-              'Prefer': 'return=minimal'
-            },
-            body: JSON.stringify({
-              estado: estado,
-              mensaje_invitado: mensajeVal,
-              fecha_confirmacion: new Date().toISOString()
-            })
-          })
-          .then(function(resp) {
-            if (resp.ok) {
-              mostrarExito(estado);
-            } else {
-              alert('Hubo un error. Intenta de nuevo.');
-            }
-          })
-          .catch(function() {
-            alert('Error de conexión. Intenta de nuevo.');
-          });
-        } else {
-          mostrarExito(estado);
-        }
-      });
-    }, 2000);
+    },2000);
   }
 
-  function mostrarExito(estado) {
-    var form = document.querySelector('form.elementor-form');
-    if (form) {
-      var qrHtml = '';
-      if (estado === 'confirmado' && invitadoId) {
-        var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=festejia:' + invitadoId;
-        qrHtml = '<div style="margin-top:1.5rem;"><p style="font-size:0.8rem;color:#666;margin-bottom:0.5rem;">Tu pase de acceso:</p><img src="' + qrUrl + '" alt="QR" style="width:200px;height:200px;margin:0 auto;display:block;border-radius:8px;" /><p style="font-size:0.7rem;color:#999;margin-top:0.5rem;">Guarda esta imagen. Pres\u00e9ntala en la entrada.</p></div>';
-      }
-      form.innerHTML = '<div style="text-align:center;padding:2rem;"><h3 style="font-family:Cormorant Garamond,serif;font-size:1.5rem;color:#2c3e6b;margin-bottom:0.5rem;">\u00a1Gracias!</h3><p style="color:#666;font-size:0.9rem;">' + (estado === 'confirmado' ? 'Tu asistencia ha sido confirmada. \u00a1Nos vemos pronto!' : 'Lamentamos que no puedas asistir. \u00a1Gracias por responder!') + '</p>' + qrHtml + '</div>';
-    }
+  function mostrarExito(estado){
+    var form=document.querySelector('form.elementor-form');if(!form)return;
+    var qr='';
+    if(estado==='confirmado'&&invitadoId){var u='https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=festejia:'+invitadoId;qr='<div style="margin-top:1.5rem"><p style="font-size:0.8rem;color:#666;margin-bottom:0.5rem">Tu pase de acceso:</p><img src="'+u+'" style="width:200px;height:200px;margin:0 auto;display:block;border-radius:8px"/><p style="font-size:0.7rem;color:#999;margin-top:0.5rem">Guarda esta imagen</p></div>';}
+    form.innerHTML='<div style="text-align:center;padding:2rem"><h3 style="font-family:Cormorant Garamond,serif;font-size:1.5rem;color:#2c3e6b">\u00a1Gracias!</h3><p style="color:#666;font-size:0.9rem">'+(estado==='confirmado'?'Tu asistencia ha sido confirmada.':'Lamentamos que no puedas asistir.')+'</p>'+qr+'</div>';
   }
 })();
 </script>
