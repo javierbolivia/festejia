@@ -42,44 +42,47 @@ export default function AdminPanel() {
   async function createClient(e) {
     e.preventDefault()
     
-    // Crear usuario con signUp (se confirma automáticamente con allowlist)
-    const { data: signupData, error: signupError } = await supabase.auth.signUp({
-      email: newClient.email,
-      password: newClient.password,
-      options: { 
-        data: { nombre: newClient.nombre },
-        emailRedirectTo: window.location.origin + '/panel'
-      }
-    })
-    
-    if (signupError) { alert('Error: ' + signupError.message); return }
-    
-    let userId = signupData.user?.id
-    if (!userId) { alert('Error al crear usuario'); return }
-    
-    // Esperar un momento para que Supabase procese
-    await new Promise(r => setTimeout(r, 1000))
+    try {
+      // 1. Crear perfil directamente (sin Auth)
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .insert({
+          id: crypto.randomUUID(),
+          email: newClient.usuario + '@festejia.local',
+          nombre: newClient.nombre,
+          role: 'client',
+          plan: newClient.plan
+        })
+        .select()
+        .single()
 
-    // 2. Actualizar perfil
-    await supabase.from('profiles').upsert({
-      id: userId,
-      email: newClient.email,
-      nombre: newClient.nombre,
-      role: 'client',
-      plan: newClient.plan
-    })
+      if (profileError) { alert('Error perfil: ' + profileError.message); return }
 
-    // 3. Crear evento para el cliente
-    await supabase.from('eventos').insert({
-      user_id: userId,
-      nombre_evento: newClient.nombre_evento || 'Mi Evento',
-      tipo: newClient.tipo
-    })
+      // 2. Guardar credenciales en clientes_login
+      const { error: loginError } = await supabase
+        .from('clientes_login')
+        .insert({
+          usuario: newClient.usuario,
+          password: newClient.password,
+          profile_id: profileData.id
+        })
 
-    alert('Cliente creado exitosamente: ' + newClient.email)
-    setNewClient({ email: '', password: '', nombre: '', plan: 'plus', nombre_evento: '', tipo: 'boda' })
-    setShowCreateClient(false)
-    await loadData()
+      if (loginError) { alert('Error login: ' + loginError.message); return }
+
+      // 3. Crear evento
+      await supabase.from('eventos').insert({
+        user_id: profileData.id,
+        nombre_evento: newClient.nombre_evento || 'Mi Evento',
+        tipo: newClient.tipo
+      })
+
+      alert('✓ Cliente creado\n\nUsuario: ' + newClient.usuario + '\nContraseña: ' + newClient.password)
+      setNewClient({ usuario: '', password: '', nombre: '', plan: 'plus', nombre_evento: '', tipo: 'boda' })
+      setShowCreateClient(false)
+      await loadData()
+    } catch(err) {
+      alert('Error: ' + err.message)
+    }
   }
 
   async function toggleClientActive(clientId, current) {
@@ -208,7 +211,7 @@ export default function AdminPanel() {
                 <thead>
                   <tr>
                     <th>Cliente</th>
-                    <th>Email</th>
+                    <th>Usuario</th>
                     <th>Plan</th>
                     <th>Estado</th>
                     <th>Fecha</th>
@@ -219,7 +222,7 @@ export default function AdminPanel() {
                   {clients.map(client => (
                     <tr key={client.id}>
                       <td className="client-name">{client.nombre || '-'}</td>
-                      <td>{client.email}</td>
+                      <td>{client.email?.replace('@festejia.local', '') || '-'}</td>
                       <td><span className={`plan-badge ${client.plan}`}>{client.plan}</span></td>
                       <td>
                         <span className={`status-dot ${client.activo ? 'active' : 'inactive'}`}>
