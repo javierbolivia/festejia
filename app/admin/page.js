@@ -11,7 +11,7 @@ export default function AdminPanel() {
   const [eventos, setEventos] = useState([])
   const [allInvitados, setAllInvitados] = useState([])
   const [showCreateClient, setShowCreateClient] = useState(false)
-  const [newClient, setNewClient] = useState({ email: '', password: '', nombre: '', plan: 'plus', nombre_evento: '', tipo: 'boda' })
+  const [newClient, setNewClient] = useState({ usuario: '', password: '', nombre: '', plan: 'plus', nombre_evento: '', tipo: 'boda' })
 
   useEffect(() => { checkAdmin() }, [])
 
@@ -42,26 +42,23 @@ export default function AdminPanel() {
   async function createClient(e) {
     e.preventDefault()
     
-    // 1. Crear usuario en auth
-    const { data: authData, error: authError } = await supabase.auth.admin?.createUser({
+    // Crear usuario con signUp (se confirma automáticamente con allowlist)
+    const { data: signupData, error: signupError } = await supabase.auth.signUp({
       email: newClient.email,
       password: newClient.password,
-      email_confirm: true
+      options: { 
+        data: { nombre: newClient.nombre },
+        emailRedirectTo: window.location.origin + '/panel'
+      }
     })
-
-    // Si no funciona admin API, usar signup normal
-    let userId = authData?.user?.id
-    if (!userId) {
-      const { data: signupData, error: signupError } = await supabase.auth.signUp({
-        email: newClient.email,
-        password: newClient.password,
-        options: { data: { nombre: newClient.nombre } }
-      })
-      if (signupError) { alert('Error: ' + signupError.message); return }
-      userId = signupData.user?.id
-    }
-
+    
+    if (signupError) { alert('Error: ' + signupError.message); return }
+    
+    let userId = signupData.user?.id
     if (!userId) { alert('Error al crear usuario'); return }
+    
+    // Esperar un momento para que Supabase procese
+    await new Promise(r => setTimeout(r, 1000))
 
     // 2. Actualizar perfil
     await supabase.from('profiles').upsert({
@@ -165,12 +162,12 @@ export default function AdminPanel() {
                 <h3>Nuevo Cliente</h3>
                 <div className="form-grid">
                   <div>
-                    <label>Email</label>
-                    <input type="email" value={newClient.email} onChange={e => setNewClient({...newClient, email: e.target.value})} required placeholder="novios@email.com" />
+                    <label>Usuario</label>
+                    <input type="text" value={newClient.usuario} onChange={e => setNewClient({...newClient, usuario: e.target.value})} required placeholder="maria_juan" />
                   </div>
                   <div>
                     <label>Contraseña</label>
-                    <input type="text" value={newClient.password} onChange={e => setNewClient({...newClient, password: e.target.value})} required placeholder="Contraseña123" />
+                    <input type="text" value={newClient.password} onChange={e => setNewClient({...newClient, password: e.target.value})} required placeholder="Boda2024!" />
                   </div>
                   <div>
                     <label>Nombre</label>
