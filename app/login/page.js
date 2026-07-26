@@ -28,7 +28,15 @@ export default function Login() {
       return
     }
 
-    window.location.href = '/panel'
+    // Detectar rol y plan para redirigir
+    const { data: prof } = await supabase.from('profiles').select('role,plan').eq('id', data.user.id).single()
+    if (prof?.role === 'admin') {
+      window.location.href = '/admin'
+    } else if (prof?.plan === 'exclusive') {
+      window.location.href = '/panel'
+    } else {
+      window.location.href = '/gestor'
+    }
   }
 
   return (
