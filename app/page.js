@@ -5,8 +5,8 @@ export default function Home() {
   const [currency, setCurrency] = useState('usd')
 
   const prices = {
-    usd: { plus: 45, premium: 90, exclusive: 150 },
-    bs: { plus: 310, premium: 620, exclusive: 1035 }
+    usd: { clasico: 45, elegante: 75, imperial: 110 },
+    bs: { clasico: 450, elegante: 700, imperial: 950 }
   }
 
   return (
@@ -129,7 +129,7 @@ export default function Home() {
       <section className="confirmation-section">
         <div className="section-title">
           <h2>Sistema de Confirmación <em>inteligente</em></h2>
-          <p>Paquete: <span className="badge-exclusive">EXCLUSIVE</span></p>
+          <p>Paquete: <span className="badge-exclusive">IMPERIAL</span></p>
         </div>
         <div className="confirmation-cards">
           <div className="conf-card">
@@ -165,20 +165,20 @@ export default function Home() {
         </div>
         <div className="pricing-grid">
           <div className="pricing-card">
-            <h3>PLUS</h3>
-            <div className="pricing-price">{currency === 'usd' ? 'USD' : 'Bs.'} {prices[currency].plus}</div>
+            <h3>CLÁSICO</h3>
+            <div className="pricing-price">{currency === 'usd' ? 'USD' : 'Bs.'} {prices[currency].clasico}</div>
           </div>
           <div className="pricing-card featured">
-            <h3>PREMIUM</h3>
-            <div className="pricing-price">{currency === 'usd' ? 'USD' : 'Bs.'} {prices[currency].premium}</div>
+            <h3>ELEGANTE</h3>
+            <div className="pricing-price">{currency === 'usd' ? 'USD' : 'Bs.'} {prices[currency].elegante}</div>
           </div>
           <div className="pricing-card">
-            <h3>EXCLUSIVE</h3>
-            <div className="pricing-price">{currency === 'usd' ? 'USD' : 'Bs.'} {prices[currency].exclusive}</div>
+            <h3>IMPERIAL</h3>
+            <div className="pricing-price">{currency === 'usd' ? 'USD' : 'Bs.'} {prices[currency].imperial}</div>
           </div>
         </div>
         <div className="pricing-note">
-          <p><strong>RESERVA CON 20 DÓLARES</strong></p>
+          <p><strong>RESERVA CON Bs. 100</strong></p>
           <p>Paga el resto cuando tu invitación esté finalizada</p>
           <a href="#contacto" className="btn-outline-light">◎ QUIERO RESERVAR</a>
         </div>
@@ -191,9 +191,9 @@ export default function Home() {
             <thead>
               <tr>
                 <th>Función</th>
-                <th>Exclusive</th>
-                <th>Premium</th>
-                <th>Plus</th>
+                <th>Imperial</th>
+                <th>Elegante</th>
+                <th>Clásico</th>
               </tr>
             </thead>
             <tbody>
@@ -304,7 +304,7 @@ export default function Home() {
             ['¿Qué es exactamente una "invitación web"? ¿Es un PDF o un diseño de Canva?', 'Nuestras invitaciones son páginas web reales, completas y privadas. A diferencia de un PDF o Canva, son interactivas con animaciones, música, cuenta regresiva, mapa y confirmación de asistencia.'],
             ['¿Puedo personalizar cada invitación con el nombre de un invitado diferente?', 'Sí. En los planes Premium y Exclusive puedes generar invitaciones personalizadas ilimitadas con nombre y número de pases únicos para cada invitado.'],
             ['¿Cómo funciona el "Sistema de Confirmación Inteligente"?', 'Es un panel completo donde ves en tiempo real quién confirmó, quién está pendiente y quién rechazó. Incluye gestión de pases, mesas y envío directo por WhatsApp.'],
-            ['¿Cómo recibo las confirmaciones de asistencia?', 'Plan Plus: por WhatsApp. Plan Premium: en planilla online. Plan Exclusive: en tu panel de administración privado con base de datos completa.'],
+            ['¿Cómo recibo las confirmaciones de asistencia?', 'Plan Clásico: por WhatsApp. Plan Elegante: en tu gestor de invitados online. Plan Imperial: en tu panel de administración privado con base de datos completa.'],
             ['¿Cuánto tiempo tarda la entrega?', '5 a 7 días laborales. Con entrega express: 48 horas garantizadas.'],
             ['¿Mis invitados podrán usar la invitación fácilmente?', 'Absolutamente. Están optimizadas para verse perfectamente en cualquier celular o computadora. La navegación es clara e intuitiva.'],
             ['Formas de Pago', 'Transferencia bancaria, QR, Binance (USDC), tarjeta de crédito/débito, PayPal y más.'],
