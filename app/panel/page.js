@@ -9,12 +9,13 @@ export default function Panel() {
   const [loading, setLoading] = useState(true)
   const [tab, setTab] = useState('invitados')
   const [showForm, setShowForm] = useState(false)
-  const [showConfig, setShowConfig] = useState(false)
   const [showScanner, setShowScanner] = useState(false)
   const [filter, setFilter] = useState('todos')
   const [search, setSearch] = useState('')
   const [newGuest, setNewGuest] = useState({ nombre_completo: '', num_pases: 1, mesa: '', permite_ninos: true })
   const [editingEvento, setEditingEvento] = useState(null)
+  const [editingGuest, setEditingGuest] = useState(null)
+  const [profile, setProfile] = useState(null)
 
   useEffect(() => { checkUser() }, [])
 
@@ -23,8 +24,9 @@ export default function Panel() {
     if (!user) { window.location.href = '/login'; return }
     setUser(user)
 
-    const { data: prof } = await supabase.from('profiles').select('role').eq('id', user.id).single()
+    const { data: prof } = await supabase.from('profiles').select('role,plan').eq('id', user.id).single()
     if (prof && prof.role === 'admin') { window.location.href = '/admin'; return }
+    setProfile(prof)
 
     await loadEvento(user.id)
     setLoading(false)
@@ -50,6 +52,10 @@ export default function Panel() {
   async function addGuest(e) {
     e.preventDefault()
     if (!evento) return
+    if (invitados.length >= getLimiteInvitados()) {
+      alert('Has alcanzado el límite de invitados de tu plan (' + getLimiteInvitados() + '). Contacta a Festejia para actualizar tu plan.')
+      return
+    }
     const { data } = await supabase.from('invitados').insert([{ ...newGuest, evento_id: evento.id }]).select()
     if (data) {
       setInvitados([data[0], ...invitados])
@@ -67,6 +73,32 @@ export default function Panel() {
     if (!confirm('¿Eliminar este invitado?')) return
     await supabase.from('invitados').delete().eq('id', id)
     setInvitados(invitados.filter(g => g.id !== id))
+  }
+
+  async function saveEditGuest(e) {
+    e.preventDefault()
+    if (!editingGuest) return
+    await supabase.from('invitados').update({
+      nombre_completo: editingGuest.nombre_completo,
+      num_pases: editingGuest.num_pases,
+      mesa: editingGuest.mesa
+    }).eq('id', editingGuest.id)
+    setInvitados(invitados.map(g => g.id === editingGuest.id ? { ...g, ...editingGuest } : g))
+    setEditingGuest(null)
+  }
+
+  function getLimiteInvitados() {
+    if (profile?.plan === 'exclusive') return 9999
+    if (profile?.plan === 'premium') return 150
+    return 50
+  }
+
+  function canUseFeature(feature) {
+    const plan = profile?.plan || 'plus'
+    if (feature === 'excel') return plan === 'premium' || plan === 'exclusive'
+    if (feature === 'checkin') return plan === 'exclusive'
+    if (feature === 'galeria') return plan === 'premium' || plan === 'exclusive'
+    return true
   }
 
   async function saveEventConfig(e) {
@@ -130,6 +162,9 @@ export default function Panel() {
   const totalPases = invitados.reduce((sum, g) => sum + g.num_pases, 0)
   const enviadas = invitados.filter(g => g.invitacion_enviada).length
   const ingresados = invitados.filter(g => g.ingreso).length
+  const diasRestantes = evento?.fecha_evento ? Math.ceil((new Date(evento.fecha_evento) - new Date()) / (1000*60*60*24)) : null
+  const porcentajeConfirmado = invitados.length > 0 ? Math.round((confirmed / invitados.length) * 100) : 0
+  const mensajes = invitados.filter(g => g.mensaje_invitado).map(g => ({ nombre: g.nombre_completo, mensaje: g.mensaje_invitado, estado: g.estado }))
 
   const filteredInvitados = invitados.filter(g => {
     if (filter === 'confirmado' && g.estado !== 'confirmado') return false
@@ -185,6 +220,28 @@ export default function Panel() {
         </div>
 
         {/* STATS */}
+        {diasRestantes !== null && (
+          <div className="countdown-bar">
+            <span className="countdown-number">{diasRestantes > 0 ? diasRestantes : '¡Hoy!'}</span>
+            <span className="countdown-label">{diasRestantes > 0 ? 'días para tu evento' : '¡Es el día de tu evento!'}</span>
+          </div>
+        )}
+
+        <div className="progress-bar-container">
+          <div className="progress-info">
+            <span>Progreso de confirmaciones</span>
+            <span>{porcentajeConfirmado}%</span>
+          </div>
+          <div className="progress-bar">
+            <div className="progress-fill" style={{width: porcentajeConfirmado + '%'}}></div>
+          </div>
+          <div className="progress-detail">
+            <span className="pg-green">{confirmed} confirmados</span>
+            <span className="pg-yellow">{pending} pendientes</span>
+            <span className="pg-red">{rejected} rechazados</span>
+          </div>
+        </div>
+
         <div className="stats-row">
           <div className="stat"><strong>{invitados.length}</strong><span>Invitados</span></div>
           <div className="stat"><strong>{totalPases}</strong><span>Pases</span></div>
@@ -198,15 +255,17 @@ export default function Panel() {
         {/* TABS */}
         <div className="panel-tabs">
           <button className={tab === 'invitados' ? 'active' : ''} onClick={() => setTab('invitados')}>📋 Invitados</button>
-          <button className={tab === 'checkin' ? 'active' : ''} onClick={() => setTab('checkin')}>📱 Check-in</button>
+          <button className={tab === 'mensajes' ? 'active' : ''} onClick={() => setTab('mensajes')}>💬 Mensajes ({mensajes.length})</button>
+          {canUseFeature('checkin') && <button className={tab === 'checkin' ? 'active' : ''} onClick={() => setTab('checkin')}>📱 Check-in</button>}
         </div>
 
         {/* INVITADOS TAB */}
         {tab === 'invitados' && (
           <>
             <div className="toolbar">
-              <button className="btn-add" onClick={() => setShowForm(!showForm)}>+ Agregar Invitado</button>
-              <button className="btn-export" onClick={exportExcel}>📥 Exportar Excel</button>
+              <button className="btn-add" onClick={() => setShowForm(!showForm)}>+ Agregar Invitado ({invitados.length}/{getLimiteInvitados()})</button>
+              {canUseFeature('excel') && <button className="btn-export" onClick={exportExcel}>📥 Exportar Excel</button>}
+              <a href={getInvitationLink({nombre_completo:'Vista Previa', num_pases: 2, mesa: '', id: 'preview'})} target="_blank" className="btn-preview">👁️ Ver Invitación</a>
               <input className="search-input" placeholder="Buscar por nombre..." value={search} onChange={e => setSearch(e.target.value)} />
               <select className="filter-select" value={filter} onChange={e => setFilter(e.target.value)}>
                 <option value="todos">Todos</option>
@@ -243,9 +302,9 @@ export default function Panel() {
                 <tbody>
                   {filteredInvitados.map(g => (
                     <tr key={g.id}>
-                      <td className="name-cell">{g.nombre_completo}</td>
-                      <td>{g.num_pases}</td>
-                      <td>{g.mesa || '-'}</td>
+                      <td className="name-cell">{editingGuest?.id === g.id ? <input value={editingGuest.nombre_completo} onChange={e => setEditingGuest({...editingGuest, nombre_completo: e.target.value})} className="edit-input" /> : g.nombre_completo}</td>
+                      <td>{editingGuest?.id === g.id ? <input type="number" min="1" value={editingGuest.num_pases} onChange={e => setEditingGuest({...editingGuest, num_pases: parseInt(e.target.value)||1})} className="edit-input-sm" /> : g.num_pases}</td>
+                      <td>{editingGuest?.id === g.id ? <input value={editingGuest.mesa||''} onChange={e => setEditingGuest({...editingGuest, mesa: e.target.value})} className="edit-input-sm" /> : (g.mesa || '-')}</td>
                       <td><span className={`badge ${g.estado}`}>{g.estado}</span></td>
                       <td>
                         <button className={`sent-btn ${g.invitacion_enviada ? 'yes' : ''}`} onClick={() => updateGuest(g.id, { invitacion_enviada: !g.invitacion_enviada })}>
@@ -253,9 +312,19 @@ export default function Panel() {
                         </button>
                       </td>
                       <td className="actions-cell">
-                        <button onClick={() => copyInvitation(g)} title="Copiar link">📋</button>
-                        <button onClick={() => shareWhatsApp(g)} title="WhatsApp">💬</button>
-                        <button onClick={() => deleteGuest(g.id)} title="Eliminar">🗑️</button>
+                        {editingGuest?.id === g.id ? (
+                          <>
+                            <button onClick={saveEditGuest} title="Guardar">💾</button>
+                            <button onClick={() => setEditingGuest(null)} title="Cancelar">✖</button>
+                          </>
+                        ) : (
+                          <>
+                            <button onClick={() => setEditingGuest({...g})} title="Editar">✏️</button>
+                            <button onClick={() => copyInvitation(g)} title="Copiar link">📋</button>
+                            <button onClick={() => shareWhatsApp(g)} title="WhatsApp">💬</button>
+                            <button onClick={() => deleteGuest(g.id)} title="Eliminar">🗑️</button>
+                          </>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -264,6 +333,25 @@ export default function Panel() {
               {filteredInvitados.length === 0 && <p className="empty">No hay invitados con ese filtro.</p>}
             </div>
           </>
+        )}
+
+        {/* MENSAJES TAB */}
+        {tab === 'mensajes' && (
+          <div className="mensajes-section">
+            <h3>Mensajes de tus Invitados</h3>
+            {mensajes.length === 0 && <p className="empty">Aún no hay mensajes. Cuando tus invitados confirmen, sus mensajes aparecerán aquí.</p>}
+            <div className="mensajes-list">
+              {mensajes.map((m, i) => (
+                <div key={i} className={`mensaje-card ${m.estado}`}>
+                  <div className="mensaje-header">
+                    <strong>{m.nombre}</strong>
+                    <span className={`badge ${m.estado}`}>{m.estado}</span>
+                  </div>
+                  <p className="mensaje-text">"{m.mensaje}"</p>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
 
         {/* CHECK-IN TAB */}
@@ -361,6 +449,27 @@ export default function Panel() {
         .btn-checkin { background: #22c55e; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
         .btn-checkout { background: #f59e0b; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
         .checkin-time { font-size: 0.75rem; color: #22c55e; }
+        .countdown-bar { background: linear-gradient(135deg, #1a1a1a, #333); color: white; border-radius: 12px; padding: 1.2rem 2rem; display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+        .countdown-number { font-size: 2.5rem; font-weight: 700; color: #c9a96e; font-family: 'Cormorant Garamond', serif; }
+        .countdown-label { font-size: 0.9rem; color: rgba(255,255,255,0.8); }
+        .progress-bar-container { background: white; border-radius: 12px; padding: 1.2rem 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .progress-info { display: flex; justify-content: space-between; font-size: 0.8rem; color: #666; margin-bottom: 0.5rem; }
+        .progress-bar { height: 8px; background: #f0f0f0; border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #16a34a); border-radius: 4px; transition: width 0.5s; }
+        .progress-detail { display: flex; gap: 1.5rem; margin-top: 0.5rem; font-size: 0.75rem; }
+        .pg-green { color: #22c55e; }
+        .pg-yellow { color: #eab308; }
+        .pg-red { color: #ef4444; }
+        .btn-preview { background: #6366f1; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; text-decoration: none; display: inline-block; }
+        .edit-input { padding: 0.3rem; border: 1.5px solid #c9a96e; border-radius: 4px; font-size: 0.8rem; width: 100%; }
+        .edit-input-sm { padding: 0.3rem; border: 1.5px solid #c9a96e; border-radius: 4px; font-size: 0.8rem; width: 60px; }
+        .mensajes-section h3 { font-size: 1.2rem; margin-bottom: 1rem; }
+        .mensajes-list { display: flex; flex-direction: column; gap: 0.8rem; }
+        .mensaje-card { background: white; border-radius: 10px; padding: 1rem 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border-left: 4px solid #e0e0e0; }
+        .mensaje-card.confirmado { border-left-color: #22c55e; }
+        .mensaje-card.rechazado { border-left-color: #ef4444; }
+        .mensaje-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; }
+        .mensaje-text { color: #555; font-style: italic; font-size: 0.85rem; margin: 0; }
         @media (max-width: 768px) {
           .panel-body { padding: 1rem; }
           .stats-row { grid-template-columns: repeat(3, 1fr); }
