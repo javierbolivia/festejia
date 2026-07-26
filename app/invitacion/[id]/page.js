@@ -30,8 +30,8 @@ export async function generateMetadata({ params }) {
     const titulo = novio2 ? `${novio1} & ${novio2} — ¡Nos Casamos!` : `${novio1} — Celebración`
     const descripcion = evento?.mensaje_personalizado || `Te invitamos a ser parte de este día tan especial. ${evento?.fecha_evento ? new Date(evento.fecha_evento).toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' }) : ''}`
     
-    // URL absoluta de la imagen OG
-    const ogImage = `https://festejia.vercel.app/api/og?id=${id}`
+    // Imagen OG: foto de los novios de la plantilla
+    const ogImage = 'https://festejia.vercel.app/plantilla1/images/foto-modelo-sobre-boda-1.jpg'
 
     return {
       title: titulo,
@@ -43,10 +43,10 @@ export async function generateMetadata({ params }) {
         images: [
           {
             url: ogImage,
-            width: 1200,
-            height: 630,
+            width: 1024,
+            height: 1024,
             alt: titulo,
-            type: 'image/png',
+            type: 'image/jpeg',
           }
         ],
         type: 'website',
@@ -59,11 +59,6 @@ export async function generateMetadata({ params }) {
         description: descripcion,
         images: [ogImage],
       },
-      other: {
-        'og:image:width': '1200',
-        'og:image:height': '630',
-        'og:image:type': 'image/png',
-      }
     }
   } catch (e) {
     return { title: 'Invitación - Festejia' }
