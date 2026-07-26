@@ -370,10 +370,10 @@ export default function Panel() {
                     {!g.ingreso ? (
                       <button className="btn-checkin" onClick={() => checkInGuest(g.id)}>✓ Registrar Ingreso</button>
                     ) : (
-                      <button className="btn-checkout" onClick={() => checkOutGuest(g.id)}>↩ Registrar Salida</button>
+                      <span className="checkin-done">✓ Ingresó</span>
                     )}
                   </div>
-                  {g.ingreso && <span className="checkin-time">Ingresó: {new Date(g.fecha_ingreso).toLocaleTimeString('es')}</span>}
+                  {g.ingreso && g.fecha_ingreso && <span className="checkin-time">Ingresó: {new Date(g.fecha_ingreso).toLocaleTimeString('es-BO', {hour:'2-digit', minute:'2-digit'})}</span>}
                 </div>
               ))}
               {invitados.filter(g => g.estado === 'confirmado').length === 0 && (
@@ -447,7 +447,7 @@ export default function Panel() {
         .checkin-info-row strong { display: block; font-size: 0.95rem; }
         .checkin-info-row span { font-size: 0.8rem; color: #666; }
         .btn-checkin { background: #22c55e; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
-        .btn-checkout { background: #f59e0b; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+        .checkin-done { background: #dcfce7; color: #166534; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.75rem; font-weight: 500; }
         .checkin-time { font-size: 0.75rem; color: #22c55e; }
         .countdown-bar { background: linear-gradient(135deg, #1a1a1a, #333); color: white; border-radius: 12px; padding: 1.2rem 2rem; display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
         .countdown-number { font-size: 2.5rem; font-weight: 700; color: #c9a96e; font-family: 'Cormorant Garamond', serif; }
