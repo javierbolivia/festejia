@@ -110,7 +110,7 @@ export default function Panel() {
   }
 
   function getInvitationLink(guest) {
-    return `https://festejia.vercel.app/invitacion/${guest.id}`
+    return `https://www.festejia.com/invitacion/${guest.id}`
   }
 
   function copyInvitation(guest) {

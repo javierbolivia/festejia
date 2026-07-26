@@ -31,7 +31,7 @@ export async function generateMetadata({ params }) {
     const descripcion = evento?.mensaje_personalizado || `Te invitamos a ser parte de este día tan especial. ${evento?.fecha_evento ? new Date(evento.fecha_evento).toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' }) : ''}`
     
     // Imagen OG: foto de los novios de la plantilla
-    const ogImage = 'https://festejia.vercel.app/plantilla1/images/foto-modelo-sobre-boda-1.jpg'
+    const ogImage = 'https://www.festejia.com/plantilla1/images/foto-modelo-sobre-boda-1.jpg'
 
     return {
       title: titulo,
@@ -39,7 +39,7 @@ export async function generateMetadata({ params }) {
       openGraph: {
         title: titulo,
         description: descripcion,
-        url: `https://festejia.vercel.app/invitacion/${id}`,
+        url: `https://www.festejia.com/invitacion/${id}`,
         images: [
           {
             url: ogImage,
