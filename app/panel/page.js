@@ -205,6 +205,30 @@ export default function Panel() {
                 <input type="date" value={editingEvento?.fecha_evento?.split('T')[0] || ''} onChange={e => setEditingEvento({...editingEvento, fecha_evento: e.target.value})} />
               </div>
               <div>
+                <label>Nombre Novio/a 1</label>
+                <input value={editingEvento?.nombre_novio1 || ''} onChange={e => setEditingEvento({...editingEvento, nombre_novio1: e.target.value})} placeholder="María" />
+              </div>
+              <div>
+                <label>Nombre Novio/a 2</label>
+                <input value={editingEvento?.nombre_novio2 || ''} onChange={e => setEditingEvento({...editingEvento, nombre_novio2: e.target.value})} placeholder="Juan" />
+              </div>
+              <div>
+                <label>Lugar Ceremonia</label>
+                <input value={editingEvento?.lugar_ceremonia || ''} onChange={e => setEditingEvento({...editingEvento, lugar_ceremonia: e.target.value})} placeholder="Iglesia San Pedro" />
+              </div>
+              <div>
+                <label>Hora Ceremonia</label>
+                <input value={editingEvento?.hora_ceremonia || ''} onChange={e => setEditingEvento({...editingEvento, hora_ceremonia: e.target.value})} placeholder="17:00" />
+              </div>
+              <div>
+                <label>Lugar Recepción</label>
+                <input value={editingEvento?.lugar_recepcion || ''} onChange={e => setEditingEvento({...editingEvento, lugar_recepcion: e.target.value})} placeholder="Salón Los Olivos" />
+              </div>
+              <div>
+                <label>Hora Recepción</label>
+                <input value={editingEvento?.hora_recepcion || ''} onChange={e => setEditingEvento({...editingEvento, hora_recepcion: e.target.value})} placeholder="20:00" />
+              </div>
+              <div>
                 <label>Fecha Límite Confirmación</label>
                 <input type="date" value={editingEvento?.fecha_limite_confirmacion?.split('T')[0] || ''} onChange={e => setEditingEvento({...editingEvento, fecha_limite_confirmacion: e.target.value})} />
               </div>
