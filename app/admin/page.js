@@ -129,7 +129,6 @@ export default function AdminPanel() {
           <button className={tab === 'dashboard' ? 'active' : ''} onClick={() => setTab('dashboard')}>📊 Dashboard</button>
           <button className={tab === 'clients' ? 'active' : ''} onClick={() => setTab('clients')}>👥 Clientes</button>
           <button className={tab === 'events' ? 'active' : ''} onClick={() => setTab('events')}>📅 Eventos</button>
-          <button className={tab === 'guests' ? 'active' : ''} onClick={() => setTab('guests')}>📋 Invitados</button>
         </nav>
         <button className="sidebar-logout" onClick={logout}>Cerrar Sesión</button>
       </aside>
@@ -137,7 +136,7 @@ export default function AdminPanel() {
       {/* MAIN CONTENT */}
       <main className="admin-main">
         <header className="admin-header">
-          <h1>{tab === 'dashboard' ? 'Dashboard' : tab === 'clients' ? 'Clientes' : tab === 'events' ? 'Eventos' : 'Todos los Invitados'}</h1>
+          <h1>{tab === 'dashboard' ? 'Dashboard' : tab === 'clients' ? 'Clientes' : 'Eventos'}</h1>
           <span className="admin-email">{user?.email}</span>
         </header>
 
@@ -147,21 +146,20 @@ export default function AdminPanel() {
             <div className="stats-grid">
               <div className="stat-card primary"><div className="stat-number">{clients.length}</div><div className="stat-label">Clientes</div></div>
               <div className="stat-card"><div className="stat-number">{eventos.length}</div><div className="stat-label">Eventos</div></div>
-              <div className="stat-card"><div className="stat-number">{allInvitados.length}</div><div className="stat-label">Invitados Total</div></div>
-              <div className="stat-card"><div className="stat-number">{totalPases}</div><div className="stat-label">Pases Total</div></div>
-              <div className="stat-card green"><div className="stat-number">{totalConfirmados}</div><div className="stat-label">Confirmados</div></div>
-              <div className="stat-card yellow"><div className="stat-number">{totalPendientes}</div><div className="stat-label">Pendientes</div></div>
-              <div className="stat-card red"><div className="stat-number">{totalRechazados}</div><div className="stat-label">Rechazados</div></div>
-              <div className="stat-card"><div className="stat-number">{clients.filter(c => c.activo).length}</div><div className="stat-label">Activos</div></div>
+              <div className="stat-card green"><div className="stat-number">{clients.filter(c => c.activo).length}</div><div className="stat-label">Activos</div></div>
+              <div className="stat-card yellow"><div className="stat-number">{clients.filter(c => c.plan === 'plus').length}</div><div className="stat-label">Plan Plus</div></div>
+              <div className="stat-card"><div className="stat-number">{clients.filter(c => c.plan === 'premium').length}</div><div className="stat-label">Plan Premium</div></div>
+              <div className="stat-card red"><div className="stat-number">{clients.filter(c => c.plan === 'exclusive').length}</div><div className="stat-label">Plan Exclusive</div></div>
             </div>
             <div className="recent-section">
               <h3>Últimos Clientes</h3>
               {clients.slice(0, 5).map(c => (
                 <div key={c.id} className="recent-item">
-                  <span>{c.nombre || c.email}</span>
+                  <span>{c.nombre || c.email?.replace('@festejia.local', '')}</span>
                   <span className={`plan-badge ${c.plan}`}>{c.plan}</span>
                 </div>
               ))}
+              {clients.length === 0 && <p className="empty">No hay clientes aún.</p>}
             </div>
           </div>
         )}
