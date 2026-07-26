@@ -1895,7 +1895,12 @@ document.addEventListener('DOMContentLoaded', function() {
       var ms=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
       if(e.nombre_novio1){var x=document.getElementById('nombre-novio1');if(x)x.textContent=e.nombre_novio1;}
       if(e.nombre_novio2){var x=document.getElementById('nombre-novio2');if(x)x.textContent=e.nombre_novio2;}
-      if(e.fecha_evento){var f=new Date(e.fecha_evento);var x=document.getElementById('fecha-mes');if(x)x.textContent=ms[f.getMonth()];var c=document.querySelector('[data-date]');if(c)c.setAttribute('data-date',Math.floor(f.getTime()/1000));}
+      if(e.fecha_evento){var f=new Date(e.fecha_evento);var x=document.getElementById('fecha-mes');if(x)x.textContent=ms[f.getMonth()];var c=document.querySelector('[data-date]');if(c){c.setAttribute('data-date',Math.floor(f.getTime()/1000));
+              // Recalcular countdown
+              var now=new Date().getTime();var dist=f.getTime()-now;
+              var days=Math.floor(dist/(1000*60*60*24));var hrs=Math.floor((dist%(1000*60*60*24))/(1000*60*60));var mins=Math.floor((dist%(1000*60*60))/(1000*60));var secs=Math.floor((dist%(1000*60))/1000);
+              var spans=c.querySelectorAll('.elementor-countdown-digits');if(spans.length>=4){spans[0].textContent=String(days).padStart(2,'0');spans[1].textContent=String(hrs).padStart(2,'0');spans[2].textContent=String(mins).padStart(2,'0');spans[3].textContent=String(secs).padStart(2,'0');}
+            }}
       if(e.lugar_ceremonia){var x=document.getElementById('lugar-ceremonia');if(x)x.innerHTML=e.lugar_ceremonia;}
       if(e.lugar_recepcion){var x=document.getElementById('lugar-recepcion');if(x)x.innerHTML=e.lugar_recepcion;}
       if(e.hora_ceremonia){var x=document.getElementById('hora-ceremonia');if(x)x.textContent=e.hora_ceremonia;}

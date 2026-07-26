@@ -304,18 +304,18 @@ export default function AdminPanel() {
                       <span>{evtInvitados.length} invitados</span>
                       <span>{evtConfirmados} confirmados</span>
                     </div>
-                    <button className="btn-edit-event" onClick={() => setEditingEvent(editingEvent === evt.id ? null : evt.id)}>✏️ Editar Diseño</button>
+                    <button className="btn-edit-event" onClick={() => { setEditingEvent(editingEvent === evt.id ? null : evt.id); loadData(); }}>✏️ Editar Diseño</button>
                     {editingEvent === evt.id && (
                       <div className="event-edit-form">
                         <div className="form-grid">
-                          <div><label>Novio/a 1</label><input defaultValue={evt.nombre_novio1||''} onChange={e => updateEventField(evt.id, 'nombre_novio1', e.target.value)} placeholder="María" /></div>
-                          <div><label>Novio/a 2</label><input defaultValue={evt.nombre_novio2||''} onChange={e => updateEventField(evt.id, 'nombre_novio2', e.target.value)} placeholder="Juan" /></div>
-                          <div><label>Lugar Ceremonia</label><input defaultValue={evt.lugar_ceremonia||''} onChange={e => updateEventField(evt.id, 'lugar_ceremonia', e.target.value)} placeholder="Iglesia San Pedro" /></div>
-                          <div><label>Hora Ceremonia</label><input defaultValue={evt.hora_ceremonia||''} onChange={e => updateEventField(evt.id, 'hora_ceremonia', e.target.value)} placeholder="17:00" /></div>
-                          <div><label>Lugar Recepción</label><input defaultValue={evt.lugar_recepcion||''} onChange={e => updateEventField(evt.id, 'lugar_recepcion', e.target.value)} placeholder="Salón Imperial" /></div>
-                          <div><label>Hora Recepción</label><input defaultValue={evt.hora_recepcion||''} onChange={e => updateEventField(evt.id, 'hora_recepcion', e.target.value)} placeholder="20:00" /></div>
+                          <div><label>Novio/a 1</label><input defaultValue={evt.nombre_novio1||''} onBlur={e => updateEventField(evt.id, 'nombre_novio1', e.target.value)} placeholder="María" /></div>
+                          <div><label>Novio/a 2</label><input defaultValue={evt.nombre_novio2||''} onBlur={e => updateEventField(evt.id, 'nombre_novio2', e.target.value)} placeholder="Juan" /></div>
+                          <div><label>Lugar Ceremonia</label><input defaultValue={evt.lugar_ceremonia||''} onBlur={e => updateEventField(evt.id, 'lugar_ceremonia', e.target.value)} placeholder="Iglesia San Pedro" /></div>
+                          <div><label>Hora Ceremonia</label><input defaultValue={evt.hora_ceremonia||''} onBlur={e => updateEventField(evt.id, 'hora_ceremonia', e.target.value)} placeholder="17:00" /></div>
+                          <div><label>Lugar Recepción</label><input defaultValue={evt.lugar_recepcion||''} onBlur={e => updateEventField(evt.id, 'lugar_recepcion', e.target.value)} placeholder="Salón Imperial" /></div>
+                          <div><label>Hora Recepción</label><input defaultValue={evt.hora_recepcion||''} onBlur={e => updateEventField(evt.id, 'hora_recepcion', e.target.value)} placeholder="20:00" /></div>
                         </div>
-                        <button className="btn-save" onClick={() => { alert('Guardado'); setEditingEvent(null); }}>Guardar Diseño</button>
+                        <button className="btn-save" onClick={() => { alert('Guardado'); setEditingEvent(null); loadData(); }}>Guardar Diseño</button>
                       </div>
                     )}
                     <p className="event-plantilla">Plantilla: {evt.plantilla || 'plantilla1'}</p>
