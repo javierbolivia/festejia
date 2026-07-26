@@ -103,7 +103,36 @@ export default function AdminPanel() {
 
   async function deleteClient(clientId) {
     if (!confirm('¿Eliminar este cliente y todos sus datos?')) return
+    
+    // Obtener email del cliente para borrarlo de Auth
+    const client = clients.find(c => c.id === clientId)
+    
+    // Borrar de Auth via API
+    if (client) {
+      await fetch('https://xzkxutllxkdrugjvflco.supabase.co/auth/v1/admin/users/' + clientId, {
+        method: 'DELETE',
+        headers: {
+          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6a3h1dGxseGtkcnVnanZmbGNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NTE0MTgsImV4cCI6MjEwMDUyNzQxOH0.s3icP7S33TEWVL77edSFe8svSgC2AqTQe3lB0WYDrXk',
+          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6a3h1dGxseGtkcnVnanZmbGNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NTE0MTgsImV4cCI6MjEwMDUyNzQxOH0.s3icP7S33TEWVL77edSFe8svSgC2AqTQe3lB0WYDrXk'
+        }
+      }).catch(() => {})
+    }
+
+    // Borrar eventos e invitados asociados
+    const { data: evts } = await supabase.from('eventos').select('id').eq('user_id', clientId)
+    if (evts) {
+      for (const evt of evts) {
+        await supabase.from('invitados').delete().eq('evento_id', evt.id)
+      }
+      await supabase.from('eventos').delete().eq('user_id', clientId)
+    }
+    
+    // Borrar de clientes_login
+    await supabase.from('clientes_login').delete().eq('profile_id', clientId)
+    
+    // Borrar perfil
     await supabase.from('profiles').delete().eq('id', clientId)
+    
     await loadData()
   }
 
