@@ -21,6 +21,14 @@ export default function Panel() {
       return
     }
     setUser(user)
+
+    // Verificar si es admin
+    const { data: prof } = await supabase.from('profiles').select('role').eq('id', user.id).single()
+    if (prof && prof.role === 'admin') {
+      window.location.href = '/admin'
+      return
+    }
+
     await loadEvento(user.id)
     setLoading(false)
   }
