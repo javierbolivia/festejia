@@ -1999,22 +1999,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (form) {
       var qrHtml = '';
       if (estado === 'confirmado' && invitadoId) {
-        qrHtml = '<div style="margin-top:1.5rem;"><p style="font-size:0.8rem;color:#666;margin-bottom:0.5rem;">Tu pase de acceso:</p><canvas id="qr-canvas" style="margin:0 auto;display:block;"></canvas><p style="font-size:0.7rem;color:#999;margin-top:0.5rem;">Guarda esta imagen. Preséntala en la entrada.</p></div>';
+        var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=festejia:' + invitadoId;
+        qrHtml = '<div style="margin-top:1.5rem;"><p style="font-size:0.8rem;color:#666;margin-bottom:0.5rem;">Tu pase de acceso:</p><img src="' + qrUrl + '" alt="QR" style="width:200px;height:200px;margin:0 auto;display:block;border-radius:8px;" /><p style="font-size:0.7rem;color:#999;margin-top:0.5rem;">Guarda esta imagen. Pres\u00e9ntala en la entrada.</p></div>';
       }
-      form.innerHTML = '<div style="text-align:center;padding:2rem;"><h3 style="font-family:Cormorant Garamond,serif;font-size:1.5rem;color:#2c3e6b;margin-bottom:0.5rem;">¡Gracias!</h3><p style="color:#666;font-size:0.9rem;">' + (estado === 'confirmado' ? 'Tu asistencia ha sido confirmada. ¡Nos vemos pronto!' : 'Lamentamos que no puedas asistir. ¡Gracias por responder!') + '</p>' + qrHtml + '</div>';
-      
-      // Generar QR
-      if (estado === 'confirmado' && invitadoId) {
-        var qrScript = document.createElement('script');
-        qrScript.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
-        qrScript.onload = function() {
-          var canvas = document.getElementById('qr-canvas');
-          if (canvas && window.QRCode) {
-            window.QRCode.toCanvas(canvas, 'festejia:' + invitadoId, { width: 200, margin: 2 });
-          }
-        };
-        document.head.appendChild(qrScript);
-      }
+      form.innerHTML = '<div style="text-align:center;padding:2rem;"><h3 style="font-family:Cormorant Garamond,serif;font-size:1.5rem;color:#2c3e6b;margin-bottom:0.5rem;">\u00a1Gracias!</h3><p style="color:#666;font-size:0.9rem;">' + (estado === 'confirmado' ? 'Tu asistencia ha sido confirmada. \u00a1Nos vemos pronto!' : 'Lamentamos que no puedas asistir. \u00a1Gracias por responder!') + '</p>' + qrHtml + '</div>';
     }
   }
 })();
