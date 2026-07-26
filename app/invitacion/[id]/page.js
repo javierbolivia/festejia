@@ -27,11 +27,12 @@ export async function generateMetadata({ params }) {
 
     const novio1 = evento?.nombre_novio1 || 'Los Novios'
     const novio2 = evento?.nombre_novio2 || ''
+    const plantilla = evento?.plantilla || 'plantilla1'
     const titulo = novio2 ? `${novio1} & ${novio2} — ¡Nos Casamos!` : `${novio1} — Celebración`
     const descripcion = evento?.mensaje_personalizado || `Te invitamos a ser parte de este día tan especial. ${evento?.fecha_evento ? new Date(evento.fecha_evento).toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' }) : ''}`
     
-    // Imagen OG: foto de los novios de la plantilla
-    const ogImage = 'https://www.festejia.com/plantilla1/images/foto-modelo-sobre-boda-1.jpg'
+    // Imagen OG: usa la primera foto de los novios de la plantilla asignada
+    const ogImage = `https://www.festejia.com/${plantilla}/images/foto-modelo-sobre-boda-1.jpg`
 
     return {
       title: titulo,
@@ -71,6 +72,7 @@ export default async function InvitacionPage({ params }) {
   let nombre = ''
   let pases = '1'
   let eventoId = ''
+  let plantilla = 'plantilla1'
   
   try {
     const { data: invitado } = await supabase
@@ -83,10 +85,21 @@ export default async function InvitacionPage({ params }) {
       nombre = invitado.nombre_completo || ''
       pases = String(invitado.num_pases || 1)
       eventoId = invitado.evento_id || ''
+
+      // Obtener la plantilla del evento
+      const { data: evento } = await supabase
+        .from('eventos')
+        .select('plantilla')
+        .eq('id', invitado.evento_id)
+        .single()
+      
+      if (evento?.plantilla) {
+        plantilla = evento.plantilla
+      }
     }
   } catch(e) {}
 
-  const redirectUrl = `/plantilla1/?m=${encodeURIComponent(nombre)}&n=${encodeURIComponent(pases + ' pases')}&id=${id}&evento=${eventoId}`
+  const redirectUrl = `/${plantilla}/?m=${encodeURIComponent(nombre)}&n=${encodeURIComponent(pases + ' pases')}&id=${id}&evento=${eventoId}`
   
   return (
     <div style={{ 

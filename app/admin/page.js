@@ -318,7 +318,7 @@ export default function AdminPanel() {
                         <button className="btn-save" onClick={() => { alert('Guardado'); setEditingEvent(null); loadData(); }}>Guardar Diseño</button>
                       </div>
                     )}
-                    <p className="event-plantilla">Plantilla: {evt.plantilla || 'plantilla1'}</p>
+                    <div className="event-plantilla"><label>Plantilla: </label><select value={evt.plantilla || 'plantilla1'} onChange={e => { updateEventField(evt.id, 'plantilla', e.target.value); setEventos(eventos.map(ev => ev.id === evt.id ? {...ev, plantilla: e.target.value} : ev)) }} style={{padding:'4px 8px', borderRadius:'4px', border:'1px solid #333', background:'#2a2a2a', color:'#fff', fontSize:'0.8rem'}}><option value="plantilla1">Plantilla 1 - Sobre</option><option value="plantilla2">Plantilla 2</option><option value="plantilla3">Plantilla 3</option><option value="plantilla4">Plantilla 4</option><option value="plantilla5">Plantilla 5</option></select></div>
                   </div>
                 )
               })}
