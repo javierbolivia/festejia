@@ -152,54 +152,36 @@ export default function Panel() {
       </header>
 
       <div className="panel-body">
-        {/* EVENT INFO */}
+        {/* EVENT CONFIG - Siempre visible */}
         <div className="event-card">
           <div className="event-card-top">
-            <div>
-              <h2>{evento?.nombre_evento}</h2>
-              <div className="event-meta">
-                <span>📅 {evento?.fecha_evento ? new Date(evento.fecha_evento).toLocaleDateString('es') : 'Sin fecha'}</span>
-                <span>📋 {evento?.tipo}</span>
-              </div>
-            </div>
-            <button className="btn-config" onClick={() => setShowConfig(!showConfig)}>⚙️ Configurar</button>
+            <h2>{evento?.nombre_evento}</h2>
+            <span className="event-type-badge">{evento?.tipo}</span>
           </div>
 
-          {showConfig && (
-            <form onSubmit={saveEventConfig} className="config-form">
-              <div className="config-grid">
-                <div>
-                  <label>Nombre del Evento</label>
-                  <input value={editingEvento?.nombre_evento || ''} onChange={e => setEditingEvento({...editingEvento, nombre_evento: e.target.value})} />
-                </div>
-                <div>
-                  <label>Fecha del Evento</label>
-                  <input type="date" value={editingEvento?.fecha_evento?.split('T')[0] || ''} onChange={e => setEditingEvento({...editingEvento, fecha_evento: e.target.value})} />
-                </div>
-                <div>
-                  <label>Fecha Límite Confirmación</label>
-                  <input type="date" value={editingEvento?.fecha_limite_confirmacion?.split('T')[0] || ''} onChange={e => setEditingEvento({...editingEvento, fecha_limite_confirmacion: e.target.value})} />
-                </div>
-                <div>
-                  <label>Tipo</label>
-                  <select value={editingEvento?.tipo || 'boda'} onChange={e => setEditingEvento({...editingEvento, tipo: e.target.value})}>
-                    <option value="boda">Boda</option>
-                    <option value="quince">15 Años</option>
-                    <option value="graduacion">Graduación</option>
-                    <option value="bautizo">Bautizo</option>
-                  </select>
-                </div>
-                <div style={{gridColumn: '1/-1'}}>
-                  <label>Mensaje Personalizado (se envía con el link)</label>
-                  <textarea rows="3" value={editingEvento?.mensaje_personalizado || ''} onChange={e => setEditingEvento({...editingEvento, mensaje_personalizado: e.target.value})} placeholder="Estás invitado a nuestra celebración..." />
-                </div>
+          <form onSubmit={saveEventConfig} className="config-form">
+            <div className="config-grid">
+              <div>
+                <label>Nombre del Evento</label>
+                <input value={editingEvento?.nombre_evento || ''} onChange={e => setEditingEvento({...editingEvento, nombre_evento: e.target.value})} />
               </div>
-              <div className="config-actions">
-                <button type="submit" className="btn-save">Guardar Cambios</button>
-                <button type="button" className="btn-cancel" onClick={() => setShowConfig(false)}>Cancelar</button>
+              <div>
+                <label>Fecha del Evento</label>
+                <input type="date" value={editingEvento?.fecha_evento?.split('T')[0] || ''} onChange={e => setEditingEvento({...editingEvento, fecha_evento: e.target.value})} />
               </div>
-            </form>
-          )}
+              <div>
+                <label>Fecha Límite Confirmación</label>
+                <input type="date" value={editingEvento?.fecha_limite_confirmacion?.split('T')[0] || ''} onChange={e => setEditingEvento({...editingEvento, fecha_limite_confirmacion: e.target.value})} />
+              </div>
+              <div style={{gridColumn: '1/-1'}}>
+                <label>Mensaje Personalizado (se envía con el link)</label>
+                <textarea rows="3" value={editingEvento?.mensaje_personalizado || ''} onChange={e => setEditingEvento({...editingEvento, mensaje_personalizado: e.target.value})} placeholder="Estás invitado a nuestra celebración..." />
+              </div>
+            </div>
+            <div className="config-actions">
+              <button type="submit" className="btn-save">Guardar Cambios</button>
+            </div>
+          </form>
         </div>
 
         {/* STATS */}
@@ -324,10 +306,9 @@ export default function Panel() {
         .panel-header-right button { background: none; border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-size: 0.75rem; }
         .panel-body { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
         .event-card { background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        .event-card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+        .event-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
         .event-card h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; }
-        .event-meta { display: flex; gap: 1rem; color: #666; font-size: 0.8rem; margin-top: 0.3rem; }
-        .btn-config { background: none; border: 1.5px solid #ddd; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+        .event-type-badge { background: #f3e8fd; color: #7c3aed; padding: 0.3rem 0.8rem; border-radius: 12px; font-size: 0.7rem; font-weight: 600; text-transform: capitalize; }
         .config-form { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #eee; }
         .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         .config-grid label { display: block; font-size: 0.7rem; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.3rem; }
