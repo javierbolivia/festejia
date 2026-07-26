@@ -30,8 +30,13 @@ export async function generateMetadata({ params }) {
     const novio1 = evento?.nombre_novio1 || 'Los Novios'
     const novio2 = evento?.nombre_novio2 || ''
     const titulo = novio2 ? `${novio1} & ${novio2} — ¡Nos Casamos!` : `${novio1} — Celebración`
-    const descripcion = `Te invitamos a ser parte de este día tan especial. ${evento?.fecha_evento ? new Date(evento.fecha_evento).toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' }) : ''}`
-    const imagen = 'https://festejia.vercel.app/og-image.jpg'
+    const descripcion = evento?.mensaje_personalizado || `Te invitamos a ser parte de este día tan especial. ${evento?.fecha_evento ? new Date(evento.fecha_evento).toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' }) : ''}`
+    
+    // Imagen OG dinámica generada por nuestra API
+    const baseUrl = process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}` 
+      : 'https://festejia.vercel.app'
+    const ogImage = `${baseUrl}/api/og?id=${id}`
 
     return {
       title: titulo,
@@ -39,7 +44,7 @@ export async function generateMetadata({ params }) {
       openGraph: {
         title: titulo,
         description: descripcion,
-        images: [{ url: imagen, width: 1200, height: 630 }],
+        images: [{ url: ogImage, width: 1200, height: 630, alt: titulo }],
         type: 'website',
         siteName: 'Festejia'
       },
@@ -47,7 +52,7 @@ export async function generateMetadata({ params }) {
         card: 'summary_large_image',
         title: titulo,
         description: descripcion,
-        images: [imagen]
+        images: [ogImage]
       }
     }
   } catch (e) {
@@ -61,26 +66,37 @@ export default async function InvitacionPage({ params }) {
   // Obtener datos del invitado para pasar a la plantilla
   let nombre = ''
   let pases = '1'
+  let eventoId = ''
   
   try {
     const { data: invitado } = await supabase
       .from('invitados')
-      .select('nombre_completo, num_pases')
+      .select('nombre_completo, num_pases, evento_id')
       .eq('id', id)
       .single()
     
     if (invitado) {
       nombre = invitado.nombre_completo || ''
       pases = String(invitado.num_pases || 1)
+      eventoId = invitado.evento_id || ''
     }
   } catch(e) {}
 
-  const redirectUrl = `/plantilla1/?m=${encodeURIComponent(nombre)}&n=${encodeURIComponent(pases + ' pases')}&id=${id}`
+  const redirectUrl = `/plantilla1/?m=${encodeURIComponent(nombre)}&n=${encodeURIComponent(pases + ' pases')}&id=${id}&evento=${eventoId}`
   
   return (
     <>
       <meta httpEquiv="refresh" content={`0;url=${redirectUrl}`} />
-      <p>Redirigiendo a tu invitación...</p>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        fontFamily: 'serif',
+        color: '#333'
+      }}>
+        <p>Abriendo tu invitación...</p>
+      </div>
     </>
   )
 }
