@@ -1,8 +1,6 @@
 import { ImageResponse } from 'next/og'
 import { createClient } from '@supabase/supabase-js'
 
-export const runtime = 'edge'
-
 const supabase = createClient(
   'https://xzkxutllxkdrugjvflco.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6a3h1dGxseGtkcnVnanZmbGNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NTE0MTgsImV4cCI6MjEwMDUyNzQxOH0.s3icP7S33TEWVL77edSFe8svSgC2AqTQe3lB0WYDrXk'
@@ -52,26 +50,23 @@ export async function GET(request) {
     }
   }
 
-  const titulo = novio2 ? `${novio1} & ${novio2}` : novio1
   const subtitulo = tipo === 'Boda' ? '¡Nos Casamos!' : tipo === '15 Años' ? '¡Mis 15 Años!' : '¡Celebración!'
 
   return new ImageResponse(
     (
       <div
         style={{
-          width: '1200px',
-          height: '630px',
+          width: '100%',
+          height: '100%',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
           background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-          fontFamily: 'serif',
           position: 'relative',
-          overflow: 'hidden',
         }}
       >
-        {/* Decorative border */}
+        {/* Border decorativo */}
         <div
           style={{
             position: 'absolute',
@@ -85,117 +80,77 @@ export async function GET(request) {
           }}
         />
 
-        {/* Corner decorations */}
+        {/* Subtitulo arriba */}
         <div
           style={{
-            position: 'absolute',
-            top: '40px',
-            left: '40px',
-            width: '60px',
-            height: '60px',
-            borderTop: '3px solid #c9a96e',
-            borderLeft: '3px solid #c9a96e',
-            borderRadius: '5px 0 0 0',
-            display: 'flex',
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            top: '40px',
-            right: '40px',
-            width: '60px',
-            height: '60px',
-            borderTop: '3px solid #c9a96e',
-            borderRight: '3px solid #c9a96e',
-            borderRadius: '0 5px 0 0',
-            display: 'flex',
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '40px',
-            left: '40px',
-            width: '60px',
-            height: '60px',
-            borderBottom: '3px solid #c9a96e',
-            borderLeft: '3px solid #c9a96e',
-            borderRadius: '0 0 0 5px',
-            display: 'flex',
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '40px',
-            right: '40px',
-            width: '60px',
-            height: '60px',
-            borderBottom: '3px solid #c9a96e',
-            borderRight: '3px solid #c9a96e',
-            borderRadius: '0 0 5px 0',
-            display: 'flex',
-          }}
-        />
-
-        {/* Top label */}
-        <div
-          style={{
-            fontSize: '18px',
-            color: 'rgba(201, 169, 110, 0.8)',
+            fontSize: '20px',
+            color: 'rgba(201, 169, 110, 0.9)',
             letterSpacing: '6px',
             textTransform: 'uppercase',
-            marginBottom: '20px',
+            marginBottom: '24px',
             display: 'flex',
           }}
         >
           {subtitulo}
         </div>
 
-        {/* Names */}
+        {/* Nombres */}
         <div
           style={{
-            fontSize: '72px',
-            color: '#ffffff',
-            fontWeight: '300',
-            letterSpacing: '2px',
-            textAlign: 'center',
-            lineHeight: '1.1',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
           }}
         >
-          <span>{novio1}</span>
+          <div
+            style={{
+              fontSize: '68px',
+              color: '#ffffff',
+              fontWeight: 300,
+              display: 'flex',
+            }}
+          >
+            {novio1}
+          </div>
           {novio2 && (
-            <span
+            <div
               style={{
-                fontSize: '40px',
+                fontSize: '42px',
                 color: '#c9a96e',
                 fontStyle: 'italic',
-                margin: '5px 0',
+                margin: '4px 0',
                 display: 'flex',
               }}
             >
-              &
-            </span>
+              &amp;
+            </div>
           )}
-          {novio2 && <span>{novio2}</span>}
+          {novio2 && (
+            <div
+              style={{
+                fontSize: '68px',
+                color: '#ffffff',
+                fontWeight: 300,
+                display: 'flex',
+              }}
+            >
+              {novio2}
+            </div>
+          )}
         </div>
 
-        {/* Divider */}
+        {/* Linea divisoria */}
         <div
           style={{
             width: '120px',
-            height: '1px',
+            height: '2px',
             background: '#c9a96e',
-            margin: '30px 0',
+            margin: '28px 0',
             display: 'flex',
           }}
         />
 
-        {/* Date */}
+        {/* Fecha */}
         {fecha && (
           <div
             style={{
@@ -209,28 +164,28 @@ export async function GET(request) {
           </div>
         )}
 
-        {/* Message */}
+        {/* Mensaje */}
         <div
           style={{
-            fontSize: '16px',
+            fontSize: '18px',
             color: 'rgba(255, 255, 255, 0.6)',
-            marginTop: '15px',
-            maxWidth: '600px',
+            marginTop: '16px',
+            maxWidth: '550px',
             textAlign: 'center',
             display: 'flex',
           }}
         >
-          {mensaje.length > 80 ? mensaje.substring(0, 80) + '...' : mensaje}
+          {mensaje.length > 70 ? mensaje.substring(0, 70) + '...' : mensaje}
         </div>
 
         {/* Branding */}
         <div
           style={{
             position: 'absolute',
-            bottom: '30px',
-            fontSize: '14px',
+            bottom: '35px',
+            fontSize: '15px',
             color: 'rgba(201, 169, 110, 0.6)',
-            letterSpacing: '3px',
+            letterSpacing: '4px',
             display: 'flex',
           }}
         >
