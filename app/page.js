@@ -209,7 +209,9 @@ export default function Home() {
       {/* NAV */}
       <nav className="navbar">
         <div className="nav-container">
-          <a href="/" className="nav-logo">Feste<span>jia</span></a>
+          <a href="/" className="nav-logo" aria-label="Festejia">
+            <img src="/isotipo.png" alt="Festejia" className="nav-isotipo" />
+          </a>
           <button className="nav-toggle" onClick={() => setMobileMenu(!mobileMenu)} aria-label="Menú">
             <span></span><span></span><span></span>
           </button>
@@ -227,10 +229,13 @@ export default function Home() {
 
       {/* HERO */}
       <section className="hero">
+        <video className="hero-video-bg" autoPlay muted loop playsInline poster="/hero-poster.jpg">
+          <source src="/hero-bg.mp4" type="video/mp4" />
+        </video>
         <div className="hero-overlay"></div>
         <div className={`hero-content ${heroVisible ? 'hero-animate' : ''}`}>
           <div className="hero-text">
-            <p className="hero-subtitle hero-fade hero-delay-1">INVITACIONES DIGITALES PREMIUM</p>
+            <img src="/logotipo.png" alt="Festejia" className="hero-logotipo hero-fade hero-delay-1" />
             <h1 className="hero-headline hero-fade hero-delay-2">
               Imagina el <em>recuerdo</em>,<br/>nosotros lo <em>creamos</em>
             </h1>
