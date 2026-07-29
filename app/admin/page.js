@@ -164,6 +164,7 @@ export default function AdminPanel() {
           <button className={tab === 'clients' ? 'active' : ''} onClick={() => setTab('clients')}>👥 Clientes</button>
           <button className={tab === 'events' ? 'active' : ''} onClick={() => setTab('events')}>📅 Eventos</button>
         </nav>
+        <a href="/admin-express" className="sidebar-express-link">⚡ Panel Express →</a>
         <button className="sidebar-logout" onClick={logout}>Cerrar Sesión</button>
       </aside>
 
@@ -371,7 +372,9 @@ export default function AdminPanel() {
         .sidebar-nav { display: flex; flex-direction: column; gap: 0.3rem; flex: 1; }
         .sidebar-nav button { background: none; border: none; color: rgba(255,255,255,0.6); text-align: left; padding: 0.8rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
         .sidebar-nav button:hover, .sidebar-nav button.active { background: rgba(201,169,110,0.15); color: white; }
-        .sidebar-logout { background: none; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); padding: 0.6rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-top: auto; }
+        .sidebar-express-link { color: #c9a96e; font-size: 0.8rem; text-decoration: none; margin-top: auto; padding: 0.6rem 1rem; border: 1px solid rgba(201,169,110,0.3); border-radius: 8px; text-align: center; }
+        .sidebar-express-link:hover { background: rgba(201,169,110,0.1); }
+        .sidebar-logout { background: none; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); padding: 0.6rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-top: 0.8rem; }
         .admin-main { flex: 1; margin-left: 240px; padding: 2rem; }
         .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
         .admin-header h1 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 400; }
