@@ -6,6 +6,7 @@ import {
   listarTodasLasInvitaciones,
   publicarInvitacionAdmin,
   despublicarInvitacionAdmin,
+  eliminarInvitacionAdmin,
 } from '../../lib/express/queries'
 import { confirmarPago, rechazarPago } from '../../lib/express/payments'
 
@@ -85,6 +86,16 @@ export default function AdminExpressPanel() {
     await despublicarInvitacionAdmin(invitacionId)
     await cargarDatos()
     setProcesando(null)
+  }
+
+  async function handleEliminar(invitacionId, nombre) {
+    if (!confirm(`¿Eliminar permanentemente la invitación de "${nombre}"? Esta acción no se puede deshacer y borrará también su historial de pagos.`)) return
+    setProcesando(invitacionId)
+    const { error } = await eliminarInvitacionAdmin(invitacionId)
+    if (error) setMensaje('Error al eliminar: ' + error.message)
+    else { setMensaje('Invitación eliminada.'); await cargarDatos() }
+    setProcesando(null)
+    setTimeout(() => setMensaje(''), 3000)
   }
 
   async function logout() {
@@ -181,6 +192,9 @@ export default function AdminExpressPanel() {
                           {inv.slug ? <a href={`/e/${inv.slug}`} target="_blank" rel="noopener noreferrer">{inv.slug}</a> : '-'}
                         </td>
                         <td className="ax-row-actions">
+                          <a className="ax-btn-sm ax-btn-sm-ghost" href={`/express/dashboard/editor/${inv.id}`} target="_blank" rel="noopener noreferrer">
+                            Ver / Editar
+                          </a>
                           {inv.estado !== 'publicada' && (
                             <button className="ax-btn-sm" disabled={procesando === inv.id} onClick={() => handlePublicarManual(inv.id)}>
                               Publicar
@@ -191,6 +205,13 @@ export default function AdminExpressPanel() {
                               Despublicar
                             </button>
                           )}
+                          <button
+                            className="ax-btn-sm ax-btn-sm-danger"
+                            disabled={procesando === inv.id}
+                            onClick={() => handleEliminar(inv.id, [inv.nombre1, inv.nombre2].filter(Boolean).join(' & ') || inv.codigo_interno || 'sin nombre')}
+                          >
+                            Eliminar
+                          </button>
                         </td>
                       </tr>
                     )
@@ -242,8 +263,11 @@ export default function AdminExpressPanel() {
         .ax-nombre { font-weight: 500; }
         .ax-status-dot { font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 10px; white-space: nowrap; }
         .ax-row-actions { display: flex; gap: 0.4rem; }
-        .ax-btn-sm { background: #1a1a1a; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.72rem; }
+        .ax-btn-sm { background: #1a1a1a; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.72rem; text-decoration: none; display: inline-block; }
+        .ax-btn-sm:disabled { opacity: 0.5; cursor: not-allowed; }
+        .ax-btn-sm-ghost { background: white; border: 1.5px solid #e0e0e0; color: #333; }
         .ax-btn-sm-warn { background: none; border: 1.5px solid #eab308; color: #b45309; }
+        .ax-btn-sm-danger { background: none; border: 1.5px solid #fca5a5; color: #ef4444; }
         @media (max-width: 768px) {
           .ax-page { flex-direction: column; }
           .ax-sidebar { width: 100%; height: auto; position: relative; flex-direction: row; align-items: center; padding: 1rem; flex-wrap: wrap; }

@@ -25,8 +25,11 @@ export default function ExpressDashboardHome() {
     setLoading(false)
   }
 
-  async function handleEliminar(id) {
-    if (!confirm('¿Eliminar este borrador? Esta acción no se puede deshacer.')) return
+  async function handleEliminar(id, estado) {
+    const mensaje = estado === 'publicada'
+      ? '¿Eliminar esta invitación? Ya está publicada: al eliminarla, el enlace dejará de funcionar para tus invitados. Esta acción no se puede deshacer.'
+      : '¿Eliminar esta invitación? Esta acción no se puede deshacer.'
+    if (!confirm(mensaje)) return
     const { data: userData } = await supabase.auth.getUser()
     await eliminarInvitacion(id, userData.user.id)
     setInvitaciones(invitaciones.filter((i) => i.id !== id))
@@ -71,9 +74,7 @@ export default function ExpressDashboardHome() {
                       Ver invitación
                     </a>
                   )}
-                  {inv.estado === 'borrador' && (
-                    <button onClick={() => handleEliminar(inv.id)} className="express-btn-danger">Eliminar</button>
-                  )}
+                  <button onClick={() => handleEliminar(inv.id, inv.estado)} className="express-btn-danger">Eliminar</button>
                 </div>
               </div>
             )
