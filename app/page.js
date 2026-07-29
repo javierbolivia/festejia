@@ -221,6 +221,7 @@ export default function Home() {
             <li><a href="/graduaciones">Graduaciones</a></li>
             <li><a href="/bautizos">Bautizos</a></li>
             <li><a href="#planes">Planes</a></li>
+            <li><a href="/express" className="nav-express-link">Festejia Express</a></li>
             <li><a href="#contacto">Contacto</a></li>
             <li><a href="/login" className="nav-cta">Iniciar Sesión</a></li>
           </ul>
@@ -374,6 +375,18 @@ export default function Home() {
           <div className="system-visual stagger-child">
             <LiveDashboard />
           </div>
+        </div>
+      </section>
+
+      {/* EXPRESS BANNER */}
+      <section className="express-banner reveal-section">
+        <div className="express-banner-content stagger-child">
+          <div className="express-banner-text">
+            <span className="express-banner-tag">Nuevo</span>
+            <h3>¿Necesitas tu invitación ya mismo?</h3>
+            <p>Con Festejia Express creas y personalizas tu invitación digital tú mismo, en minutos, sin esperar a nuestro equipo de diseño.</p>
+          </div>
+          <a href="/express" className="btn-primary">Conocer Festejia Express</a>
         </div>
       </section>
 

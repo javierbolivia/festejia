@@ -162,6 +162,11 @@ ul, ol { list-style: none; }
   box-shadow: 0 4px 16px rgba(196,162,101,0.3) !important;
 }
 .nav-cta:active { transform: translateY(0) scale(0.97) !important; }
+.nav-express-link {
+  color: var(--gold-light) !important;
+  font-weight: 500 !important;
+}
+.nav-express-link:hover { color: var(--gold) !important; }
 
 /* ===== HERO ===== */
 .hero {
@@ -885,6 +890,31 @@ ul, ol { list-style: none; }
 .feed-dot.blue { background: #5b9bd5; }
 .feed-dot.gold { background: var(--gold); }
 .feed-msg { font-size: 0.6rem; color: rgba(255,255,255,0.5); font-weight: 300; }
+
+/* ===== EXPRESS BANNER ===== */
+.express-banner { padding: var(--space-6) var(--space-5); background: var(--dark); overflow: hidden; }
+.express-banner-content {
+  max-width: 1000px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-5);
+  flex-wrap: wrap;
+  background: linear-gradient(135deg, rgba(196,162,101,0.1), rgba(196,162,101,0.02));
+  border: 1px solid rgba(196,162,101,0.2);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-6);
+}
+.express-banner-text { flex: 1; min-width: 240px; }
+.express-banner-tag {
+  display: inline-block; font-size: 0.6rem; font-weight: 600; letter-spacing: 0.15em;
+  color: var(--dark); background: var(--gold); padding: 3px 12px; border-radius: var(--radius-full);
+  margin-bottom: var(--space-3); text-transform: uppercase;
+}
+.express-banner-text h3 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 500; color: var(--white); margin-bottom: var(--space-2); }
+.express-banner-text p { font-size: 0.85rem; color: rgba(255,255,255,0.55); font-weight: 300; line-height: 1.5; max-width: 480px; }
+
+@media (max-width: 768px) {
+  .express-banner-content { flex-direction: column; text-align: center; padding: var(--space-5); }
+  .express-banner-text p { margin: 0 auto; }
+}
 
 /* ===== PRICING ===== */
 .pricing-section { padding: var(--space-8) var(--space-5); background: var(--gray-50); overflow: hidden; }
