@@ -53,6 +53,11 @@ app/
         └── generate-text/    # Asistente de IA para textos
 ```
 
+### 2.1. Componentes Modulares de Interfaz (`components/`)
+- **`CategoryPage.js`**: Componente maestro reutilizable para las páginas de catálogo (`/bodas`, `/quince`, `/graduaciones`, `/bautizos`). Estandariza la navegación, menú móvil, encabezado con color de acento, rejilla de teléfonos y formulario de contacto hacia WhatsApp.
+- **`CuentaRegresiva.jsx`**: Widget interactivo de alta gama para cuenta regresiva hacia el evento. Implementa animación precisa por segundo (`dias`, `horas`, `minutos`, `segundos`), prevención de deshidratación SSR, variantes cromáticas (`marfil` y `oscuro`), y transiciones al estado festivo.
+- **`LiveDashboard.js`**: Maqueta interactiva del panel de control que simula en tiempo real la llegada de confirmaciones, métricas y gráficas.
+
 ---
 
 ## 3. Módulos Críticos en `lib/`

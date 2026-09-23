@@ -40,6 +40,7 @@ Bienvenido al mapa de contenido principal (MOC) de tu bóveda de conocimiento pe
 - [[politica-cambiaria-mercado]]: Tasa mínima de 11.50 BOB/USD en Bolivia, detección geográfica automática de 20 divisas y redondeo comercial.
 - [[modelo-comercial-festejia]]: Estructura de ingresos escalonada (Clásico, Elegante, Imperial, Express) y addons de margen.
 - [[sistema-diseno-editorial]]: Paleta oro champagne (#d6b06a), marfil y negro obsidiana con tipografía Cormorant Garamond e Inter.
+- [[componente-cuenta-regresiva]]: Reloj interactivo de cuenta regresiva por segundo con diseño editorial y soporte bimodal.
 - [[optimizacion-rendimiento-movil]]: Cero frameworks CSS pesados y hook `useVisibleInterval` con IntersectionObserver.
 
 ### Arquitectura de Conocimiento (PKM)

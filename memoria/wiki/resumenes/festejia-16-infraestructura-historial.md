@@ -20,7 +20,7 @@ Festejia opera sobre un stack de producción sin servidores (serverless) altamen
    - **Base de Datos y Auth**: Supabase PostgreSQL administrado con RLS.
    - **Dominio y DNS**: Porkbun con gestión de registros DNS y certificados SSL automáticos.
 2. **Historial de Commits y Evolución del Código**:
-   - Trazabilidad documentada desde los primeros commits fundacionales (`262a518`) hasta la arquitectura modular de bloques y seguridad de IA (`8891b05`).
+   - Trazabilidad documentada desde los primeros commits fundacionales (`262a518`) hasta los últimos hitos de tipografía editorial (`d23a58d`) y enfoque visual de la portada (`c92935a`).
 3. **Hoja de Ruta de Pasarelas de Pago para Bolivia**:
    - **Fase 1 (Vigente / Cero Comisión)**: Cobro manual asistido por WhatsApp mediante código QR Simple interbancario y validación visual en `/admin-express`.
    - **Fase 2 (Transición)**: Generación dinámica de enlaces de cobro de la pasarela **Libélula** para pagos automáticos con tarjeta de débito/crédito boliviana.

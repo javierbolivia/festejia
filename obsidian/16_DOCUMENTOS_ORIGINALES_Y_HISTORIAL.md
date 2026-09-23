@@ -19,6 +19,9 @@
 ## 2. HISTORIAL DE COMMITS Y EVOLUCIÓN TÉCNICA
 
 Registro de los últimos hitos de desarrollo consolidados en la rama `main`:
+- `c92935a`: `revert(page)` - Mantener únicamente los 8 diseños boutique originales en la portada sin mockups de otras ocasiones, preservando la ligereza visual y el enfoque minimalista.
+- `d23a58d`: `feat` - Incorporar tipografía de lujo Cormorant Garamond (Google Fonts), componente React CuentaRegresiva y consolidación de la memoria total en Obsidian.
+- `0461301`: `fix(categories)` - Menú hamburguesa móvil, enlaces completos de navegación, redes sociales y botón WhatsApp en el componente `CategoryPage`.
 - `8891b05`: `feat(express)` - Agregar acción "Eliminar" en paneles de usuario y admin, limitando a una sola plantilla editable en el lanzamiento.
 - `91afc27`: `fix(admin-express)` - Prevención de colisión de slug al publicar borradores sin nombres capturados mediante fallback a código interno.
 - `7341dc1`: `feat(admin-express)` - Panel administrativo para confirmación de pagos y publicación con cálculo de expiración automática.

@@ -693,6 +693,9 @@ D) CONTROL DE ACCESO Y ESCANER QR (/checkin) - EXCLUSIVO PLAN IMPERIAL
   * Repositorio: GitHub (javierbolivia/festejia).
   * Base de datos: Supabase (Auth + DB + Storage).
 - Historial de Commits Destacados:
+  * c92935a: Revertir galería de portada para mantener únicamente los 8 diseños boutique originales sin saturar la home.
+  * d23a58d: Tipografía de lujo Cormorant Garamond, componente CuentaRegresiva y base de conocimiento total en Obsidian/Memoria.
+  * 0461301: Menú móvil hamburguesa, enlaces completos, redes sociales y botón WhatsApp en CategoryPage.
   * 8891b05: Acción Eliminar en paneles y límite de una plantilla editable en Express.
   * 91afc27: Prevención de choque de slug al publicar sin nombres.
   * 7341dc1: Panel /admin-express para pagos y cálculo de expiración.
