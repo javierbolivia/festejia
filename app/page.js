@@ -622,6 +622,10 @@ export default function Home() {
             <span className="section-tag stagger-child">Contáctanos</span>
             <h2 className="section-title left stagger-child">Hagamos realidad<br/>tu invitación</h2>
             <p className="contact-desc stagger-child">Nuestro equipo está listo para ayudarte a diseñar una experiencia única para tu celebración.</p>
+            <div className="contact-demo stagger-child" aria-label="Muestra de una invitación digital Festejia">
+              <img src="/demo-contacto-v1.png" alt="Muestra genérica de invitación digital en teléfono" />
+              <span>Tu historia, en una experiencia digital</span>
+            </div>
             <div className="contact-methods">
               <a href="https://wa.me/59100000000" className="contact-method stagger-child" target="_blank" rel="noopener noreferrer">
                 <div className="method-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
