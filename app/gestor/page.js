@@ -18,9 +18,19 @@ export default function GestorLite() {
     if (!user) { window.location.href = '/login'; return }
     setUser(user)
 
+    const { data: expressProfile } = await supabase
+      .from('express_clientes')
+      .select('id')
+      .eq('id', user.id)
+      .maybeSingle()
+    if (expressProfile) { window.location.href = '/express/dashboard'; return }
+
     const { data: prof } = await supabase.from('profiles').select('role,plan').eq('id', user.id).single()
-    if (prof && prof.role === 'admin') { window.location.href = '/admin'; return }
-    if (prof && prof.plan === 'exclusive') { window.location.href = '/panel'; return }
+    if (prof?.role === 'admin') { window.location.href = '/admin'; return }
+    // El gestor Lite corresponde únicamente a Plus. Las cuentas Express no
+    // tienen perfil Premium y no deben poder crear un evento por esta ruta.
+    if (prof?.role !== 'client') { window.location.href = '/login'; return }
+    if (prof.plan === 'premium' || prof.plan === 'exclusive') { window.location.href = '/panel'; return }
 
     const { data: eventos } = await supabase.from('eventos').select('*').eq('user_id', user.id).limit(1)
     if (eventos && eventos.length > 0) {

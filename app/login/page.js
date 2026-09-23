@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { supabase } from '../../lib/supabase'
+import { waLink } from '../../lib/config'
 
 export default function Login() {
   const [usuario, setUsuario] = useState('')
@@ -28,11 +29,23 @@ export default function Login() {
       return
     }
 
+    // Mantener Express y Premium separados incluso si existe un perfil
+    // legacy creado automáticamente al registrarse en Auth.
+    const { data: expressProfile } = await supabase
+      .from('express_clientes')
+      .select('id')
+      .eq('id', data.user.id)
+      .maybeSingle()
+    if (expressProfile) {
+      window.location.href = '/express/dashboard'
+      return
+    }
+
     // Detectar rol y plan para redirigir
     const { data: prof } = await supabase.from('profiles').select('role,plan').eq('id', data.user.id).single()
     if (prof?.role === 'admin') {
       window.location.href = '/admin'
-    } else if (prof?.plan === 'exclusive') {
+    } else if (prof?.plan === 'premium' || prof?.plan === 'exclusive') {
       window.location.href = '/panel'
     } else {
       window.location.href = '/gestor'
@@ -88,7 +101,7 @@ export default function Login() {
           </form>
 
           <p className="login-footer">
-            ¿No tienes cuenta? <a href="https://wa.me/59100000000?text=Hola Festejia! Necesito acceso al panel." target="_blank" rel="noopener noreferrer">Contáctanos</a>
+            ¿No tienes cuenta? <a href={waLink('Hola Festejia! Necesito acceso al panel.')} target="_blank" rel="noopener noreferrer">Contáctanos</a>
           </p>
         </div>
       </div>

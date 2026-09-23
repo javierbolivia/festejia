@@ -30,8 +30,16 @@ export default function AdminPanel() {
   }
 
   async function loadData() {
-    const { data: profs } = await supabase.from('profiles').select('*').eq('role', 'client').order('created_at', { ascending: false })
-    setClients(profs || [])
+    const { data: sessionData } = await supabase.auth.getSession()
+    const token = sessionData?.session?.access_token
+    const [profilesResult, expressResponse] = await Promise.all([
+      supabase.from('profiles').select('*').eq('role', 'client').order('created_at', { ascending: false }),
+      token ? fetch('/api/admin/express-client-ids', { headers: { Authorization: `Bearer ${token}` } }) : null,
+    ])
+    const profs = profilesResult.data
+    const expressPayload = expressResponse?.ok ? await expressResponse.json() : { ids: [] }
+    const expressIds = new Set(expressPayload.ids || [])
+    setClients((profs || []).filter((profile) => !expressIds.has(profile.id)))
 
     const { data: evts } = await supabase.from('eventos').select('*').order('created_at', { ascending: false })
     setEventos(evts || [])
@@ -42,102 +50,72 @@ export default function AdminPanel() {
 
   async function createClient(e) {
     e.preventDefault()
-    
+    const { data: sessionData } = await supabase.auth.getSession()
+    const token = sessionData?.session?.access_token
+    if (!token) { alert('Sesión inválida, vuelve a iniciar sesión.'); return }
+
     try {
-      const email = newClient.usuario + '@festejia.local'
-      
-      // 1. Crear usuario en Supabase Auth via fetch directo
-      const response = await fetch('https://xzkxutllxkdrugjvflco.supabase.co/auth/v1/signup', {
+      const response = await fetch('/api/admin/create-client', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6a3h1dGxseGtkcnVnanZmbGNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NTE0MTgsImV4cCI6MjEwMDUyNzQxOH0.s3icP7S33TEWVL77edSFe8svSgC2AqTQe3lB0WYDrXk'
-        },
-        body: JSON.stringify({ email, password: newClient.password })
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(newClient),
       })
-      
-      const authData = await response.json()
-      
-      if (!response.ok || !authData.user?.id) {
-        alert('Error al crear usuario: ' + (authData.msg || authData.message || 'Error desconocido'))
+      const result = await response.json()
+      if (!response.ok || !result?.ok) {
+        alert('Error al crear cliente: ' + (result?.error || 'Error desconocido'))
         return
       }
-      
-      const userId = authData.user.id
 
-      // 2. Crear perfil
-      await supabase.from('profiles').upsert({
-        id: userId,
-        email: email,
-        nombre: newClient.nombre,
-        role: 'client',
-        plan: newClient.plan
-      })
-
-      // 3. Guardar credenciales en clientes_login
-      await supabase.from('clientes_login').insert({
-        usuario: newClient.usuario,
-        password: newClient.password,
-        profile_id: userId
-      })
-
-      // 4. Crear evento
-      await supabase.from('eventos').insert({
-        user_id: userId,
-        nombre_evento: newClient.nombre_evento || 'Mi Evento',
-        tipo: newClient.tipo
-      })
-
-      alert('✓ Cliente creado exitosamente\n\nUsuario: ' + newClient.usuario + '\nContraseña: ' + newClient.password)
+      alert('✓ Cliente creado exitosamente\n\nUsuario: ' + result.client.usuario + '\nContraseña: ' + newClient.password)
       setNewClient({ usuario: '', password: '', nombre: '', plan: 'plus', nombre_evento: '', tipo: 'boda' })
       setShowCreateClient(false)
       await loadData()
     } catch(err) {
-      alert('Error: ' + err.message)
+      alert('Error al crear cliente: ' + err.message)
     }
   }
 
   async function toggleClientActive(clientId, current) {
-    await supabase.from('profiles').update({ activo: !current }).eq('id', clientId)
+    const { error } = await supabase.from('profiles').update({ activo: !current }).eq('id', clientId)
+    if (error) { alert('No se pudo actualizar el cliente: ' + error.message); return }
     setClients(clients.map(c => c.id === clientId ? { ...c, activo: !current } : c))
   }
 
   async function updateEventField(eventoId, field, value) {
-    await supabase.from('eventos').update({ [field]: value }).eq('id', eventoId)
+    const { error } = await supabase.from('eventos').update({ [field]: value }).eq('id', eventoId)
+    if (error) alert('No se pudo guardar el evento: ' + error.message)
   }
 
   async function deleteClient(clientId) {
     if (!confirm('¿Eliminar este cliente y todos sus datos?')) return
-    
-    // Obtener email del cliente para borrarlo de Auth
-    const client = clients.find(c => c.id === clientId)
-    
-    // Borrar de Auth via API
-    if (client) {
-      await fetch('https://xzkxutllxkdrugjvflco.supabase.co/auth/v1/admin/users/' + clientId, {
-        method: 'DELETE',
-        headers: {
-          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6a3h1dGxseGtkcnVnanZmbGNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NTE0MTgsImV4cCI6MjEwMDUyNzQxOH0.s3icP7S33TEWVL77edSFe8svSgC2AqTQe3lB0WYDrXk',
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6a3h1dGxseGtkcnVnanZmbGNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NTE0MTgsImV4cCI6MjEwMDUyNzQxOH0.s3icP7S33TEWVL77edSFe8svSgC2AqTQe3lB0WYDrXk'
-        }
-      }).catch(() => {})
+
+    // Corrección de auditoría (hallazgo 1.3): antes esto intentaba borrar el
+    // usuario de Auth con un fetch directo desde el navegador usando la anon
+    // key, que no tiene permiso para esa operación (falla siempre en
+    // silencio, `.catch(() => {})`). El borrado real de auth.users requiere
+    // la Service Role Key, que nunca debe estar en el navegador — por eso
+    // ahora se delega a un Route Handler server-only.
+    const { data: sessionData } = await supabase.auth.getSession()
+    const token = sessionData?.session?.access_token
+    if (!token) { alert('Sesión inválida, vuelve a iniciar sesión.'); return }
+
+    try {
+      const res = await fetch('/api/admin/delete-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ clientId }),
+      })
+      const json = await res.json()
+      if (!res.ok) {
+        alert('Error al eliminar: ' + (json?.error || 'Error desconocido'))
+        return
+      }
+      if (json?.warning) alert(json.warning)
+    } catch (err) {
+      alert('Error al eliminar: ' + err.message)
+      return
     }
 
-    // Borrar eventos e invitados asociados
-    const { data: evts } = await supabase.from('eventos').select('id').eq('user_id', clientId)
-    if (evts) {
-      for (const evt of evts) {
-        await supabase.from('invitados').delete().eq('evento_id', evt.id)
-      }
-      await supabase.from('eventos').delete().eq('user_id', clientId)
-    }
-    
-    // Borrar de clientes_login
-    await supabase.from('clientes_login').delete().eq('profile_id', clientId)
-    
-    // Borrar perfil
-    await supabase.from('profiles').delete().eq('id', clientId)
-    
     await loadData()
   }
 
@@ -163,6 +141,7 @@ export default function AdminPanel() {
           <button className={tab === 'dashboard' ? 'active' : ''} onClick={() => setTab('dashboard')}>📊 Dashboard</button>
           <button className={tab === 'clients' ? 'active' : ''} onClick={() => setTab('clients')}>👥 Clientes</button>
           <button className={tab === 'events' ? 'active' : ''} onClick={() => setTab('events')}>📅 Eventos</button>
+          <button className={tab === 'guests' ? 'active' : ''} onClick={() => setTab('guests')}>✉️ Invitados</button>
         </nav>
         <a href="/admin-express" className="sidebar-express-link">⚡ Panel Express →</a>
         <button className="sidebar-logout" onClick={logout}>Cerrar Sesión</button>
@@ -171,7 +150,7 @@ export default function AdminPanel() {
       {/* MAIN CONTENT */}
       <main className="admin-main">
         <header className="admin-header">
-          <h1>{tab === 'dashboard' ? 'Dashboard' : tab === 'clients' ? 'Clientes' : 'Eventos'}</h1>
+          <h1>{tab === 'dashboard' ? 'Resumen' : tab === 'clients' ? 'Clientes' : tab === 'events' ? 'Eventos' : 'Invitados'}</h1>
           <span className="admin-email">{user?.email}</span>
         </header>
 
@@ -214,7 +193,7 @@ export default function AdminPanel() {
                   </div>
                   <div>
                     <label>Contraseña</label>
-                    <input type="text" value={newClient.password} onChange={e => setNewClient({...newClient, password: e.target.value})} required placeholder="Boda2024!" />
+                    <input type="password" minLength="8" value={newClient.password} onChange={e => setNewClient({...newClient, password: e.target.value})} required placeholder="Mínimo 8 caracteres" />
                   </div>
                   <div>
                     <label>Nombre</label>
@@ -319,7 +298,7 @@ export default function AdminPanel() {
                         <button className="btn-save" onClick={() => { alert('Guardado'); setEditingEvent(null); loadData(); }}>Guardar Diseño</button>
                       </div>
                     )}
-                    <div className="event-plantilla"><label>Plantilla: </label><select value={evt.plantilla || 'plantilla1'} onChange={e => { updateEventField(evt.id, 'plantilla', e.target.value); setEventos(eventos.map(ev => ev.id === evt.id ? {...ev, plantilla: e.target.value} : ev)) }} style={{padding:'4px 8px', borderRadius:'4px', border:'1px solid #333', background:'#2a2a2a', color:'#fff', fontSize:'0.8rem'}}><option value="plantilla1">Plantilla 1 - Sobre</option><option value="plantilla2">Plantilla 2</option><option value="plantilla3">Plantilla 3</option><option value="plantilla4">Plantilla 4</option><option value="plantilla5">Plantilla 5</option></select></div>
+                    <div className="event-plantilla"><label>Plantilla: </label><select value={evt.plantilla || 'plantilla1'} onChange={e => { updateEventField(evt.id, 'plantilla', e.target.value); setEventos(eventos.map(ev => ev.id === evt.id ? {...ev, plantilla: e.target.value} : ev)) }} style={{padding:'4px 8px', borderRadius:'4px', border:'1px solid #333', background:'#2a2a2a', color:'#fff', fontSize:'0.8rem'}}><option value="plantilla1">Plantilla 1 - Sobre</option><option value="plantilla2">Plantilla 2</option></select></div>
                   </div>
                 )
               })}
@@ -364,31 +343,32 @@ export default function AdminPanel() {
       </main>
 
       <style jsx>{`
-        .admin-page { display: flex; min-height: 100vh; background: #f5f5f5; }
-        .admin-sidebar { width: 240px; background: #1a1a1a; color: white; padding: 2rem 1.5rem; display: flex; flex-direction: column; position: fixed; height: 100vh; }
+        .admin-page { display: flex; min-height: 100vh; background: #f7f6f2; }
+        .admin-sidebar { width: 240px; background: linear-gradient(160deg, #17191d, #25201b); color: white; padding: 2rem 1.5rem; display: flex; flex-direction: column; position: fixed; height: 100vh; box-shadow: 8px 0 30px rgba(21, 18, 14, .08); }
         .sidebar-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; margin-bottom: 0.3rem; }
         .sidebar-logo span { color: #c9a96e; }
         .sidebar-role { font-size: 0.65rem; color: #c9a96e; letter-spacing: 2px; margin-bottom: 2.5rem; font-weight: 600; }
         .sidebar-nav { display: flex; flex-direction: column; gap: 0.3rem; flex: 1; }
         .sidebar-nav button { background: none; border: none; color: rgba(255,255,255,0.6); text-align: left; padding: 0.8rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
         .sidebar-nav button:hover, .sidebar-nav button.active { background: rgba(201,169,110,0.15); color: white; }
+        .sidebar-nav button.active { box-shadow: inset 3px 0 #c9a96e; }
         .sidebar-express-link { color: #c9a96e; font-size: 0.8rem; text-decoration: none; margin-top: auto; padding: 0.6rem 1rem; border: 1px solid rgba(201,169,110,0.3); border-radius: 8px; text-align: center; }
         .sidebar-express-link:hover { background: rgba(201,169,110,0.1); }
         .sidebar-logout { background: none; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); padding: 0.6rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-top: 0.8rem; }
         .admin-main { flex: 1; margin-left: 240px; padding: 2rem; }
-        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-        .admin-header h1 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 400; }
-        .admin-email { color: #999; font-size: 0.8rem; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1.1rem; border-bottom: 1px solid #e8e4dc; }
+        .admin-header h1 { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 500; letter-spacing: -.02em; }
+        .admin-email { color: #777; font-size: 0.8rem; background: #fff; border: 1px solid #e8e4dc; padding: .5rem .8rem; border-radius: 999px; }
         .admin-content { }
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-        .stat-card { background: white; border-radius: 12px; padding: 1.5rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .stat-card { background: white; border: 1px solid #eee9df; border-radius: 14px; padding: 1.5rem; text-align: center; box-shadow: 0 6px 20px rgba(43,36,25,.045); }
         .stat-card.primary { border-left: 4px solid #c9a96e; }
         .stat-card.green { border-left: 4px solid #22c55e; }
         .stat-card.yellow { border-left: 4px solid #eab308; }
         .stat-card.red { border-left: 4px solid #ef4444; }
         .stat-number { font-size: 2rem; font-weight: 700; color: #1a1a1a; }
         .stat-label { font-size: 0.7rem; color: #999; text-transform: uppercase; letter-spacing: 1px; margin-top: 0.3rem; }
-        .recent-section { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .recent-section { background: white; border: 1px solid #eee9df; border-radius: 14px; padding: 1.5rem; box-shadow: 0 6px 20px rgba(43,36,25,.045); }
         .recent-section h3 { font-size: 1rem; margin-bottom: 1rem; color: #333; }
         .recent-item { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid #f0f0f0; font-size: 0.85rem; }
         .plan-badge { padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }

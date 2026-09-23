@@ -12,6 +12,11 @@ export default function CheckinScanner() {
   const canvasRef = useRef(null)
   const streamRef = useRef(null)
   const intervalRef = useRef(null)
+  // ref mutable para deduplicar escaneos (ver processQR). Un ref, a diferencia
+  // de un estado de React, siempre refleja el valor más reciente incluso
+  // dentro del closure de scanFrame/processQR registrado una sola vez por
+  // setInterval — corrección de auditoría, hallazgo 1.7.
+  const ultimoEscaneadoRef = useRef(null)
 
   useEffect(() => {
     checkAccess()
@@ -21,6 +26,25 @@ export default function CheckinScanner() {
   async function checkAccess() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { window.location.href = '/login'; return }
+    const { data: expressProfile } = await supabase
+      .from('express_clientes')
+      .select('id')
+      .eq('id', user.id)
+      .maybeSingle()
+    if (expressProfile) { window.location.href = '/express/dashboard'; return }
+    const { data: prof } = await supabase
+      .from('profiles')
+      .select('role,plan')
+      .eq('id', user.id)
+      .single()
+
+    // Check-in/QR es una prestación exclusiva del plan Exclusive. Antes
+    // cualquier cliente con un evento podía abrir directamente /checkin.
+    if (prof?.role === 'admin') { window.location.href = '/admin'; return }
+    if (prof?.role !== 'client' || prof?.plan !== 'exclusive') {
+      window.location.href = prof?.role === 'client' ? '/panel' : '/login'
+      return
+    }
     const { data: eventos } = await supabase.from('eventos').select('id').eq('user_id', user.id).limit(1)
     if (eventos && eventos.length > 0) setEventoId(eventos[0].id)
   }
@@ -35,18 +59,45 @@ export default function CheckinScanner() {
         videoRef.current.srcObject = stream
         videoRef.current.play()
       }
-      // Cargar jsQR dinámicamente
+      // Cargar jsQR dinámicamente desde CDN.
+      // Corrección de auditoría (hallazgo 1.6): antes no había `onerror` ni
+      // timeout — si el CDN fallaba (sin internet, firewall del venue, CDN
+      // caído justo el día del evento), el `await` de la promesa colgaba
+      // para siempre y el escáner quedaba en un spinner infinito sin ningún
+      // mensaje de error. Ahora se rechaza explícitamente en ambos casos.
       if (!window.jsQR) {
-        const script = document.createElement('script')
-        script.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js'
-        document.head.appendChild(script)
-        await new Promise(r => script.onload = r)
+        await cargarScriptJsQR()
       }
       intervalRef.current = setInterval(scanFrame, 500)
     } catch (err) {
-      setError('No se pudo acceder a la cámara: ' + err.message)
-      setScanning(false)
+      setError('No se pudo iniciar el escáner: ' + err.message)
+      // Si la cámara ya se había activado pero la carga de jsQR falló,
+      // hay que liberarla — antes quedaba encendida aunque la UI dijera
+      // "no escaneando" (setScanning(false) sin detener streamRef.current).
+      stopScanner()
     }
+  }
+
+  function cargarScriptJsQR() {
+    return new Promise((resolve, reject) => {
+      const TIMEOUT_MS = 10000
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js'
+
+      const timeoutId = setTimeout(() => {
+        script.remove()
+        reject(new Error('Tiempo de espera agotado cargando el escáner. Verifica tu conexión a internet.'))
+      }, TIMEOUT_MS)
+
+      script.onload = () => { clearTimeout(timeoutId); resolve() }
+      script.onerror = () => {
+        clearTimeout(timeoutId)
+        script.remove()
+        reject(new Error('No se pudo cargar el escáner. Verifica tu conexión a internet.'))
+      }
+
+      document.head.appendChild(script)
+    })
   }
 
   function scanFrame() {
@@ -68,9 +119,18 @@ export default function CheckinScanner() {
     // El QR contiene: festejia:INVITADO_ID
     if (!data.startsWith('festejia:')) return
     const invitadoId = data.replace('festejia:', '')
-    
-    // Evitar escanear el mismo dos veces seguidas
-    if (history.length > 0 && history[0].id === invitadoId) return
+
+    // Evitar reprocesar el mismo QR mientras el invitado lo sostiene frente
+    // a la cámara (se escanea cada 500ms). Antes esto comparaba contra
+    // `history` capturado en un closure obsoleto (siempre `[]`, porque
+    // scanFrame/processQR se registran una sola vez en setInterval) y el
+    // guard nunca funcionaba de verdad — disparaba múltiples selects/updates
+    // a Supabase por cada segundo que el QR quedaba frente a la cámara.
+    if (ultimoEscaneadoRef.current === invitadoId) return
+    ultimoEscaneadoRef.current = invitadoId
+    setTimeout(() => {
+      if (ultimoEscaneadoRef.current === invitadoId) ultimoEscaneadoRef.current = null
+    }, 3000)
 
     // Buscar invitado
     const { data: invitados } = await supabase

@@ -9,9 +9,21 @@ export default function ExpressDashboardLayout({ children, activeTab }) {
   const [checking, setChecking] = useState(true)
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
+    supabase.auth.getUser().then(async ({ data }) => {
       if (!data.user) {
         window.location.href = '/express/login'
+        return
+      }
+      const { data: expressProfile } = await supabase
+        .from('express_clientes')
+        .select('id')
+        .eq('id', data.user.id)
+        .maybeSingle()
+      if (!expressProfile) {
+        const { data: profile } = await supabase.from('profiles').select('role,plan').eq('id', data.user.id).maybeSingle()
+        if (profile?.role === 'admin') window.location.href = '/admin'
+        else if (profile?.plan === 'premium' || profile?.plan === 'exclusive') window.location.href = '/panel'
+        else window.location.href = '/gestor'
         return
       }
       setUser(data.user)
@@ -51,14 +63,15 @@ export default function ExpressDashboardLayout({ children, activeTab }) {
       </main>
 
       <style jsx global>{`
-        .express-dash-page { display: flex; min-height: 100vh; background: #f5f5f5; font-family: 'Raleway', sans-serif; }
-        .express-dash-sidebar { width: 230px; background: #1a1a1a; color: white; padding: 2rem 1.5rem; display: flex; flex-direction: column; position: fixed; height: 100vh; }
+        .express-dash-page { display: flex; min-height: 100vh; background: #f7f6f2; font-family: 'Raleway', sans-serif; }
+        .express-dash-sidebar { width: 230px; background: linear-gradient(160deg, #17191d, #25201b); color: white; padding: 2rem 1.5rem; display: flex; flex-direction: column; position: fixed; height: 100vh; box-shadow: 8px 0 30px rgba(21,18,14,.08); }
         .express-dash-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; }
         .express-dash-logo span { color: #c9a96e; }
         .express-dash-badge { font-size: 0.6rem; letter-spacing: 2px; color: #c9a96e; margin: 0.2rem 0 2rem; font-weight: 600; }
         .express-dash-nav { display: flex; flex-direction: column; gap: 0.3rem; flex: 1; }
         .express-dash-nav a { color: rgba(255,255,255,0.65); text-decoration: none; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.85rem; transition: all 0.2s; }
         .express-dash-nav a:hover, .express-dash-nav a.active { background: rgba(201,169,110,0.15); color: white; }
+        .express-dash-nav a.active { box-shadow: inset 3px 0 #c9a96e; }
         .express-dash-logout { background: none; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.65); padding: 0.6rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-top: auto; }
         .express-dash-main { flex: 1; margin-left: 230px; padding: 2rem; }
         @media (max-width: 768px) {

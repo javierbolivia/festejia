@@ -15,10 +15,22 @@ export default function ExpressLogin() {
     setError('')
     setLoading(true)
 
-    const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
+    const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password })
 
     if (authError) {
       setError('Correo o contraseña incorrectos.')
+      setLoading(false)
+      return
+    }
+
+    const { data: expressProfile } = await supabase
+      .from('express_clientes')
+      .select('id')
+      .eq('id', data.user.id)
+      .maybeSingle()
+    if (!expressProfile) {
+      await supabase.auth.signOut()
+      setError('Esta cuenta pertenece al panel Premium. Usa el acceso correspondiente.')
       setLoading(false)
       return
     }
