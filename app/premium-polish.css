@@ -1,6 +1,11 @@
 /* Dirección visual 2026: editorial cálida, tecnología discreta y detalle artesanal. */
 :root { --ink: #11100f; --paper: #f5f1e9; --champagne: #d6b06a; --champagne-pale: #f2dfb8; }
 
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
 .navbar { background: linear-gradient(180deg, rgba(10,9,8,.94), rgba(10,9,8,.72)); border-bottom-color: rgba(235,210,164,.14); }
 .nav-container { max-width: 1320px; padding-top: 13px; padding-bottom: 13px; }
 .nav-links { gap: clamp(14px, 1.8vw, 30px); }
@@ -18,9 +23,11 @@
 .hero-headline { font-size: clamp(2.55rem,5.1vw,5.2rem); max-width: 12ch; line-height: .98; letter-spacing: -.055em; text-wrap: balance; }
 .hero-headline em { color: var(--champagne-pale); }
 .liquid-gold-text {
+  color: var(--champagne-pale);
   background: linear-gradient(120deg, #d6b06a 0%, #fffbf2 25%, #c49646 50%, #f7e4be 75%, #ffffff 100%);
   background-size: 250% auto;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
 }
@@ -39,16 +46,16 @@
   position: absolute;
   top: -50%;
   left: -100%;
-  width: 55%;
+  width: 50%;
   height: 200%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
   transform: rotate(25deg);
-  animation: btnBeam 4.5s ease-in-out infinite;
+  animation: btnBeam 4.8s ease-in-out infinite;
   pointer-events: none;
 }
 .btn-primary:hover { 
   transform: translateY(-2px); 
-  box-shadow: 0 18px 44px rgba(0,0,0,.35), 0 0 22px rgba(218,178,103,.35); 
+  box-shadow: 0 18px 44px rgba(0,0,0,.35), 0 0 20px rgba(218,178,103,.28); 
 }
 .btn-ghost { border-color: rgba(245,226,187,.54); background: rgba(16,13,10,.25); backdrop-filter: blur(8px); }
 .hero-stats { border-top: 1px solid rgba(241,220,175,.24); padding-top: 22px; gap: clamp(24px,3vw,48px); }
@@ -63,7 +70,9 @@
 }
 .hero-logo-wrap {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   overflow: hidden;
   border-radius: 8px;
 }
@@ -71,7 +80,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(105deg, transparent 25%, rgba(255, 255, 255, 0.4) 50%, transparent 75%);
+  background: linear-gradient(105deg, transparent 25%, rgba(255, 255, 255, 0.28) 50%, transparent 75%);
   transform: translateX(-100%);
   animation: logoSweep 5.5s ease-in-out infinite;
   pointer-events: none;
@@ -309,28 +318,24 @@
 .express-banner-content { max-width: 1150px; }
 .express-banner-tag { color: #24180b; background: #f2d495; }
 .pricing-section { background: linear-gradient(180deg,#fbfaf7,#f0ebe2); }
-.pricing-grid { max-width: 1180px; gap: 20px; }
+.pricing-grid { max-width: 1140px; gap: 22px; }
 .pricing-card { border-radius: 20px; border-color: rgba(111,75,24,.15); box-shadow: 0 14px 34px rgba(54,39,17,.06); }
 .pricing-card.imperial { 
   position: relative;
-  background: radial-gradient(circle at 80% 0%,rgba(220,179,99,.27),transparent 30%),linear-gradient(145deg,#1b1712,#080807); 
-  border: 1px solid rgba(220, 179, 99, 0.35);
-  box-shadow: 0 18px 48px rgba(0,0,0,.5), 0 0 25px rgba(220,179,99,.12);
+  background: radial-gradient(circle at 85% 0%, rgba(214, 176, 106, 0.16) 0%, transparent 45%), linear-gradient(165deg, #181512 0%, #0d0c0a 55%, #15120e 100%); 
+  border: 1.5px solid rgba(214, 176, 106, 0.45);
+  border-radius: 20px;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 235, 195, 0.12);
+  color: #fffaf0;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
 }
 .pricing-card.imperial::before {
-  content: '';
-  position: absolute;
-  inset: -1.5px;
-  border-radius: 21px;
-  background: conic-gradient(from 0deg, transparent 0deg, rgba(242, 212, 149, 0.75) 60deg, transparent 120deg, transparent 360deg);
-  animation: rotateBeam 7s linear infinite;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.85;
+  display: none !important;
 }
-.pricing-card.imperial > * {
-  position: relative;
-  z-index: 1;
+.pricing-card.imperial:hover {
+  border-color: rgba(214, 176, 106, 0.85);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 0 25px rgba(214, 176, 106, 0.16), inset 0 1px 0 rgba(255, 235, 195, 0.22);
 }
 .comparison-section { background: #fff; }
 .comparison-grid { max-width: 960px; }
@@ -380,7 +385,218 @@
 
 .brand-panel-mark { width: 36px; height: 36px; object-fit: cover; object-position: center; border-radius: 50%; mix-blend-mode: multiply; }
 .panel-logo,.sidebar-logo { display: inline-flex; align-items: center; gap: 9px; }
-@media (max-width:768px) { .hero { background-position:61% center; } .hero::before { background: linear-gradient(180deg,rgba(9,8,7,.6),rgba(9,8,7,.85) 55%,rgba(9,8,7,.94)); } .hero-content { gap:28px; } .hero-visual { display:none; } .hero-text { max-width:100%; } .hero-headline { max-width:none; } .hero-stats { justify-content:space-between; gap:12px; } .design-card:nth-child(odd) { transform:none; } .design-phone { height:230px; } .designs-grid { gap:12px; } .design-invitation-copy { inset:15% 8% 13%; } .category-hero { padding:100px 20px 40px; } .category-hero-content { grid-template-columns:1fr; text-align:center; } .category-subtitle { margin:0 auto; } .category-demo-wrap { justify-self:center; width:min(76vw,300px); transform:none; margin-top:8px; } .category-section-heading { margin-bottom:28px; } .category-grid { gap:14px; } .category-card:nth-child(even),.category-card:hover:nth-child(even) { transform:none; } .category-card { padding:9px 9px 15px; } .category-phone { height:170px; border-width:4px; padding:9px; } .category-card h3 { font-size:1.05rem; } .category-card p { font-size:.72rem; } .category-cta { padding:64px 20px; } .contact-demo { height:125px; } }
+/* ========================================================
+   OPTIMIZACIÓN RESPONSIVA MULTI-DISPOSITIVO
+   (Celulares, Tablets, Laptops y PCs de Escritorio)
+   ======================================================== */
+
+/* Desktop & Laptop (>= 1081px) */
+@media (min-width: 1081px) {
+  .hero-content {
+    grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.85fr);
+    gap: clamp(48px, 6vw, 100px);
+  }
+  .pricing-grid {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1140px;
+    gap: 22px;
+  }
+  .pricing-card.imperial {
+    transform: scale(1.02);
+  }
+  .pricing-card.imperial:hover {
+    transform: scale(1.02) translateY(-4px);
+  }
+}
+
+/* Tablets e iPads (769px a 1080px) */
+@media (min-width: 769px) and (max-width: 1080px) {
+  .hero {
+    min-height: auto;
+    padding: 120px 24px 64px;
+  }
+  .hero-content {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: center;
+    text-align: left;
+  }
+  .hero-headline {
+    font-size: clamp(2.2rem, 4vw, 3rem);
+    max-width: 100%;
+  }
+  .hero-phone {
+    width: 220px;
+    height: 440px;
+    transform: rotate(2deg) translateY(4px);
+    margin: 0 auto;
+  }
+  .pricing-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    max-width: 980px !important;
+    gap: 14px !important;
+    padding: 0 16px !important;
+  }
+  .pricing-card {
+    padding: 26px 14px 20px !important;
+  }
+  .pricing-card.imperial {
+    transform: none !important;
+  }
+  .price-amount {
+    font-size: 2.15rem !important;
+  }
+  .pricing-header h3 {
+    font-size: 1.18rem !important;
+  }
+  .pricing-features li {
+    font-size: 0.72rem !important;
+    padding: 5px 0 !important;
+  }
+}
+
+/* Celulares y Smartphones (<= 768px) */
+@media (max-width: 768px) {
+  .hero {
+    background-position: 61% center;
+    padding: 96px 18px 48px;
+    min-height: auto;
+  }
+  .hero::before {
+    background: linear-gradient(180deg, rgba(9,8,7,.68), rgba(9,8,7,.88) 55%, rgba(9,8,7,.96));
+  }
+  .hero-content {
+    grid-template-columns: 1fr !important;
+    gap: 24px;
+    text-align: center;
+  }
+  .hero-text {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  .hero-logotipo {
+    height: clamp(56px, 12vw, 80px);
+  }
+  .hero-headline {
+    font-size: clamp(2rem, 7vw, 2.75rem) !important;
+    max-width: none !important;
+    line-height: 1.05;
+  }
+  .hero-description {
+    font-size: 0.92rem;
+    line-height: 1.6;
+    margin: 0 auto 18px;
+  }
+  .hero-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto 20px;
+  }
+  .hero-actions .btn-primary,
+  .hero-actions .btn-ghost {
+    width: 100%;
+    text-align: center;
+    padding: 13px 20px;
+  }
+  .hero-stats {
+    justify-content: space-around;
+    gap: 10px;
+    padding-top: 18px;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+  .stat-number {
+    font-size: 1.5rem;
+  }
+  .stat-label {
+    font-size: 0.52rem;
+  }
+
+  /* Maqueta en móvil: centrada, sin rotación para evitar overflow */
+  .hero-visual {
+    display: flex !important;
+    justify-content: center;
+    width: 100%;
+    margin-top: 14px;
+  }
+  .hero-phone {
+    width: min(84vw, 240px) !important;
+    height: 440px !important;
+    transform: none !important;
+    margin: 0 auto 14px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.65), 0 0 0 1px rgba(253,228,177,.28);
+  }
+
+  /* Precios en móvil: tarjetas en 1 columna limpias y legibles */
+  .pricing-section {
+    padding: 48px 14px;
+  }
+  .pricing-grid {
+    grid-template-columns: 1fr !important;
+    max-width: min(100%, 390px) !important;
+    margin: 0 auto !important;
+    gap: 22px !important;
+    padding: 0 !important;
+  }
+  .pricing-card {
+    width: 100% !important;
+    padding: 32px 20px 24px !important;
+    border-radius: 18px !important;
+    box-sizing: border-box !important;
+  }
+  .pricing-card.featured,
+  .pricing-card.imperial {
+    transform: none !important;
+  }
+  .pricing-card.imperial:hover {
+    transform: none !important;
+  }
+  .price-amount {
+    font-size: 2.5rem !important;
+  }
+
+  /* Diseños en móvil */
+  .design-card:nth-child(odd) { transform: none; }
+  .design-phone { height: 210px; }
+  .designs-grid { gap: 12px; }
+  .design-invitation-copy { inset: 15% 8% 13%; }
+
+  /* Páginas de ocasión */
+  .category-hero { padding: 96px 18px 36px; }
+  .category-hero-content { grid-template-columns: 1fr; text-align: center; }
+  .category-subtitle { margin: 0 auto; }
+  .category-demo-wrap { justify-self: center; width: min(76vw, 290px); transform: none; margin-top: 8px; }
+  .category-section-heading { margin-bottom: 24px; }
+  .category-grid { gap: 14px; }
+  .category-card:nth-child(even),.category-card:hover:nth-child(even) { transform: none; }
+  .category-card { padding: 9px 9px 15px; }
+  .category-phone { height: 165px; border-width: 4px; padding: 9px; }
+  .category-card h3 { font-size: 1.05rem; }
+  .category-card p { font-size: .72rem; }
+  .category-cta { padding: 56px 18px; }
+  .contact-demo { height: 120px; }
+}
+
+/* Teléfonos muy pequeños (<= 420px) */
+@media (max-width: 420px) {
+  .hero-headline {
+    font-size: 1.85rem !important;
+  }
+  .hero-phone {
+    width: 220px !important;
+    height: 420px !important;
+  }
+  .pricing-card {
+    padding: 28px 16px 20px !important;
+  }
+  .price-amount {
+    font-size: 2.2rem !important;
+  }
+}
+
 @media (prefers-reduced-motion:no-preference) { 
   .hero::before { animation:heroBreath 9s ease-in-out infinite alternate; } 
   .hero-phone { animation:phoneHover 6s ease-in-out infinite; } 
@@ -392,5 +608,5 @@
 @keyframes btnBeam { 0%, 42% { left: -100%; } 68%, 100% { left: 200%; } }
 @keyframes logoSweep { 0%, 45% { transform: translateX(-100%); } 65%, 100% { transform: translateX(100%); } }
 @keyframes soundwave { 0% { transform: scaleY(0.4); } 100% { transform: scaleY(1.3); } }
-@keyframes rotateBeam { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
 
