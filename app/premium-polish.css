@@ -1,7 +1,7 @@
 /* Dirección visual 2026: editorial cálida, tecnología discreta y detalle artesanal. */
 :root { --ink: #11100f; --paper: #f5f1e9; --champagne: #d6b06a; --champagne-pale: #f2dfb8; }
 
-html, body {
+body {
   overflow-x: hidden;
   max-width: 100vw;
 }
@@ -21,69 +21,37 @@ html, body {
 .hero-text { max-width: 620px; }
 .hero-logotipo { height: clamp(70px,8vw,110px); filter: drop-shadow(0 14px 24px rgba(0,0,0,.24)); }
 .hero-headline { font-size: clamp(2.55rem,5.1vw,5.2rem); max-width: 12ch; line-height: .98; letter-spacing: -.055em; text-wrap: balance; }
-.hero-headline em { color: var(--champagne-pale); }
+.hero-headline em,
 .liquid-gold-text {
-  color: var(--champagne-pale);
-  background: linear-gradient(120deg, #d6b06a 0%, #fffbf2 25%, #c49646 50%, #f7e4be 75%, #ffffff 100%);
-  background-size: 250% auto;
+  color: #f3d69b;
+  background: linear-gradient(135deg, #ffffff 0%, #f6dfb8 35%, #d6b06a 70%, #caa052 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  display: inline-block;
+  display: inline;
 }
 .hero-description { max-width: 49ch; font-size: 1rem; line-height: 1.72; color: rgba(255,255,255,.78); }
 .btn-primary { 
-  position: relative; 
-  overflow: hidden; 
   background: linear-gradient(135deg,#f1d397,#c38d3c); 
   color: #16110b; 
   border: 1px solid rgba(255,255,255,.28); 
-  box-shadow: 0 14px 32px rgba(0,0,0,.22), inset 0 1px rgba(255,255,255,.45); 
-  transition: transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s cubic-bezier(.16,1,.3,1); 
-}
-.btn-primary::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -100%;
-  width: 50%;
-  height: 200%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
-  transform: rotate(25deg);
-  animation: btnBeam 4.8s ease-in-out infinite;
-  pointer-events: none;
+  box-shadow: 0 10px 26px rgba(0,0,0,.22), inset 0 1px rgba(255,255,255,.45); 
+  transition: transform .25s ease, box-shadow .25s ease; 
 }
 .btn-primary:hover { 
   transform: translateY(-2px); 
-  box-shadow: 0 18px 44px rgba(0,0,0,.35), 0 0 20px rgba(218,178,103,.28); 
+  box-shadow: 0 16px 36px rgba(0,0,0,.32), 0 0 18px rgba(218,178,103,.28); 
 }
 .btn-ghost { border-color: rgba(245,226,187,.54); background: rgba(16,13,10,.25); backdrop-filter: blur(8px); }
 .hero-stats { border-top: 1px solid rgba(241,220,175,.24); padding-top: 22px; gap: clamp(24px,3vw,48px); }
 .stat-number { color: #f6d896; font-size: 1.9rem; }
 .stat-label { letter-spacing: .16em; font-size: .58rem; }
 
-/* Logo Sweep & Glow */
+/* Logo Glow */
 .nav-isotipo { transition: transform .35s ease, filter .35s ease; }
 .nav-logo:hover .nav-isotipo, .logo-glow:hover .nav-isotipo {
   transform: scale(1.08);
   filter: drop-shadow(0 0 14px rgba(214, 176, 106, 0.75));
-}
-.hero-logo-wrap {
-  position: relative;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  border-radius: 8px;
-}
-.hero-logo-wrap::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(105deg, transparent 25%, rgba(255, 255, 255, 0.28) 50%, transparent 75%);
-  transform: translateX(-100%);
-  animation: logoSweep 5.5s ease-in-out infinite;
-  pointer-events: none;
 }
 
 /* Hero Phone - Editorial Invitación Viva */
@@ -327,7 +295,6 @@ html, body {
   border-radius: 20px;
   box-shadow: 0 16px 44px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 235, 195, 0.12);
   color: #fffaf0;
-  overflow: hidden;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
 }
 .pricing-card.imperial::before {
@@ -538,14 +505,18 @@ html, body {
     grid-template-columns: 1fr !important;
     max-width: min(100%, 390px) !important;
     margin: 0 auto !important;
-    gap: 22px !important;
-    padding: 0 !important;
+    gap: 36px !important;
+    padding: 10px 0 !important;
   }
   .pricing-card {
     width: 100% !important;
-    padding: 32px 20px 24px !important;
+    padding: 34px 20px 24px !important;
     border-radius: 18px !important;
     box-sizing: border-box !important;
+    margin-top: 14px;
+  }
+  .pricing-badge {
+    top: -14px !important;
   }
   .pricing-card.featured,
   .pricing-card.imperial {
@@ -597,16 +568,6 @@ html, body {
   }
 }
 
-@media (prefers-reduced-motion:no-preference) { 
-  .hero::before { animation:heroBreath 9s ease-in-out infinite alternate; } 
-  .hero-phone { animation:phoneHover 6s ease-in-out infinite; } 
-  .liquid-gold-text { animation: liquidGold 6s ease-in-out infinite alternate; }
-}
-@keyframes heroBreath { to { opacity:.82; } }
-@keyframes phoneHover { 50% { transform:rotate(2deg) translateY(-8px); } }
-@keyframes liquidGold { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
-@keyframes btnBeam { 0%, 42% { left: -100%; } 68%, 100% { left: 200%; } }
-@keyframes logoSweep { 0%, 45% { transform: translateX(-100%); } 65%, 100% { transform: translateX(100%); } }
 @keyframes soundwave { 0% { transform: scaleY(0.4); } 100% { transform: scaleY(1.3); } }
 
 

@@ -341,11 +341,9 @@ export default function Home() {
         <div className="hero-overlay"></div>
         <div className={`hero-content ${heroVisible ? 'hero-animate' : ''}`}>
           <div className="hero-text">
-            <div className="hero-logo-wrap hero-fade hero-delay-1">
-              <img src="/logotipo.png" alt="Festejia" className="hero-logotipo" />
-            </div>
+            <img src="/logotipo.png" alt="Festejia" className="hero-logotipo hero-fade hero-delay-1" />
             <h1 className="hero-headline hero-fade hero-delay-2">
-              Imagina el <em className="liquid-gold-text">recuerdo</em>,<br/>nosotros lo <em className="liquid-gold-text">creamos</em>
+              Imagina el <em>recuerdo</em>,<br/>nosotros lo <em>creamos</em>
             </h1>
             <p className="hero-description hero-fade hero-delay-3">
               Invitaciones digitales exclusivas que transforman tu evento en una experiencia inolvidable desde el primer click.
