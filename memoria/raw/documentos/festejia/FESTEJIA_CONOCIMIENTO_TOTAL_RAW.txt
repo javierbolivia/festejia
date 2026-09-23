@@ -1,0 +1,724 @@
+================================================================================
+MEMORIA Y BASE DE CONOCIMIENTO TOTAL - FESTEJIA (EDICION MAESTRA EN RAW)
+Fecha de exportacion: 23 de Septiembre de 2026
+Proyecto: Festejia - Plataforma de Invitaciones Digitales de Alta Gama
+Dominio: https://www.festejia.com
+================================================================================
+
+[INDICE DE CONTENIDOS]
+1. MANIFIESTO DE MARCA, VISION Y POSICIONAMIENTO
+2. MODELOS DE NEGOCIO, PLANES Y ESTRUCTURA DE PRECIOS
+3. MATRIZ COMPARATIVA COMPLETA DE FUNCIONES
+4. SISTEMA FINANCIERO, MERCADO Y MULTIDIVISAS (TASA BOLIVIA 11.5)
+5. CATALOGO COMPLETO DE COLECCIONES Y DISENOS POR EVENTO
+6. SISTEMA TECNOLOGICO RSVP INTELIGENTE, QR Y LIVE DASHBOARD
+7. FESTEJIA EXPRESS (PLATAFORMA SELF-SERVICE DIY CON IA)
+8. MENU DE SERVICIOS ADICIONALES (ADDONS)
+9. PROCESO OPERATIVO, LOGISTICA Y POLITICA DE PAGOS ($15 DE SENA)
+10. GUIONES Y PLANTILLAS DE ATENCION COMERCIAL POR WHATSAPP
+11. BASE DE CONOCIMIENTO COMPLETA (LAS 19 PREGUNTAS FRECUENTES)
+12. ARQUITECTURA TECNICA DEL SOFTWARE Y RUTAS DE CODIGO
+13. PANEL ADMINISTRADOR MAESTRO BESPOKE Y ADMIN EXPRESS
+14. PANEL DEL CLIENTE (ANFITRION), GESTOR LITE Y CONTROL DE ACCESO (CHECK-IN)
+15. ESTUDIO DE DISENO EXPRESS Y CATALOGO DETALLADO DE LOS 17 BLOQUES
+16. MODELO DE DATOS SUPABASE Y SEGURIDAD RLS
+17. RUNTIME PUBLICO, INVITACION/[ID] Y CATALOGO DE PLANTILLAS
+18. MOTOR DE HITOS, TRIGGERS DE BASE DE DATOS Y SEGURIDAD IA
+19. COMPONENTES DEL EDITOR EXPRESS Y PIPELINE DE COMPRESION WEBP
+20. CONFIGURACION GLOBAL, WALINK Y ESPECIFICACION DE LAS 23 DIVISAS
+21. DOCUMENTOS ORIGINALES, INFRAESTRUCTURA Y REGISTRO HISTORICO
+22. AGENTS.MD, REGLAS Y SISTEMA DE SKILLS DE ANTIGRAVITY AI
+
+================================================================================
+1. MANIFIESTO DE MARCA, VISION Y POSICIONAMIENTO
+================================================================================
+- Nombre comercial: Festejia
+- Slogan principal: "Imagina el recuerdo, nosotros lo creamos."
+- Mision: Transformar la primera impresion de cualquier celebracion en una experiencia viva, interactiva, tecnologica y profundamente emotiva, superando las limitaciones del papel impreso y los PDFs estaticos.
+- Valores clave:
+  1. Detalle artesanal y direccion de arte editorial.
+  2. Cero friccion: no requiere descargas de apps ni registros para los invitados.
+  3. Control inteligente para los organizadores (mesas, pases, QR).
+  4. Confianza comercial transparente: reserva simbolica de $15 USD y saldo contra entrega tras aprobacion.
+
+- Identidad Visual (Direccion 2026):
+  * Dorado Champagne Principal: #d6b06a (acento: #caa052, gradiente: #ffffff -> #f6dfb8 -> #d6b06a -> #caa052).
+  * Negro Obsidiana / Fondo Profundo: #11100f y #181512.
+  * Marfil Editorial Suave: #f5f1e9 y #fffaf0.
+  * Verde Esmeralda (Confirmaciones / WhatsApp): #166534 / #25d366.
+  * Tipografia Títulos: Cormorant Garamond / Playfair Display (Serif, elegante, clasica).
+  * Tipografia Cuerpo: Inter / Montserrat / Raleway (Sans-serif, nitida, geometrica).
+
+- Canales Oficiales:
+  * Web: https://www.festejia.com
+  * Facebook: https://facebook.com/festejiadigital
+  * Instagram: https://instagram.com/festejiadigital
+  * TikTok: https://tiktok.com/@festejiadigital
+  * Email: info@festejia.com
+
+================================================================================
+2. MODELOS DE NEGOCIO, PLANES Y ESTRUCTURA DE PRECIOS
+================================================================================
+
+A) PLAN CLASICO
+- Precio: $45 USD | Bs. 520 (Bolivia a tasa 11.5)
+- Concepto: "Listo, elegante y simple". Elige un diseno de la coleccion y personaliza todos los datos esenciales del evento.
+- Caracteristicas incluidas (9 items):
+  1. Diseno profesional de coleccion.
+  2. Informacion completa del evento (nombres, fecha, horarios, salones).
+  3. Ubicacion con Google Maps integrada.
+  4. Cuenta regresiva dinamica.
+  5. Codigo de vestimenta (dress code).
+  6. Seccion de regalos y sugerencias (datos bancarios / lluvia de sobres).
+  7. Confirmacion RSVP basica por WhatsApp.
+  8. Dominio festejia.com/tu-evento.
+  9. Entrega garantizada en 5 a 7 dias habiles.
+- Acceso a panel: Dirige a /gestor (Gestor Lite hasta 50 invitados).
+
+B) PLAN ELEGANTE (EL MAS POPULAR)
+- Precio: $75 USD | Bs. 860 (Bolivia a tasa 11.5)
+- Concepto: "La experiencia completa". Personalizacion profunda, musica de fondo, galeria de fotos y panel de control inteligente.
+- Caracteristicas incluidas (15 items):
+  1. TODO lo del Plan Clasico.
+  2. Efecto sobre interactivo de apertura con sello de lacre virtual.
+  3. Musica de fondo personalizada (cancion a eleccion con reproductor estetico).
+  4. Galeria de fotos profesional (hasta 10 fotografias en alta resolucion).
+  5. Itinerario detallado del evento con iconografia sincronizada.
+  6. Confirmacion RSVP inteligente con pases personalizados e intransferibles.
+  7. Panel de control en tiempo real (/panel) para los novios/anfitriones.
+  8. Notificaciones de confirmacion instantaneas en el panel.
+  9. Exportacion de lista de invitados a Excel (formato CSV con UTF-8 BOM).
+  10. Seccion "Nuestra Historia" con fotos y relato emotivo.
+  11. Seccion de Padrinos y Cortejo de honor.
+  12. Alertas de restricciones alimentarias y notas especiales de invitados.
+  13. Enlaces personalizados individuales para cada invitado.
+  14. Capacidad de hasta 150 invitados en panel.
+  15. Entrega garantizada en 5 a 7 dias habiles.
+
+C) PLAN IMPERIAL (EXCLUSIVO)
+- Precio: $110 USD | Bs. 1270 (Bolivia a tasa 11.5)
+- Concepto: "Sin limites, a tu medida". Diseno 100% a medida desde cero, soporte prioritario VIP y control de acceso en puerta con escaneo QR.
+- Caracteristicas incluidas (20 items):
+  1. TODO lo del Plan Elegante.
+  2. Diseno 100% exclusivo y personalizado desde cero (a juego con tu tematica).
+  3. Asignacion y visualizacion de mesas individuales para cada invitado.
+  4. Codigo QR unico e intransferible por invitado para control de ingreso.
+  5. Sistema de Check-in digital en puerta (/checkin) para recepcionistas con escaneo rapido desde camara.
+  6. Mensaje de bienvenida personalizado con el nombre del invitado al ingresar.
+  7. Filtro de Instagram / TikTok personalizado para la fiesta.
+  8. Invitados y pases ilimitados en el panel (9999).
+  9. Modificaciones ilimitadas antes del evento.
+  10. Soporte prioritario VIP por WhatsApp (respuesta en menos de 1 hora).
+  11. Entrega express prioritaria en 3 a 5 dias habiles.
+  12. Asesoria en protocolo de envio de invitaciones y etiqueta digital.
+
+D) FESTEJIA EXPRESS (SELF-SERVICE DIY)
+- Precio: Desde Bs. 200 (Pago unico)
+- Concepto: "Crealo tu mismo en 15 minutos". Editor visual tipo Canva con 17 bloques tematicos, asistente de textos con IA y publicacion inmediata.
+- Enlace publico: festejia.com/e/tu-slug.
+- Incluye 2 correcciones gratuitas post-publicacion. Paquete de 2 correcciones adicionales por Bs. 30.
+
+================================================================================
+3. MATRIZ COMPARATIVA COMPLETA DE FUNCIONES
+================================================================================
+
+[CATEGORIA: DISENO Y ESTETICA]
+- Diseno de coleccion: Clasico: SI | Elegante: SI | Imperial: SI
+- Diseno 100% a medida desde cero: Clasico: NO | Elegante: NO | Imperial: SI
+- Efecto sobre interactivo de apertura: Clasico: NO | Elegante: SI | Imperial: SI
+- Musica de fondo personalizada: Clasico: NO | Elegante: SI (1 cancion) | Imperial: SI (1 cancion)
+- Galeria de fotos: Clasico: NO | Elegante: SI (hasta 10 fotos) | Imperial: SI (ilimitadas)
+- Cronograma / Itinerario de la fiesta: Clasico: NO | Elegante: SI | Imperial: SI
+- Seccion Nuestra Historia: Clasico: NO | Elegante: SI | Imperial: SI
+- Seccion de Padrinos: Clasico: NO | Elegante: SI | Imperial: SI
+
+[CATEGORIA: EXPERIENCIA DEL INVITADO]
+- Ubicacion GPS integrada (Google Maps/Waze): Clasico: SI | Elegante: SI | Imperial: SI
+- Cuenta regresiva animada: Clasico: SI | Elegante: SI | Imperial: SI
+- Codigo de vestimenta (dress code): Clasico: SI | Elegante: SI | Imperial: SI
+- Seccion de regalos (sobres / transferencia bancaria con QR): Clasico: SI | Elegante: SI | Imperial: SI
+- Saludo con nombre personalizado en pantalla: Clasico: NO | Elegante: NO | Imperial: SI
+- Asignacion de mesa individual: Clasico: NO | Elegante: NO | Imperial: SI
+- Pase de acceso con codigo QR unico: Clasico: NO | Elegante: NO | Imperial: SI
+
+[CATEGORIA: GESTION DE INVITADOS (RSVP)]
+- Confirmacion de asistencia (RSVP): Clasico: Por WhatsApp basico | Elegante: Inteligente en vivo | Imperial: Inteligente en vivo
+- Pases intransferibles: Clasico: NO | Elegante: SI | Imperial: SI
+- Enlaces unicos por invitado: Clasico: NO | Elegante: SI | Imperial: SI
+- Alertas de restricciones dieteticas / alergias: Clasico: NO | Elegante: SI | Imperial: SI
+- Muro de mensajes y buenos deseos: Clasico: NO | Elegante: SI | Imperial: SI
+
+[CATEGORIA: ADMINISTRACION Y PANEL]
+- Gestor online de confirmaciones: Clasico: Gestor Lite (/gestor) | Elegante: Panel Completo (/panel) | Imperial: Panel Completo (/panel)
+- Capacidad maxima de invitados: Clasico: Hasta 50 | Elegante: Hasta 150 | Imperial: Ilimitados (9999)
+- Alertas en tiempo real por WebSockets: Clasico: NO | Elegante: SI | Imperial: SI
+- Exportar lista completa a Excel (.csv UTF-8): Clasico: NO | Elegante: SI | Imperial: SI
+- App / Sistema de Check-in en puerta con escaneo QR: Clasico: NO | Elegante: NO | Imperial: SI (/checkin)
+
+[CATEGORIA: SERVICIO Y ENTREGA]
+- Tiempo de entrega: Clasico: 5 a 7 dias habiles | Elegante: 5 a 7 dias habiles | Imperial: 3 a 5 dias habiles
+- Rondas de cambios: Clasico: 1 ronda | Elegante: 2 rondas | Imperial: Ilimitadas
+- Soporte: Clasico: Estandar por WhatsApp | Elegante: Prioritario | Imperial: VIP prioritario (< 1 hora)
+- Dominio personalizado (nombres.festejia.com): Clasico: Addon ($10) | Elegante: Addon ($10) | Imperial: Incluido
+
+================================================================================
+4. SISTEMA FINANCIERO, MERCADO Y MULTIDIVISAS (TASA BOLIVIA 11.5)
+================================================================================
+- Contexto Cambiario:
+  En Bolivia rige un desdoblamiento cambiario entre la cotizacion oficial estatica del Banco Central (~6.96 BOB) y el tipo de cambio real de mercado libre (11.50+ BOB/USD).
+- Politica Inquebrantable de Festejia:
+  Para garantizar la sostenibilidad del negocio y evitar distorsiones absurdas, el backend utiliza de forma fija la tasa de mercado real:
+  TASA_MERCADO_BOLIVIA = 11.50 BOB por cada 1 USD.
+
+- Conversiones oficiales vigentes:
+  * Plan Clasico: $45 USD * 11.5 = Bs. 517.50 -> Redondeo comercial: Bs. 520.
+  * Plan Elegante: $75 USD * 11.5 = Bs. 862.50 -> Redondeo comercial: Bs. 860.
+  * Plan Imperial: $110 USD * 11.5 = Bs. 1265.00 -> Redondeo comercial: Bs. 1270.
+  * Seña de Reserva: $15 USD * 11.5 = Bs. 172.50 -> Redondeo comercial: Bs. 170.
+
+- Algoritmo de Deteccion Geografica y Divisas:
+  El sistema detecta automaticamente la ubicacion del usuario mediante su huso horario (Intl.DateTimeFormat().resolvedOptions().timeZone) y el locale del navegador:
+  * America/La_Paz -> BOB (Bs.) | Factor: 11.50
+  * America/Santiago -> CLP ($) | Factor: ~970
+  * America/Buenos_Aires -> ARS ($) | Factor: ~1200
+  * America/Lima -> PEN (S/.) | Factor: ~3.75
+  * America/Bogota -> COP ($) | Factor: ~4100
+  * America/Mexico_City -> MXN ($) | Factor: ~20.0
+  * Europe/* -> EUR (EUR) | Factor: ~0.92
+  * Resto del mundo -> USD ($) | Factor: 1.00
+
+- Politica de Pago Fraccionado:
+  Para brindar total confianza y eliminar cualquier miedo a estafas digitales:
+  1. Se solicita una sena inicial simbolica de solo $15 USD (o Bs. 170 en Bolivia).
+  2. Festejia disena y monta la invitacion completa en su servidor privado.
+  3. El cliente revisa la invitacion funcional, prueba la musica, verifica los nombres y solicita ajustes.
+  4. Una vez que el cliente aprueba a satisfaccion ("¡Me encanta, quedo perfecta!"), abona el saldo restante y la invitacion queda liberada para compartir.
+
+================================================================================
+5. CATALOGO COMPLETO DE COLECCIONES Y DISENOS POR EVENTO
+================================================================================
+
+A) COLECCION BODAS (8 MODELOS)
+1. Serenata: Minimalismo contemporaneo, blanco y negro sofisticado, lineas ultra-limpias, tipografia sans-serif con toques clasicos.
+2. Aurora: El modelo mas vendido. Marco floral acuarelado en tonos champan y rosa empolvado, detalles dorados, caligrafia script de lujo.
+3. Jardin: Estilo botanico y campestre. Hojas de olivo, eucalipto, acentos en verde sabio y tipografia con serifa elegante. Ideal para bodas al aire libre.
+4. Allegria: Inspiracion mediterranea con toques vintage. Flores silvestres, fondo marfil calido, ambiente romantico y festivo.
+5. Napoli: Clasico italiano atemporal. Marcos geometricos, simetria renacentista, tonos dorados profundos y tipografia solemne.
+6. Terra: Rustico chic y organico. Tonos terracota, arena calida, flores secas, pampas y atmosfera bohemia relajada.
+7. Rose Gold: Moderno, glamoroso y brillante. Destellos en oro rosa, sombras suaves, texturas metalizadas y contrastes delicados.
+8. Euforia: Sofisticacion nocturna. Fondo negro profundo (#11100f), detalles en pan de oro, tipografia dorada resplandeciente.
+
+B) COLECCION 15 ANOS (4 MODELOS)
+1. Princesa: Cuento de hadas clasico. Tiara delicada, marfil y dorado brillante, ornamentos reales.
+2. Mariposa: Magico, juvenil y etereo. Mariposas flotantes en acuarela, tonos lavanda y lila suave.
+3. Encanto: Flores silvestres vibrantes, acentos fucsia y dorado, estilo fresco y moderno.
+4. Celestial: Tematica galactica y estelar. Azul medianoche, constelaciones doradas y tipografia futurista refinada.
+
+C) COLECCION GRADUACIONES (3 MODELOS)
+1. Logro: Sobrio y distinguido. Azul marino profundo y dorado imperial, laureles de triunfo.
+2. Exito: Contemporaneo. Negro mate y dorado champagne, tipografia moderna y geometrica.
+3. Academia: Clasico universitario tradicional. Borgoña intenso, detalles en plata y tipografia con serifa.
+
+D) COLECCION BAUTIZOS (3 MODELOS)
+1. Bendicion: Suave, angelical y puro. Blanco puro, acentos en dorado suave y celestes pasteles.
+2. Angel: Tierno e infantil. Ilustraciones acuareladas de querubines y nubes, caligrafia cursiva suave.
+3. Gracia: Botanico tierno y floral. Ramas de olivo tiernas, fondo marfil calido y tonos neutros.
+
+================================================================================
+6. SISTEMA TECNOLOGICO RSVP INTELIGENTE, QR Y LIVE DASHBOARD
+================================================================================
+
+- Flujo RSVP Unico e Intransferible:
+  Cada invitado recibe un enlace exclusivo generado desde la base de datos:
+  URL: https://www.festejia.com/invitacion/[INVITADO_UUID]
+  1. Al abrir la invitacion, la pantalla saluda cordialmente al invitado por su nombre.
+  2. El formulario ya sabe cuantos pases tiene asignados (ej. "Tienes 2 pases reservados").
+  3. El invitado no puede agregar pases que no le corresponden.
+  4. Selecciona: "Asistire" (indica si usa 1 o los 2 pases) o "No podre asistir".
+  5. Puede ingresar restricciones alimentarias (vegetariano, celiaco, alergias) y un mensaje de felicitacion.
+  6. Al confirmar, el estado cambia de 'pendiente' a 'confirmado' en Supabase y dispara un evento en tiempo real hacia el panel del anfitrion.
+
+- Codigo QR de Control de Acceso:
+  Una vez confirmada la asistencia, el sistema genera dinamicamente un pase digital con un codigo QR unico que contiene:
+  Payload: "festejia:[INVITADO_UUID]"
+  El invitado puede guardarlo en su galeria o presentarlo en su celular el dia de la fiesta.
+
+- Live Dashboard (/LiveDashboard.js):
+  Componente visual interactivo en la landing page que simula la experiencia real del panel del anfitrion:
+  * Tickers de eventos recientes ("Camila confirmó 2 pases", "Mesa 4 completada").
+  * Contadores en tiempo real (142 Confirmados, 18 Pendientes, 8 Rechazados).
+  * Graficos de distribucion de mesas y barras de progreso animadas.
+
+================================================================================
+7. FESTEJIA EXPRESS (PLATAFORMA SELF-SERVICE DIY CON IA)
+================================================================================
+- Creado para usuarios que necesitan una solucion rapida y accesible.
+- Precio fijo: Bs. 200.
+- Motor de 17 bloques tematicos reordenables con Drag & Drop.
+- Generador de textos con Inteligencia Artificial (/api/express/generate-text):
+  Asistente basado en IA (Moonshot AI Kimi, modelo kimi-k2.7-code) que ayuda a redactar dedicatorias, historias de amor, frases de bienvenida o peticiones respetuosas de lluvia de sobres con distintos tonos (Romantico, Divertido, Clasico, Poético). Rate limit: 40 por hora por usuario.
+- Checkout manual integrado con WhatsApp:
+  Genera el mensaje con el codigo interno de la invitacion (ej. BOD-4820) para validar el pago QR en Bolivia y activar la publicacion.
+- 2 correcciones gratuitas post-publicacion con historial de auditoria en express_correcciones_log.
+
+================================================================================
+8. MENU DE SERVICIOS ADICIONALES (ADDONS)
+================================================================================
+1. Entrega Express en 48 Horas: $15 USD | Bs. 170
+   * Entrega prioritaria en 48 horas habiles.
+2. Dominio Personalizado: $10 USD | Bs. 115
+   * Subdominio personalizado: sofia-y-mateo.festejia.com
+3. Pase de Acceso con Codigo QR: $10 USD | Bs. 115
+   * Generacion de pases individuales con QR para planes Clasico y Elegante.
+4. Asignacion de Mesas: $10 USD | Bs. 115
+   * Visualizacion de numero o nombre de mesa para planes Clasico y Elegante.
+5. Filtro de Instagram / TikTok: $15 USD | Bs. 170
+   * Filtro de realidad aumentada personalizado con nombres y estetica del evento.
+6. Recordatorio Automatico por WhatsApp: $15 USD | Bs. 170
+   * Envio de recordatorio a los invitados 48 horas antes del evento.
+7. Cancion Adicional: $5 USD | Bs. 60
+   * Segunda melodia o cambio dinamico de musica.
+8. Galeria de Fotos Extendida: $10 USD | Bs. 115
+   * Hasta 25 fotografias adicionales en alta resolucion.
+
+================================================================================
+9. PROCESO OPERATIVO, LOGISTICA Y POLITICA DE PAGOS ($15 DE SENA)
+================================================================================
+- El flujo consta de 3 etapas sencillas:
+
+PASO 1: SELECCIONA Y RESERVA
+- El cliente explora los catalogos en festejia.com y elige el diseno que mas le guste.
+- Hace clic en "Elegir diseno" o contacta por WhatsApp.
+- Abona la sena de $15 USD (Bs. 170) para congelar fecha y diseno.
+
+PASO 2: ENVIA TUS DATOS
+- A traves de un formulario privado o por chat, el anfitrión nos proporciona:
+  * Nombres de los homenajeados.
+  * Fecha, horarios y ubicaciones (iglesia, salon).
+  * Cancion elegida, fotografias y codigo de vestimenta.
+  * Opciones de mesa de regalos (banco, sobres, etc.).
+
+PASO 3: REVISION, APROBACION Y ENTREGA
+- En un plazo de 5 a 7 dias habiles (o 48h con servicio express), Festejia entrega el enlace privado.
+- El cliente revisa la invitacion en su propio celular.
+- Si requiere cambios de texto, foto o color, se aplican de inmediato.
+- Cuando todo esta perfecto, abona el saldo restante.
+- Se le entrega el enlace final publico y sus credenciales de acceso al panel de anfitriones.
+
+- Metodos de Pago Aceptados:
+  * Bolivia: Transferencia bancaria (todos los bancos) y Pago QR Simple (Banco Union, BNB, BCP, Mercantil Santa Cruz, etc.).
+  * Internacional: Tarjeta de credito/debito (Visa, Mastercard, Amex), PayPal y transferencia internacional.
+
+================================================================================
+10. GUIONES Y PLANTILLAS DE ATENCION COMERCIAL POR WHATSAPP
+================================================================================
+
+PLANTILLA 1: BIENVENIDA Y SOLICITUD DE INFORMACION
+"¡Hola! 👋 Que alegria que nos escribas. ¡Muchas felicidades por su proxima celebracion! ✨ En Festejia creamos invitaciones digitales interactivas de alta gama para que sus invitados vivan una experiencia inolvidable desde el primer momento. Cuéntame, ¿para qué fecha es su evento y que tipo de celebracion estan planificando (boda, 15 años, graduacion, etc.)?"
+
+PLANTILLA 2: PRESENTACION DE PLANES Y ASESORIA
+"¡Excelente fecha! 💍 Te cuento brevemente sobre nuestros 3 planes:
+✨ Plan Clasico ($45 / Bs. 520): Listo, elegante y simple. Con ubicacion GPS, cuenta regresiva, dress code y confirmacion por WhatsApp.
+✨ Plan Elegante ($75 / Bs. 860) [EL MAS ELEGIDO]: Experiencia completa. Incluye sobre interactivo, musica de fondo, galeria de fotos, itinerario, confirmacion con pases personalizados e intransferibles y panel de control en vivo para ver quien asiste.
+✨ Plan Imperial ($110 / Bs. 1270): A medida desde cero. Agrega asignacion de mesas, codigos QR unicos por invitado, check-in en puerta para recepcionistas y soporte VIP.
+¿Cual de ellos se ajusta mejor a lo que habian soñado?"
+
+PLANTILLA 3: POLITICA DE RESERVA DE $15 (GENERADOR DE CONFIANZA)
+"Para su total tranquilidad, nosotros no cobramos el 100% por adelantado. Únicamente se inicia el trabajo con una reserva simbolica de $15 USD (Bs. 170). Con eso diseñamos su invitacion completa. Se las enviamos a su celular para que la prueben, escuchen la musica y revisen cada detalle. Una vez que este 100% aprobada y les encante, recien abonan el saldo restante. ¿Te gustaria que reservemos su cupo de diseño?"
+
+PLANTILLA 4: DATOS BANCARIOS (BOLIVIA)
+"¡Perfecto! Para confirmar su cupo de diseño con la seña de Bs. 170:
+🏦 Banco: [Nombre de Banco - ej. Banco Nacional de Bolivia]
+👤 Titular: [Nombre Completo]
+💳 Cuenta: [Numero de Cuenta]
+📄 Tipo: Caja de Ahorro / Moneda Nacional
+📱 O si prefieres, te envio nuestro codigo QR Simple para transferencia instantanea. En cuanto tengas el comprobante, nos lo compartes por aqui para enviarte el formulario de datos. ¡Gracias por confiar en Festejia!"
+
+================================================================================
+11. BASE DE CONOCIMIENTO COMPLETA (LAS 19 PREGUNTAS FRECUENTES)
+================================================================================
+[CATEGORIA: GENERAL]
+P1: ¿Que es una invitacion digital interactiva de Festejia?
+R: Es una experiencia web moderna, elegante y completamente personalizada a la que tus invitados acceden mediante un enlace exclusivo. A diferencia de una tarjeta de papel o una imagen fija, incluye musica de fondo, cuenta regresiva animada, mapa GPS con navegacion directa a la iglesia y el salon, galeria de fotos, confirmacion de asistencia en tiempo real con pases personalizados, y en nuestros planes avanzados, asignacion de mesas y control de ingreso con codigo QR.
+
+P2: ¿Mis invitados necesitan descargar alguna aplicacion?
+R: No, absolutamente ninguna. Tus invitados solo tocan el enlace que les envies por WhatsApp, mensaje o correo, y la invitacion se abre de inmediato en cualquier navegador web de smartphone, tablet o computadora con fluidez total y sin registros molestos.
+
+P3: ¿Cuanto tiempo permanece activa mi invitacion en internet?
+R: Todas nuestras invitaciones permanecen activas desde el momento de su publicacion hasta 30 dias despues de concluido el evento. De esta forma, tus invitados pueden volver a ingresar para consultar fotos, revivir la musica o dejar mensajes en el muro de recuerdos.
+
+P4: ¿Puedo probar una demostracion antes de contratar?
+R: ¡Por supuesto! En nuestra web puedes interactuar con demostraciones reales de todas nuestras colecciones de bodas, 15 años, graduaciones y bautizos, abriendo el sobre virtual y probando el sistema de confirmacion.
+
+[CATEGORIA: PERSONALIZACION]
+P5: ¿Que elementos de la invitacion puedo personalizar?
+R: Absolutamente todo: nombres, fecha, horarios, direcciones con mapas GPS integrados, codigo de vestimenta, itinerario de la fiesta, canciones de fondo, fotografias, opciones de mesa de regalos (datos bancarios y lluvia de sobres), datos de los padres y padrinos, y la paleta de colores. En el Plan Imperial, el diseno se elabora 100% desde cero segun tu tematica exclusiva.
+
+P6: ¿Puedo incluir mi propia cancion de fondo?
+R: Si. En los planes Elegante e Imperial puedes elegir cualquier cancion que signifique algo especial para ustedes. Nosotros nos encargamos de integrarla con un reproductor estetico y sutil con controles de pausa y reproduccion.
+
+P7: ¿Cuantas fotografias puedo incluir en mi galeria?
+R: El Plan Elegante incluye hasta 10 fotografias profesionales en alta resolucion con visor optimizado para pantallas moviles. En el Plan Imperial puedes incluir fotos ilimitadas.
+
+P8: ¿Que pasa si cambian los horarios o el lugar del evento a ultimo momento?
+R: Esa es una de las grandes ventajas de Festejia frente al papel impreso: las invitaciones digitales son dinamicas. Si sufres un imprevisto o cambio de salon, nos avisas por WhatsApp y actualizamos la informacion de inmediato en la web sin ningun costo adicional dentro de tus rondas de cambios.
+
+[CATEGORIA: CONFIRMACION Y GESTION (RSVP)]
+P9: ¿Como funciona el sistema de confirmacion inteligente?
+R: Cada familia o invitado recibe un enlace exclusivo que reconoce su nombre y la cantidad exacta de pases autorizados que decidiste asignarle (por ejemplo: 'Familia Perez - 3 pases'). El invitado simplemente selecciona si asistira o no, cuantos pases utilizara, agrega notas sobre restricciones alimentarias y te deja un mensaje de felicitacion. Los datos se actualizan en vivo en tu panel de control.
+
+P10: ¿Puedo evitar que los invitados agreguen acompanantes no invitados?
+R: Si, totalmente. Con nuestro sistema de pases intransferibles, ningun invitado puede confirmar mas personas de las que tu le hayas asignado previamente en tu lista. Se acabaron las sorpresas desagradables en la recepcion.
+
+P11: ¿Como accedo al panel de control de anfitriones?
+R: Te proporcionamos un acceso privado mediante usuario y contrasena a festejia.com/login. Desde alli, tu y tu pareja o wedding planner podran ver en vivo cuantas personas han confirmado, quienes faltan por responder, leer los mensajes de felicitacion y exportar la lista a Excel.
+
+P12: ¿Como funciona el control de acceso en puerta con codigo QR?
+R: En nuestro Plan Imperial, cada invitado confirmado recibe un pase digital con un codigo QR exclusivo. El dia del evento, la persona encargada de la puerta o recepcion escanea los codigos con la camara de su celular ingresando a festejia.com/checkin. El sistema valida el pase, indica la mesa asignada y registra el ingreso, evitando que se reutilicen pases o ingresen personas no invitadas.
+
+P13: ¿Puedo asignar numeros de mesa a mis invitados?
+R: Si. En el Plan Imperial (o como servicio adicional en los otros planes), puedes definir el numero o nombre de mesa de cada invitado para que al abrir su pase digital sepa con precision donde sentarse al llegar al salon.
+
+[CATEGORIA: PAGOS Y ENTREGA]
+P14: ¿Cual es el plazo de entrega de mi invitacion?
+R: Para los planes Clasico y Elegante, el tiempo estandar de entrega del primer borrador funcional es de 5 a 7 dias habiles. Para el Plan Imperial es de 3 a 5 dias habiles. Si tienes una urgencia extrema, disponemos de nuestro Servicio Express con entrega en 48 horas.
+
+P15: ¿Como es la politica de pagos y por que es 100% segura?
+R: Para que tengas total seguridad y tranquilidad, trabajamos con un anticipo simbolico de solo $15 USD (Bs. 170 en Bolivia). Con eso reservamos tu fecha y montamos la invitacion completa. Te enviamos el enlace para que la revises en tu propio celular y solicites ajustes. Solo cuando la invitacion este completamente aprobada y estes feliz con el resultado, abonas el saldo restante.
+
+P16: ¿Que metodos de pago aceptan?
+R: Para clientes en Bolivia aceptamos transferencias bancarias a cuentas en los principales bancos y pagos instantaneos mediante Codigo QR Simple. Para clientes internacionales aceptamos tarjetas de debito y credito (Visa, Mastercard, American Express), PayPal y transferencias internacionales.
+
+P17: ¿Por que el precio en Bolivianos se calcula a tasa de mercado de 11.5 y no a la oficial?
+R: En Festejia operamos con herramientas de infraestructura en la nube, servidores internacionales, motores de bases de datos y licencias de software que se facturan estrictamente en Dolares estadounidenses. Para mantener la sostenibilidad financiera de la empresa y la maxima calidad de diseno y tecnologia sin cortes de servicio, aplicamos la tasa de cambio real y efectiva del mercado boliviano (11.5 BOB/USD), ofreciendo siempre un redondeo comercial justo y ventajoso para nuestros anfitriones.
+
+P18: ¿Como envio las invitaciones a mis seres queridos?
+R: Es tan sencillo como enviar un mensaje de WhatsApp. Nuestro panel te permite copiar el enlace personalizado de cada invitado junto con un saludo carinoso ya redactado con un solo toque y enviarlo directamente por chat, mensaje de texto o correo electronico.
+
+P19: ¿Que sucede si necesito realizar un cambio despues de aprobada la invitacion?
+R: Todos los planes incluyen rondas de revision antes de la entrega final. Si despues de compartirla surge un cambio de fuerza mayor (como modificacion de hora o lugar), nuestro equipo te asiste para actualizar la web de inmediato.
+
+================================================================================
+12. ARQUITECTURA TECNICA DEL SOFTWARE Y RUTAS DE CODIGO
+================================================================================
+- Framework: Next.js 16 (App Router con Turbopack y React 19).
+- Base de datos: Supabase (PostgreSQL 15) con Row Level Security (RLS) habilitado.
+- Estilos: CSS nativo modular con styled-jsx y hojas globales optimizadas (globals.css, premium-polish.css).
+
+Rutas clave del proyecto:
+- c:\Users\user23\festejia\app\page.js: Landing page maestra.
+- c:\Users\user23\festejia\app\bodas\page.js: Catalogo tematico de bodas.
+- c:\Users\user23\festejia\app\quince\page.js: Catalogo de 15 anos.
+- c:\Users\user23\festejia\app\graduaciones\page.js: Catalogo de graduaciones.
+- c:\Users\user23\festejia\app\bautizos\page.js: Catalogo de bautizos.
+- c:\Users\user23\festejia\app\login\page.js: Acceso unificado para administradores y clientes.
+- c:\Users\user23\festejia\app\panel\page.js: Panel del Anfitrion en tiempo real (Planes Elegante e Imperial).
+- c:\Users\user23\festejia\app\gestor\page.js: Gestor Lite (Plan Clasico).
+- c:\Users\user23\festejia\app\checkin\page.js: Escaner QR y control de acceso en puerta (Plan Imperial).
+- c:\Users\user23\festejia\app\admin\page.js: Panel Administrador Bespoke para gestion de clientes y eventos.
+- c:\Users\user23\festejia\app\admin-express\page.js: Panel Administrador Express para validacion de pagos y publicacion.
+- c:\Users\user23\festejia\app\express\dashboard\page.js: Dashboard de usuario Express.
+- c:\Users\user23\festejia\app\express\dashboard\editor\[id]\page.js: Estudio de diseno interactivo de bloques.
+- c:\Users\user23\festejia\app\api\admin\create-client\route.js: Creacion server-side de clientes y eventos con rollback transaccional.
+- c:\Users\user23\festejia\app\api\admin\delete-user\route.js: Eliminacion segura en cascada con Service Role Key.
+- c:\Users\user23\festejia\app\api\admin\express-client-ids\route.js: Filtro de exclusividad entre clientes Express y Bespoke.
+- c:\Users\user23\festejia\app\api\currency\route.js: Servicio de deteccion geografica de divisas.
+- c:\Users\user23\festejia\app\api\express\generate-text\route.js: Motor de generacion de textos emotivos con IA (Moonshot Kimi).
+- c:\Users\user23\festejia\lib\express\blocks\registry.js: Registro de los 17 bloques de Express.
+- c:\Users\user23\festejia\lib\express\queries.js: Consultas Supabase para tablas express_*.
+- c:\Users\user23\festejia\lib\express\payments.js: Capa de abstraccion de pagos para Festejia Express.
+- c:\Users\user23\festejia\lib\notificaciones.js: Motor de hitos y notificaciones reactivas.
+- c:\Users\user23\festejia\lib\useVisibleInterval.js: Hook de rendimiento con IntersectionObserver.
+
+================================================================================
+13. PANEL ADMINISTRADOR MAESTRO BESPOKE Y ADMIN EXPRESS
+================================================================================
+
+A) PANEL ADMINISTRADOR BESPOKE (/admin)
+- Control de Acceso:
+  * Verifica sesion de Supabase Auth.
+  * Valida que profiles.role === 'admin'. Si no es admin, redirige a /panel.
+  * Las operaciones sensibles corren en Route Handlers server-only con la Service Role Key (lib/supabase-admin.js).
+- Mapeo de Nombres de Planes:
+  * plus -> Clásico ($45 USD / Bs. 520)
+  * premium -> Elegante ($75 USD / Bs. 860)
+  * exclusive -> Imperial ($110 USD / Bs. 1270)
+- Modulos del Panel:
+  1. Tab Dashboard: Resumen de clientes totales, eventos totales, clientes activos, desglose por plan y lista de ultimos anfitriones registrados.
+  2. Tab Clientes: Tabla completa con nombre, usuario, plan, estado (activo/inactivo con boton toggle instantaneo), fecha de alta y boton de eliminacion en cascada.
+  3. Formulario "+ Crear Nuevo Cliente":
+     * Campos: Usuario (alfanumerico en minusculas), Contrasena (min 8 chars), Nombre, Plan, Nombre del evento y Tipo de evento.
+     * Logica Backend (/api/admin/create-client): Valida usuario con regex /^[a-z0-9_-]{3,40}$/, crea el usuario en auth.admin.createUser con correo virtual ${usuario}@festejia.local, inserta fila en profiles, inserta en clientes_login e inserta en eventos. Si algun paso falla, ejecuta rollback automatico de todos los registros creados para no dejar datos huerfanos.
+  4. Tab Eventos: Cuadricula de eventos con conteo de invitados y confirmados, selector de plantilla de diseno y editor rapido de datos (novio 1, novio 2, iglesia, hora ceremonia, salon, hora recepcion) con guardado en tiempo real al perder el foco (onBlur).
+  5. Tab Invitados: Auditoria unificada de todos los invitados registrados en todos los eventos de la plataforma.
+
+B) PANEL ADMINISTRADOR EXPRESS (/admin-express)
+- Administra el flujo de autoservicio Express (Bs. 200).
+- Pestaña Pagos Pendientes:
+  * Lista las solicitudes de pago creadas por los clientes al hacer clic en "Publicar" o en "Comprar correcciones adicionales".
+  * Muestra: Nombres, Tipo de pago (publicacion o correcciones_extra), Codigo interno, Plantilla, Monto en Bolivianos y Fecha.
+  * Accion "✓ Confirmar pago":
+    - Ejecuta confirmarPagoAdmin(pagoId, user.id).
+    - Marca el pago como confirmado con ID del admin y marca temporal.
+    - Si es publicacion: cambia el estado de la invitacion a 'publicada', registra fecha_publicacion = now(), calcula automaticamente la fecha de expiracion (fecha_evento + 1 dia) y asigna 2 correcciones gratuitas.
+    - Si es correcciones_extra: suma +2 al contador correcciones_disponibles.
+  * Accion "✕ Rechazar": Marca el pago como rechazado si el comprobante no es valido.
+- Pestaña Todas las Invitaciones:
+  * Tabla con todas las invitaciones Express: Nombre, Codigo interno, Plantilla, Estado (borrador, pendiente_pago, publicada, expirada con badges de color), Correcciones y enlace al slug publico.
+  * Acciones operativas:
+    - Ver / Editar: Abre el editor de bloques en /express/dashboard/editor/[id].
+    - Publicar Manual: Permite publicar invitaciones de cortesia o pagos manuales sin comprobante, auto-generando el slug unico.
+    - Despublicar: Regresa la invitacion a estado borrador.
+    - Eliminar: Borra la invitacion y su registro asociado.
+
+================================================================================
+14. PANEL DEL CLIENTE (ANFITRION), GESTOR LITE Y CONTROL DE ACCESO (CHECK-IN)
+================================================================================
+
+A) INICIO DE SESION Y ENRUTAMIENTO INTELIGENTE (/login)
+- Formulario de credenciales: Usuario y Contraseña.
+- Resolucion de usuario: Si no tiene @, agrega automaticamente @festejia.local para autenticar contra Supabase Auth.
+- Redireccion segun perfil:
+  * Si pertenece a express_clientes -> redirige a /express/dashboard.
+  * Si profiles.role === 'admin' -> redirige a /admin.
+  * Si profiles.plan === 'premium' o 'exclusive' -> redirige a /panel (Panel Completo).
+  * Si profiles.plan === 'plus' -> redirige a /gestor (Gestor Lite).
+
+B) PANEL DEL ANFITRION COMPLETO (/panel) - PLANES ELEGANTE E IMPERIAL
+- Suscripciones en Tiempo Real (WebSockets con Supabase Channels):
+  * notif-[user.id]: Escucha inserciones en la tabla notificaciones para alertar al instante cuando un invitado confirma o declina.
+  * invitados-realtime-[evento.id]: Escucha cambios en la tabla invitados filtrados por el evento del usuario para actualizar las metricas sin recargar la pantalla.
+- Campana de Notificaciones:
+  * Badge con contador de no leidas.
+  * Menu desplegable con calculo de tiempo relativo ("Ahora", "Hace 5 min", "Hace 2h", "Hace 3d") y boton "Marcar todas".
+- Configuracion del Evento:
+  * Nombre del evento, fecha de celebracion, fecha limite de confirmacion (RSVP deadline) y mensaje personalizado para envio de WhatsApp.
+- Contador y Progreso:
+  * Barra de cuenta regresiva dinamica ("X dias para tu evento").
+  * Barra de progreso de confirmaciones calculando el porcentaje total con desglose de confirmados (verde), pendientes (amarillo) y rechazados (rojo).
+- Tablero de 7 Metricas KPI:
+  1. Invitados totales.
+  2. Pases asignados.
+  3. Confirmados (tarjeta verde).
+  4. Pendientes (tarjeta amarilla).
+  5. Rechazados (tarjeta roja).
+  6. Invitaciones enviadas por WhatsApp.
+  7. Ingresados en puerta (tarjeta azul).
+- Limites de Invitados:
+  * Plan Elegante: 150 invitados maximo.
+  * Plan Imperial: Ilimitados (9999).
+- Gestion de Invitados (Pestaña Invitados):
+  * Exportar a Excel (.csv con codificacion UTF-8 BOM para soporte de tildes y caracteres en Excel).
+  * Buscador en tiempo real y filtro de estado (Todos, Confirmados, Pendientes, Rechazados, Enviadas, No enviadas).
+  * Rendimiento optimizado: Fila GuestRow memoizada con React.memo y callbacks estables via useCallback para evitar re-renderizados innecesarios al escribir en el buscador.
+  * Acciones por invitado: Edicion en linea de nombre, pases y mesa; boton Copiar link con mensaje al portapapeles; boton Compartir directo por WhatsApp (wa.me/?text=...); switch de confirmacion de envio (Si/No) y boton Eliminar.
+- Pestaña Mensajes:
+  * Muro con las dedicatorias y felicitaciones dejadas por los invitados al momento de confirmar en la web.
+- Pestaña Check-in:
+  * Resumen de personas ingresadas vs confirmadas y marcado manual de asistencia.
+
+C) GESTOR LITE (/gestor) - PLAN CLASICO
+- Version agil y minimalista pensada para eventos intimos de hasta 50 invitados.
+- Alta rapida de invitado con cantidad de pases.
+- Tabla compacta con estado de confirmacion, boton copiar enlace, boton WhatsApp y eliminar.
+
+D) CONTROL DE ACCESO Y ESCANER QR (/checkin) - EXCLUSIVO PLAN IMPERIAL
+- Acceso restringido por RBAC: profiles.plan === 'exclusive'.
+- Camara nativa: navigator.mediaDevices.getUserMedia con facingMode: 'environment' (camara trasera del smartphone).
+- Inyeccion dinamica y resiliente de la libreria jsQR con timeout de proteccion de 10 segundos.
+- Lectura de tokens propietarios con formato "festejia:INVITADO_UUID".
+- Prevencion de lecturas duplicadas con mutable ref (useRef) y enfriamiento de 3 segundos.
+- Verificacion de Seguridad en Puerta:
+  * Exito: Invitado confirmado -> Registra ingreso = true, fecha_ingreso = now(), emite mensaje verde con mesa asignada y dispara vibracion haptica (navigator.vibrate(200)).
+  * Alerta de Reingreso / Fraude: Si el invitado ya ingreso previamente, emite alerta con advertencia para evitar que compartan capturas del mismo QR.
+  * Alerta de No Confirmado: Advierte si el invitado figura como pendiente o rechazado.
+- Entrada manual de emergencia por nombre para invitados que se quedaron sin bateria en el celular.
+- Historial en vivo con la hora exacta de cada ingreso registrado.
+
+================================================================================
+15. ESTUDIO DE DISENO EXPRESS Y CATALOGO DETALLADO DE LOS 17 BLOQUES
+================================================================================
+
+- Estudio de Diseño Interactivo (/express/dashboard/editor/[id]):
+  * Interfaz tipo Canva con previsualizacion en vivo (BlockPreviewShell.js) y acordeon de configuracion (Accordion.js).
+  * Reordenamiento de bloques con Drag & Drop (SortableBlockItem.js).
+  * Motor central desacoplado (EditorEngine.js).
+  * Sincronizacion bidireccional con columnas legacy (sync.js).
+  * Validador pre-publicacion (validator.js) que asegura nombres, fecha y al menos una ubicacion antes de permitir el pago.
+
+- Los 17 Bloques Modulares:
+  1. informacion-principal: Nombres de los festejados, fecha del evento, hora general y tipo de evento. Sincroniza las columnas legacy principales.
+  2. portada: Imagen de portada, titulo, subtitulo y estilo de apertura (sobre digital interactivo o portada limpia).
+  3. cuenta-regresiva: Contador animado con dias, horas, minutos y segundos hacia la fecha objetivo.
+  4. ceremonia: Nombre del templo o iglesia, direccion, hora y enlace directo a Google Maps / Waze.
+  5. recepcion: Nombre del salon o finca, direccion, hora de inicio/cierre y link GPS.
+  6. itinerario: Cronograma interactivo con iconos para cada hito (iglesia, coctel, cena, vals, fiesta).
+  7. padres: Seccion formal con nombres de los padres de los novios o de la quinceañera.
+  8. padrinos: Lista de padrinos de honor y cortejo clasificados por categoria.
+  9. historia: Relato de la historia de amor o vida con fotos y momentos destacados.
+  10. galeria: Cuadricula o carrusel de fotos en alta definicion con visor lightbox.
+  11. musica: Cancion de fondo con enlace de YouTube, MP3 o Spotify y reproductor flotante.
+  12. dress-code: Etiqueta requerida (formal, etiqueta rigurosa, etc.) y paleta de colores sugeridos o reservados.
+  13. regalos: Opciones de regalos: Lluvia de sobres, datos bancarios con imagen QR para transferencias instantaneas y enlaces a tiendas.
+  14. solo-adultos: Mensaje cordial y respetuoso comunicando la exclusion de niños en el evento.
+  15. confirmacion: Formulario de asistencia RSVP con seleccion de pases, restricciones dieteticas y mensajes.
+  16. redes-sociales: Hashtag del evento (#BodaXyY) y enlaces a Instagram / TikTok.
+  17. configuracion: Paletas de color maestras, tipografias y estilos globales.
+
+- Ciclo de Vida de Publicacion y Pagos de Express:
+  1. El cliente disena y pulsa "Publicar".
+  2. El validador verifica los bloques indispensables y el sistema genera un slug unico anti-colision (prepararParaPublicar).
+  3. Se registra el pago en express_pagos (monto: 200, tipo: 'publicacion', estado: 'pendiente') y se abre WhatsApp con el mensaje pre-armado y el codigo interno.
+  4. El administrador confirma el pago en /admin-express, lo que pasa la invitacion a 'publicada', activa la fecha_expiracion (fecha_evento + 1 dia) y asigna 2 correcciones gratuitas.
+  5. El cliente puede realizar hasta 2 modificaciones gratuitas en el editor (auditadas en express_correcciones_log). Agotadas estas, puede comprar paquetes de 2 correcciones extra por Bs. 30.
+
+================================================================================
+16. MODELO DE DATOS SUPABASE Y SEGURIDAD RLS
+================================================================================
+
+- Tablas del Ecosistema Bespoke:
+  1. profiles: id (UUID auth), email, nombre, role ('admin' | 'client'), plan ('plus' | 'premium' | 'exclusive'), activo (boolean), created_at.
+  2. eventos: id (UUID), user_id (UUID), nombre_evento, tipo ('boda', 'quince', 'graduacion', 'bautizo', 'otro'), fecha_evento, fecha_limite_confirmacion, mensaje_personalizado, lugar_ceremonia, hora_ceremonia, lugar_recepcion, hora_recepcion, plantilla, created_at.
+  3. invitados: id (UUID), evento_id (UUID), nombre_completo, num_pases, mesa, estado ('pendiente' | 'confirmado' | 'rechazado'), invitacion_enviada (boolean), ingreso (boolean), fecha_ingreso (timestamp), mensaje_invitado (text), fecha_confirmacion (timestamp), permite_ninos (boolean), created_at.
+  4. notificaciones: id (UUID), user_id (UUID), titulo, descripcion, icono, leida (boolean), created_at.
+  5. clientes_login: id, usuario, profile_id, password (marca protegida), created_at.
+
+- Tablas del Ecosistema Express:
+  1. express_clientes: id (UUID auth), email, nombre, created_at.
+  2. express_invitaciones: id (UUID), user_id (UUID), plantilla, codigo_interno, slug (unique), estado ('borrador' | 'pendiente_pago' | 'publicada' | 'expirada'), contenido (JSON con los 17 bloques), orden (JSON array de bloques), correcciones_disponibles (int), correcciones_usadas (int), fecha_publicacion, fecha_expiracion, nombre1, nombre2, fecha_evento, ceremonia_lugar, recepcion_lugar, dresscode, created_at.
+  3. express_pagos: id (UUID), invitacion_id (UUID), tipo ('publicacion' | 'correcciones_extra'), monto (numeric), metodo ('whatsapp_manual'), estado ('pendiente' | 'confirmado' | 'rechazado'), confirmado_por (UUID), confirmado_at (timestamp), created_at.
+  4. express_correcciones_log: id (UUID), invitacion_id (UUID), campo_modificado, valor_anterior, valor_nuevo, created_at.
+  5. express_ia_generaciones: id (UUID), user_id (UUID), invitacion_id (UUID), tipo_texto, prompt_usado, resultado, tokens_usados, costo_estimado, created_at.
+
+================================================================================
+17. RUNTIME PUBLICO, INVITACION/[ID] Y CATALOGO DE PLANTILLAS
+================================================================================
+- Flujo Dinámico del Invitado:
+  * URL: https://www.festejia.com/invitacion/[UUID].
+  * generateMetadata construye en el servidor OpenGraph y Twitter Cards con el título, descripción de los novios y la portada de la plantilla correspondiente (/plantillaX/images/foto-modelo-sobre-boda-1.jpg).
+  * Redirección Server-Side con window.location.replace() hacia:
+    /${plantilla}/?m=${encodeURIComponent(nombre)}&n=${encodeURIComponent(pases + ' pases')}&id=${id}&evento=${eventoId}.
+- Plantillas Bespoke en /public/:
+  * plantilla1: Sobre interactivo con sello de lacre virtual y animación de apertura física con apertura de solapas.
+  * plantilla2: Mármol blanco y oro, acentos verde salvia (#5F6754) e hidratación dinámica de IDs DOM (#nombre-novio1, #nombre-novio2, #nombre-invitado-seccion, etc.).
+- Las 5 Plantillas Oficiales de Festejia Express (lib/express/templates/):
+  1. plantilla-a ("Mármol"): Verde salvia y dorado (#5F6754, #876E44).
+  2. plantilla-b ("Clásica"): Blanco y dorado minimalista (#1a1a1a, #c9a96e).
+  3. plantilla-c ("Romance"): Rosa pastel y oro rosa (#8b5f6b, #d4a5b0), galería en carrusel e historia de amor.
+  4. plantilla-d ("Jardín"): Verde natural (#4a6e5c, #c9a96e) con mapas GPS embebidos.
+  5. plantilla-e ("Moderna"): Negro y dorado (#0a0a0a, #c4a265) con bloque de redes sociales.
+
+================================================================================
+18. MOTOR DE HITOS, TRIGGERS DE BASE DE DATOS Y SEGURIDAD IA
+================================================================================
+- Motor de Notificaciones e Hitos (lib/notificaciones.js):
+  * Disparo automático de hitos al alcanzar porcentajes de confirmación: 25% (hito_25), 50% (hito_50), 75% (hito_75), 100% (hito_100).
+  * Deduplicación con hitoYaNotificado() para evitar spam.
+  * Recordatorios cronológicos automáticos: 30 días (dias_30), 15 días (dias_15), 7 días (dias_7), 1 día antes (manana) y día del evento (hoy).
+  * Notificaciones de actividad de invitados: confirmación, rechazo, cambio de pases, cambio de respuesta y dedicatoria.
+- Triggers de Seguridad en PostgreSQL:
+  * validar_limite_invitados_por_plan(): Trigger BEFORE INSERT ON invitados que consulta el plan en profiles y bloquea inserciones que superen los límites (Clásico: 50, Elegante: 150, Imperial: 9999), lanzando una excepción SQL a nivel base de datos para impedir cualquier bypass de la interfaz.
+  * express_set_updated_at(): Trigger BEFORE UPDATE ON express_invitaciones.
+- Almacenamiento Multimedia (Storage):
+  * Bucket 'express-media' con políticas RLS que aíslan subidas y borrados al directorio express-media/{user_id}/{invitacion_id}/, manteniendo lectura pública para las plantillas web.
+- Seguridad de Inteligencia Artificial (api/express/generate-text):
+  * Motor Moonshot AI Kimi (kimi-k2.7-code).
+  * Rate limiting de 40 generaciones/hora/usuario con índice idx_express_ia_user_created.
+  * Registro de auditoría y tokens en tabla express_ia_generaciones.
+- Rendimiento en Frontend:
+  * Hook useVisibleInterval con IntersectionObserver para suspender contadores y tickers cuando no están visibles en pantalla, ahorrando batería y CPU.
+
+================================================================================
+19. COMPONENTES DEL EDITOR EXPRESS Y PIPELINE DE COMPRESION WEBP
+================================================================================
+- Vistas del Portal Express:
+  * /express/dashboard: Listado de invitaciones con estado, código interno, plantilla y acciones (editar, ver /e/[slug], eliminar).
+  * /express/dashboard/nueva: Selección de plantilla y generación de código interno aleatorio EXP-XXXX (excluyendo caracteres confusos).
+  * /express/dashboard/cuenta: Gestión de perfil y nombre del anfitrión.
+  * /express/dashboard/ayuda: Preguntas frecuentes de Express y botón de soporte vía WhatsApp.
+  * /express/dashboard/editor/[id]: Estudio de diseño tipo Canva.
+- Componentes Clave del Editor:
+  * EditorEngine.js: Orquestador con autoguardado en tiempo real (debounce) y sincronización bidireccional con columnas legacy (sync.js).
+  * SortableBlockItem.js: Sistema Drag & Drop para reordenar bloques móviles en vertical.
+  * Accordion.js: Acordeón colapsable para edición limpia de cada sección.
+  * FieldRenderer.js: Renderizador polimórfico de campos (text, textarea, date, time, color, image, audio) con botón integrado "✨ Generar con IA".
+  * BlockPreviewShell.js: Simulador de smartphone en tiempo real.
+- Pipeline de Compresión WebP en el Navegador (lib/express/storage.js):
+  * Función comprimirImagen(): Utiliza createImageBitmap, reescala el ancho máximo a 1200px proporcionalmente y convierte a WebP con calidad 0.8 en un canvas HTML5. Reduce fotos de 10MB+ a ~250KB al vuelo.
+  * Validación: Máximo 5MB para fotos (JPG, PNG, WebP) y máximo 5MB para música (MP3). Límite de 3 fotos en galería para el plan base.
+
+================================================================================
+20. CONFIGURACION GLOBAL, WALINK Y ESPECIFICACION DE LAS 23 DIVISAS
+================================================================================
+- Configuración Centralizada (lib/config.js):
+  * WHATSAPP_NUMERO = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '59100000000'
+  * waLink(mensaje): Construye URLs seguras https://wa.me/[NUMERO]?text=[MENSAJE] codificadas en UTF-8 para todos los botones de contacto de la web.
+- Las 23 Divisas Oficiales (lib/currency.js):
+  * Moneda base: USD.
+  * Tasa de mercado Bolivia: 11.50 BOB/USD (fija e inalterable).
+  * Las 17 Divisas de Latinoamérica:
+    1. BOB: Bolivianos (Bs. 🇧🇴, tasa 11.50, paso 10)
+    2. USD: Dólares ($ 🇺🇸, tasa 1.00, paso 1)
+    3. PEN: Soles (S/ 🇵🇪, tasa 3.75, paso 5)
+    4. MXN: Pesos Mexicanos (MX$ 🇲🇽, tasa 18.50, paso 10)
+    5. COP: Pesos Colombianos (COL$ 🇨🇴, tasa 4100, paso 1000)
+    6. ARS: Pesos Argentinos (AR$ 🇦🇷, tasa 1250, paso 500)
+    7. CLP: Pesos Chilenos (CLP$ 🇨🇱, tasa 940, paso 500)
+    8. BRL: Reales (R$ 🇧🇷, tasa 5.40, paso 5)
+    9. UYU: Pesos Uruguayos ($U 🇺🇾, tasa 40.00, paso 10)
+    10. PYG: Guaraníes (₲ 🇵🇾, tasa 7500, paso 5000)
+    11. GTQ: Quetzales (Q 🇬🇹, tasa 7.70, paso 5)
+    12. CRC: Colones (₡ 🇨🇷, tasa 510, paso 100)
+    13. DOP: Pesos Dominicanos (RD$ 🇩🇴, tasa 59.00, paso 50)
+    14. HNL: Lempiras (L 🇭🇳, tasa 25.00, paso 10)
+    15. NIO: Córdobas (C$ 🇳🇮, tasa 36.80, paso 10)
+    16. VES: Bolívares (Bs. 🇻🇪, tasa 36.50, paso 10)
+    17. PAB: Balboas / USD (B/. 🇵🇦, tasa 1.00, paso 1)
+  * Las 6 Divisas Globales:
+    1. EUR: Euros (€ 🇪🇺, tasa 0.92, paso 1, formato 'X €')
+    2. GBP: Libras Esterlinas (£ 🇬🇧, tasa 0.78, paso 1)
+    3. CAD: Dólares Canadienses (CA$ 🇨🇦, tasa 1.36, paso 5)
+    4. AUD: Dólares Australianos (AU$ 🇦🇺, tasa 1.50, paso 5)
+    5. CHF: Francos Suizos (CHF 🇨🇭, tasa 0.88, paso 1)
+    6. JPY: Yenes (¥ 🇯🇵, tasa 155, paso 100)
+  * Algoritmo de Detección: Evaluación por huso horario (Intl.DateTimeFormat().resolvedOptions().timeZone) y locale de navegador (navigator.language). Reconoce automáticamente Panamá, Ecuador y El Salvador como economías dolarizadas nativas hacia USD.
+  * Algoritmo de Redondeo: Múltiplos limpios según orden de magnitud (>=1000 redondea a 500/1000, >=100 a 100, >=10 a 10, >=2 a 5, <2 al entero más cercano).
+
+================================================================================
+21. DOCUMENTOS ORIGINALES, INFRAESTRUCTURA Y REGISTRO HISTORICO
+================================================================================
+- Enlaces de Producción:
+  * Dominio: Porkbun (festejia.com).
+  * Hosting: Vercel (festejia/festejia) sobre rama main.
+  * Repositorio: GitHub (javierbolivia/festejia).
+  * Base de datos: Supabase (Auth + DB + Storage).
+- Historial de Commits Destacados:
+  * 8891b05: Acción Eliminar en paneles y límite de una plantilla editable en Express.
+  * 91afc27: Prevención de choque de slug al publicar sin nombres.
+  * 7341dc1: Panel /admin-express para pagos y cálculo de expiración.
+  * 90a6880: Editor tipo Canva con 17 bloques y drag & drop.
+  * 0850235: Parche de seguridad crítico Next.js 14.2.35 (CVE-2025-55182).
+  * 262a518: Módulo inicial de Festejia Express.
+- Hoja de Ruta de Pagos Bolivia:
+  * Fase 1 (Actual): Transferencia bancaria y QR Simple por WhatsApp.
+  * Fase 2 (Escala): Links de pago Libélula.bo (+50 clientes/mes).
+  * Fase 3 (Automatización): API REST de checkout Libélula (+200 clientes/mes).
+- Absorción de Bóveda Previa:
+  * Los 4 archivos de festejia-vault/ (Guía, Inicio MOC, Marca, Plan Clásico) están 100% absorbidos e integrados.
+
+================================================================================
+22. AGENTS.MD, REGLAS Y SISTEMA DE SKILLS DE ANTIGRAVITY AI
+================================================================================
+- Regla Estricta AGENTS.md / CLAUDE.md:
+  * Generada por Next.js 16 Turbopack (generate-agent-files.js). Advierte de APIs asíncronas (await params).
+  * Debe permanecer commiteada en el repositorio para evitar diffs residuales al correr next dev.
+- Especificación del Sistema de Skills de Antigravity:
+  * Estructura SKILL.md con YAML frontmatter (name, description) e instrucciones procedimentales paso a paso.
+  * Rutas de descubrimiento: .agents/ en el workspace, reglas jerárquicas GEMINI.md / AGENTS.md, y ~/.gemini/config/.
+  * Los 5 tipos de personalizaciones: Rules (restricciones obligatorias), Skills (procedimientos on-demand), Plugins (paquetes combinados), Hooks (scripts en eventos de ciclo de vida) y MCP Servers (herramientas externas).
+  * Skills nativos: agy-customizations, antigravity_guide, generative_ui, migrate-workflows.
+  * Comandos de productividad (Slash commands): /goal, /schedule, /browser, /grill-me, /teamwork-preview, /learn, /boost.
+
+================================================================================
+FIN DE LA MEMORIA TOTAL Y ABSOLUTA DE FESTEJIA (EDICION MAESTRA FINAL)
+================================================================================

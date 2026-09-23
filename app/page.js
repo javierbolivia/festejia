@@ -47,6 +47,245 @@ function useCounter(target, duration = 2000) {
   return { count, ref }
 }
 
+const DESIGNS_CATALOG = [
+  // Bodas (8)
+  {
+    name: 'Serenata',
+    category: 'bodas',
+    categoryName: 'Boda',
+    color: '#e8d5b0',
+    desc: 'Clásica, romántica y atemporal',
+    image: '/coleccion-serenata-v1.png',
+    couple: 'Emma & Daniel',
+    eyebrow: 'Nuestra Boda',
+    date: '22 · 08 · 2026',
+    text: '#6e5125'
+  },
+  {
+    name: 'Aurora',
+    category: 'bodas',
+    categoryName: 'Boda',
+    color: '#d4b8c4',
+    desc: 'Suave, delicada y contemporánea',
+    image: '/coleccion-aurora-v1.png',
+    couple: 'Valeria & Mateo',
+    eyebrow: 'Nuestra Boda',
+    date: '12 · 09 · 2026',
+    text: '#7e5167'
+  },
+  {
+    name: 'Jardín',
+    category: 'bodas',
+    categoryName: 'Boda',
+    color: '#c8d8c0',
+    desc: 'Natural, botánica y orgánica',
+    image: '/coleccion-jardin-v1.png',
+    couple: 'Sofía & Lucas',
+    eyebrow: 'Nuestra Boda',
+    date: '03 · 10 · 2026',
+    text: '#40513c'
+  },
+  {
+    name: 'Allegria',
+    category: 'bodas',
+    categoryName: 'Boda',
+    color: '#80958E',
+    desc: 'Moderna, vibrante y floral',
+    image: '/coleccion-allegria-v1.png',
+    couple: 'Mía & Andrés',
+    eyebrow: 'Nuestra Boda',
+    date: '17 · 10 · 2026',
+    text: '#fff7e8'
+  },
+  {
+    name: 'Napoli',
+    category: 'bodas',
+    categoryName: 'Boda',
+    color: '#d4a574',
+    desc: 'Cálida, mediterránea y dorada',
+    image: '/coleccion-napoli-v1.png',
+    couple: 'Isabella & Marco',
+    eyebrow: 'Nuestra Boda',
+    date: '24 · 10 · 2026',
+    text: '#78502a'
+  },
+  {
+    name: 'Terra',
+    category: 'bodas',
+    categoryName: 'Boda',
+    color: '#a08060',
+    desc: 'Orgánica, terrenal y campestre',
+    image: '/coleccion-terra-v1.png',
+    couple: 'Clara & Tomás',
+    eyebrow: 'Nuestra Boda',
+    date: '07 · 11 · 2026',
+    text: '#5a3824'
+  },
+  {
+    name: 'Rose Gold',
+    category: 'bodas',
+    categoryName: 'Boda',
+    color: '#b76e79',
+    desc: 'Lujosa, femenina y brillante',
+    image: '/coleccion-rose-gold-v1.png',
+    couple: 'Renata & Julián',
+    eyebrow: 'Nuestra Boda',
+    date: '14 · 11 · 2026',
+    text: '#8f4f57'
+  },
+  {
+    name: 'Euforia',
+    category: 'bodas',
+    categoryName: 'Boda',
+    color: '#6b8dad',
+    desc: 'Serena, elegante y minimalista',
+    image: '/coleccion-euforia-v1.png',
+    couple: 'Elena & Gabriel',
+    eyebrow: 'Nuestra Boda',
+    date: '28 · 11 · 2026',
+    text: '#536779'
+  },
+
+  // 15 Años (4)
+  {
+    name: 'Princesa',
+    category: 'quince',
+    categoryName: '15 Años',
+    color: '#f0c4d4',
+    accent: '#d4708a',
+    desc: 'Cuento de hadas tradicional con corona dorada',
+    image: '/demo-quince-v1.png',
+    couple: 'Mis 15 · Valentina',
+    eyebrow: 'Mis XV Años',
+    date: '15 · 10 · 2026',
+    text: '#75283f'
+  },
+  {
+    name: 'Mariposa',
+    category: 'quince',
+    categoryName: '15 Años',
+    color: '#c8b4e0',
+    accent: '#8a60b0',
+    desc: 'Ligereza, metamorfosis y juventud mágica',
+    image: '/demo-quince-v1.png',
+    couple: 'Mis 15 · Camila',
+    eyebrow: 'Mis XV Años',
+    date: '21 · 11 · 2026',
+    text: '#4a256a'
+  },
+  {
+    name: 'Encanto',
+    category: 'quince',
+    categoryName: '15 Años',
+    color: '#e8c8d8',
+    accent: '#c070a0',
+    desc: 'Elegancia juvenil chic con destellos de brillo',
+    image: '/demo-quince-v1.png',
+    couple: 'Mis 15 · Lucía',
+    eyebrow: 'Mis XV Años',
+    date: '05 · 12 · 2026',
+    text: '#6a2045'
+  },
+  {
+    name: 'Celestial',
+    category: 'quince',
+    categoryName: '15 Años',
+    color: '#b8c8e8',
+    accent: '#5070a0',
+    desc: 'Nocturna, constelaciones y magia estelar',
+    image: '/demo-quince-v1.png',
+    couple: 'Mis 15 · Mariana',
+    eyebrow: 'Mis XV Años',
+    date: '19 · 12 · 2026',
+    text: '#253560'
+  },
+
+  // Graduaciones (3)
+  {
+    name: 'Logro',
+    category: 'graduaciones',
+    categoryName: 'Graduación',
+    color: '#2c3e5a',
+    accent: '#5a7bad',
+    desc: 'Toga solemne, excelencia institucional y oro académico',
+    image: '/demo-graduaciones-v1.png',
+    couple: 'Promoción 2026',
+    eyebrow: 'Graduación de Honor',
+    date: '10 · 12 · 2026',
+    text: '#f5d590',
+    darkPhone: true
+  },
+  {
+    name: 'Éxito',
+    category: 'graduaciones',
+    categoryName: 'Graduación',
+    color: '#3a6b5a',
+    accent: '#6bad8a',
+    desc: 'Enérgico, dinámico y verde esmeralda festivo',
+    image: '/demo-graduaciones-v1.png',
+    couple: 'Promoción 2026',
+    eyebrow: 'Graduación de Honor',
+    date: '15 · 12 · 2026',
+    text: '#e0f5ea',
+    darkPhone: true
+  },
+  {
+    name: 'Academia',
+    category: 'graduaciones',
+    categoryName: 'Graduación',
+    color: '#4a3a5a',
+    accent: '#8a6bad',
+    desc: 'Sobrio, universitario clásico y lila distinguido',
+    image: '/demo-graduaciones-v1.png',
+    couple: 'Promoción 2026',
+    eyebrow: 'Graduación de Honor',
+    date: '18 · 12 · 2026',
+    text: '#ecd8f5',
+    darkPhone: true
+  },
+
+  // Bautizos (3)
+  {
+    name: 'Bendición',
+    category: 'bautizos',
+    categoryName: 'Bautizo',
+    color: '#d0e8f0',
+    accent: '#7ab8d0',
+    desc: 'Pureza, ternura e inocencia celestial en celeste y nube',
+    image: '/demo-bautizos-v1.png',
+    couple: 'Mi Bautizo · Mateo',
+    eyebrow: 'Santo Bautismo',
+    date: '15 · 08 · 2026',
+    text: '#205068'
+  },
+  {
+    name: 'Ángel',
+    category: 'bautizos',
+    categoryName: 'Bautizo',
+    color: '#e8e0c8',
+    accent: '#c9a96e',
+    desc: 'Detalles sacros y dorado suave tradicional',
+    image: '/demo-bautizos-v1.png',
+    couple: 'Mi Bautizo · Santiago',
+    eyebrow: 'Santo Bautismo',
+    date: '29 · 08 · 2026',
+    text: '#6a5530'
+  },
+  {
+    name: 'Gracia',
+    category: 'bautizos',
+    categoryName: 'Bautizo',
+    color: '#d8e8d0',
+    accent: '#8ab880',
+    desc: 'Delicadeza botánica en tonos pastel verde menta y lirio',
+    image: '/demo-bautizos-v1.png',
+    couple: 'Mi Bautizo · Isabella',
+    eyebrow: 'Santo Bautismo',
+    date: '05 · 09 · 2026',
+    text: '#305835'
+  }
+]
+
 const FAQ_ITEMS = [
   // General
   ['¿Qué es una invitación web?', 'Nuestras invitaciones son páginas web reales, interactivas con animaciones, música, cuenta regresiva, mapa y confirmación de asistencia. No es un PDF ni un diseño estático.', 'general'],
@@ -212,6 +451,7 @@ export default function Home() {
   const [modalDesign, setModalDesign] = useState(null)
   const [selectedPlan, setSelectedPlan] = useState(null)
   const [faqCategory, setFaqCategory] = useState('todas')
+  const [occasionTab, setOccasionTab] = useState('todas')
 
   // Formulario de contacto
   const [formNombre, setFormNombre] = useState('')
@@ -222,7 +462,7 @@ export default function Home() {
 
   const stat1 = useCounter(500, 2000)
   const stat2 = useCounter(98, 1500)
-  const stat3 = useCounter(8, 800)
+  const stat3 = useCounter(18, 1000)
 
   useEffect(() => {
     // Detectar divisa por país del visitante automáticamente
@@ -374,7 +614,7 @@ export default function Home() {
             <div className="hero-stats hero-fade hero-delay-5">
               <div className="stat" ref={stat1.ref}><span className="stat-number">{stat1.count}+</span><span className="stat-label">EVENTOS</span></div>
               <div className="stat" ref={stat2.ref}><span className="stat-number">{stat2.count}%</span><span className="stat-label">SATISFACCIÓN</span></div>
-              <div className="stat" ref={stat3.ref}><span className="stat-number">{stat3.count}</span><span className="stat-label">DISEÑOS</span></div>
+              <div className="stat" ref={stat3.ref}><span className="stat-number">{stat3.count}+</span><span className="stat-label">DISEÑOS</span></div>
             </div>
           </div>
           <div className="hero-visual hero-fade hero-delay-3">
@@ -447,20 +687,37 @@ export default function Home() {
           <h2 className="section-title stagger-child">Diseños Exclusivos</h2>
           <p className="section-subtitle stagger-child">Cada invitación es una obra de arte digital, creada para impresionar</p>
         </div>
-        <div className="designs-grid">
+
+        {/* SELECTOR DE PESTAÑAS POR OCASIÓN */}
+        <div className="designs-tabs stagger-child" role="tablist" aria-label="Filtrar por ocasión">
           {[
-            { name: 'Serenata', color: '#e8d5b0', desc: 'Clásica y romántica', image: '/coleccion-serenata-v1.png', couple: 'Emma & Daniel', date: '22 · 08 · 2026', text: '#6e5125' },
-            { name: 'Aurora', color: '#d4b8c4', desc: 'Suave y delicada', image: '/coleccion-aurora-v1.png', couple: 'Valeria & Mateo', date: '12 · 09 · 2026', text: '#7e5167' },
-            { name: 'Jardín', color: '#c8d8c0', desc: 'Natural y fresca', image: '/coleccion-jardin-v1.png', couple: 'Sofía & Lucas', date: '03 · 10 · 2026', text: '#40513c' },
-            { name: 'Allegria', color: '#80958E', desc: 'Moderna y vibrante', image: '/coleccion-allegria-v1.png', couple: 'Mía & Andrés', date: '17 · 10 · 2026', text: '#fff7e8' },
-            { name: 'Napoli', color: '#d4a574', desc: 'Cálida y mediterránea', image: '/coleccion-napoli-v1.png', couple: 'Isabella & Marco', date: '24 · 10 · 2026', text: '#78502a' },
-            { name: 'Terra', color: '#a08060', desc: 'Orgánica y terrenal', image: '/coleccion-terra-v1.png', couple: 'Clara & Tomás', date: '07 · 11 · 2026', text: '#5a3824' },
-            { name: 'Rose Gold', color: '#b76e79', desc: 'Lujosa y femenina', image: '/coleccion-rose-gold-v1.png', couple: 'Renata & Julián', date: '14 · 11 · 2026', text: '#8f4f57' },
-            { name: 'Euforia', color: '#6b8dad', desc: 'Elegante y serena', image: '/coleccion-euforia-v1.png', couple: 'Elena & Gabriel', date: '28 · 11 · 2026', text: '#536779' },
-          ].map((design, i) => (
+            { id: 'todas', label: 'Todas', count: 18 },
+            { id: 'bodas', label: 'Bodas', count: 8 },
+            { id: 'quince', label: '15 Años', count: 4 },
+            { id: 'graduaciones', label: 'Graduaciones', count: 3 },
+            { id: 'bautizos', label: 'Bautizos', count: 3 },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              type="button"
+              className={`designs-tab-btn ${occasionTab === tab.id ? 'active' : ''}`}
+              onClick={() => setOccasionTab(tab.id)}
+              role="tab"
+              aria-selected={occasionTab === tab.id}
+            >
+              {tab.label} <span className="tab-count">({tab.count})</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="designs-grid">
+          {(occasionTab === 'todas'
+            ? DESIGNS_CATALOG
+            : DESIGNS_CATALOG.filter(d => d.category === occasionTab)
+          ).map((design, i) => (
             <div 
               className="design-card stagger-child clickable" 
-              key={i}
+              key={design.name}
               onClick={() => setModalDesign(design)}
               role="button"
               tabIndex="0"
@@ -468,9 +725,16 @@ export default function Home() {
               aria-label={`Ver detalles del diseño ${design.name}`}
             >
               <div className="design-preview">
-                <div className="design-phone" style={{ backgroundImage: `url(${design.image})` }}>
+                <div 
+                  className={`design-phone ${design.darkPhone ? 'dark-phone' : ''}`} 
+                  style={{ 
+                    backgroundImage: design.image ? `url(${design.image})` : undefined,
+                    backgroundColor: design.color,
+                    background: !design.image ? `linear-gradient(135deg, ${design.color}, ${design.accent || design.color})` : undefined
+                  }}
+                >
                   <div className="design-invitation-copy" style={{ color: design.text }}>
-                    <span className="design-invitation-eyebrow">Nuestra celebración</span>
+                    <span className="design-invitation-eyebrow">{design.eyebrow || 'Nuestra celebración'}</span>
                     <strong>{design.couple}</strong>
                     <span className="design-invitation-rule"></span>
                     <span className="design-invitation-date">{design.date}</span>
@@ -480,7 +744,10 @@ export default function Home() {
                 </div>
               </div>
               <div className="design-info">
-                <h4>{design.name}</h4>
+                <div className="design-title-row">
+                  <h4>{design.name}</h4>
+                  <span className="design-category-badge">{design.categoryName}</span>
+                </div>
                 <p>{design.desc}</p>
                 <span className="design-card-action">✦ Ver detalles y cotizar</span>
               </div>
@@ -984,7 +1251,10 @@ export default function Home() {
         <div className="design-modal-overlay" onClick={() => setModalDesign(null)}>
           <div className="design-modal design-modal-content" onClick={e => e.stopPropagation()}>
             <div className="design-modal-header">
-              <h3>Diseño {modalDesign.name}</h3>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <h3 style={{ margin: 0 }}>Diseño {modalDesign.name}</h3>
+                <span className="design-category-badge">{modalDesign.categoryName}</span>
+              </div>
               <button 
                 type="button" 
                 className="design-modal-close" 
@@ -996,25 +1266,32 @@ export default function Home() {
             </div>
             <div className="design-modal-body">
               <div 
-                className="design-modal-preview" 
+                className={`design-modal-preview ${modalDesign.darkPhone ? 'dark-phone' : ''}`}
                 style={{ 
-                  backgroundImage: `url(${modalDesign.image})`,
+                  backgroundImage: modalDesign.image ? `url(${modalDesign.image})` : undefined,
+                  backgroundColor: modalDesign.color,
                   color: modalDesign.text 
                 }}
               >
-                <div style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(4px)', padding: '12px 18px', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                  <span style={{ fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', display: 'block', color: '#888' }}>Nuestra celebración</span>
-                  <strong style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', display: 'block', margin: '4px 0', color: '#1a1612' }}>{modalDesign.couple}</strong>
-                  <span style={{ fontSize: '0.75rem', display: 'block', color: '#555' }}>{modalDesign.date}</span>
+                <div style={{ background: modalDesign.darkPhone ? 'rgba(24, 21, 18, 0.88)' : 'rgba(255,255,255,0.88)', backdropFilter: 'blur(4px)', padding: '12px 18px', borderRadius: '12px', border: '1px solid rgba(214,176,106,0.25)' }}>
+                  <span style={{ fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', display: 'block', color: modalDesign.darkPhone ? '#d6b06a' : '#888' }}>
+                    {modalDesign.eyebrow || 'Nuestra celebración'}
+                  </span>
+                  <strong style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', display: 'block', margin: '4px 0', color: modalDesign.darkPhone ? '#ffffff' : '#1a1612' }}>
+                    {modalDesign.couple}
+                  </strong>
+                  <span style={{ fontSize: '0.75rem', display: 'block', color: modalDesign.darkPhone ? '#cccccc' : '#555' }}>
+                    {modalDesign.date}
+                  </span>
                 </div>
               </div>
               <p className="design-modal-desc">
-                <strong>{modalDesign.name}:</strong> {modalDesign.desc}. Este diseño puede personalizarse al 100% con los colores, tipografías, música, fotos, itinerario y mapa de tu celebración.
+                <strong>{modalDesign.name} ({modalDesign.categoryName}):</strong> {modalDesign.desc}. Este diseño puede personalizarse al 100% con los colores, tipografías, música, fotos, itinerario y mapa de tu celebración.
               </p>
             </div>
             <div className="design-modal-footer">
               <a 
-                href={waLink(`Hola Festejia! Me gustó el diseño "${modalDesign.name}" y quisiera cotizarlo para mi evento.`)} 
+                href={waLink(`Hola Festejia! Me gustó el diseño "${modalDesign.name}" (${modalDesign.categoryName}) y quisiera cotizarlo para mi evento.`)} 
                 className="btn-primary" 
                 target="_blank" 
                 rel="noopener noreferrer"

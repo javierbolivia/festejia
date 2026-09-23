@@ -22,7 +22,7 @@
   --gray-700: #3d3b38;
 
   /* Typography */
-  --font-display: 'Playfair Display', serif;
+  --font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
   --font-body: 'Inter', -apple-system, sans-serif;
 
   /* Spacing (8px system) */
@@ -1732,3 +1732,78 @@ ul, ol { list-style: none; }
   color: #7b6238;
   cursor: pointer;
 }
+
+/* ===== DESIGNS CATEGORY TABS ===== */
+.designs-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: var(--space-6);
+  padding: 0 16px;
+}
+.designs-tab-btn {
+  background: var(--white);
+  border: 1px solid rgba(214, 176, 106, 0.35);
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  font-size: 0.84rem;
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: #554e44;
+  cursor: pointer;
+  transition: all 250ms ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+.designs-tab-btn .tab-count {
+  font-size: 0.74rem;
+  opacity: 0.75;
+  font-weight: 600;
+}
+.designs-tab-btn:hover {
+  border-color: #d6b06a;
+  color: #11100f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(214, 176, 106, 0.2);
+}
+.designs-tab-btn.active {
+  background: linear-gradient(135deg, #181512 0%, #11100f 100%);
+  color: #f7dfb8;
+  border-color: #d6b06a;
+  box-shadow: 0 6px 18px rgba(17, 16, 15, 0.25), 0 0 12px rgba(214, 176, 106, 0.2);
+}
+.designs-tab-btn.active .tab-count {
+  color: #d6b06a;
+  opacity: 1;
+}
+
+.design-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+.design-category-badge {
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  background: rgba(214, 176, 106, 0.12);
+  color: #9a6e2f;
+  border: 1px solid rgba(214, 176, 106, 0.28);
+}
+.design-phone.dark-phone {
+  border-color: #d6b06a !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4), 0 0 20px rgba(214, 176, 106, 0.15) !important;
+}
+.design-phone.dark-phone::after {
+  color: rgba(247, 223, 184, 0.8) !important;
+}
+
+
