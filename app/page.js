@@ -376,11 +376,10 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="phone-monogram">
-                    <span>J&V</span>
-                  </div>
-
-                  <div className="phone-content">
+                  <div className="phone-invitation-body">
+                    <div className="phone-monogram">
+                      <span>J&V</span>
+                    </div>
                     <p className="phone-label">BIENVENIDOS A NUESTRA BODA</p>
                     <h3 className="phone-names">José & Victoria</h3>
                     <p className="phone-date">22 de Agosto, 2026</p>
@@ -388,27 +387,29 @@ export default function Home() {
                     <p className="phone-venue">Jardín Las Palmas</p>
                   </div>
 
-                  <div className="phone-countdown-widget">
-                    <div className="phone-cd-item">
-                      <span className="phone-cd-num">142</span>
-                      <span className="phone-cd-lbl">DÍAS</span>
+                  <div className="phone-bottom-group">
+                    <div className="phone-countdown-widget">
+                      <div className="phone-cd-item">
+                        <span className="phone-cd-num">142</span>
+                        <span className="phone-cd-lbl">DÍAS</span>
+                      </div>
+                      <div className="phone-cd-item">
+                        <span className="phone-cd-num">18</span>
+                        <span className="phone-cd-lbl">HORAS</span>
+                      </div>
+                      <div className="phone-cd-item">
+                        <span className="phone-cd-num">45</span>
+                        <span className="phone-cd-lbl">MIN</span>
+                      </div>
                     </div>
-                    <div className="phone-cd-item">
-                      <span className="phone-cd-num">18</span>
-                      <span className="phone-cd-lbl">HORAS</span>
-                    </div>
-                    <div className="phone-cd-item">
-                      <span className="phone-cd-num">45</span>
-                      <span className="phone-cd-lbl">MIN</span>
-                    </div>
-                  </div>
 
-                  <div className="phone-action-wrap">
-                    <span className="phone-rsvp-btn">Confirmar Asistencia</span>
+                    <div className="phone-action-wrap">
+                      <span className="phone-rsvp-btn">Confirmar Asistencia</span>
+                    </div>
                   </div>
                 </div>
               </div>
-              <span className="phone-badge">DEMO</span>
+              <span className="phone-badge">✦ DEMO EN VIVO ✦</span>
             </div>
           </div>
         </div>

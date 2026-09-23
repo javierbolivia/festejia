@@ -104,7 +104,7 @@
   justify-content: space-between;
   height: 100%;
   width: 100%;
-  padding-top: 18px;
+  padding-top: 14px;
 }
 .phone-top-bar {
   display: flex;
@@ -147,10 +147,18 @@
 .sw-bar:nth-child(4) { height: 9px; animation-delay: 0.2s; }
 .sw-bar:nth-child(5) { height: 15px; animation-delay: 0.4s; }
 
+.phone-invitation-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 6px 2px;
+}
 .phone-monogram {
   width: 44px;
   height: 44px;
-  margin: 6px auto 2px;
+  margin: 0 auto 10px;
   border-radius: 50%;
   border: 1px solid rgba(214, 176, 106, 0.5);
   background: radial-gradient(circle, rgba(214, 176, 106, 0.18) 0%, rgba(18, 15, 12, 0.85) 100%);
@@ -166,22 +174,18 @@
   letter-spacing: 0.05em;
   font-style: italic;
 }
-.phone-content {
-  text-align: center;
-  padding: 2px 4px !important;
-}
 .phone-label {
   font-size: 0.5rem !important;
   color: rgba(255, 255, 255, 0.45) !important;
   letter-spacing: 0.2em !important;
-  margin-bottom: 2px !important;
+  margin-bottom: 4px !important;
 }
 .phone-names {
   font-family: var(--font-display) !important;
   font-size: 1.55rem !important;
   color: #fcf9f2 !important;
   font-style: italic !important;
-  margin-bottom: 2px !important;
+  margin-bottom: 4px !important;
   line-height: 1.1 !important;
 }
 .phone-date {
@@ -195,12 +199,19 @@
   width: 28px !important;
   height: 1px !important;
   background: rgba(214, 176, 106, 0.4) !important;
-  margin: 6px auto !important;
+  margin: 8px auto !important;
 }
 .phone-venue {
   font-size: 0.62rem !important;
-  color: rgba(255, 255, 255, 0.4) !important;
+  color: rgba(255, 255, 255, 0.45) !important;
   font-style: italic !important;
+}
+
+.phone-bottom-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
 }
 .phone-countdown-widget {
   display: grid;
@@ -209,8 +220,8 @@
   background: rgba(10, 8, 6, 0.72);
   border: 1px solid rgba(214, 176, 106, 0.22);
   border-radius: 12px;
-  padding: 7px 6px;
-  margin: 6px 4px 4px;
+  padding: 8px 6px;
+  margin: 0;
   backdrop-filter: blur(4px);
 }
 .phone-cd-item { text-align: center; }
@@ -218,7 +229,7 @@
   display: block;
   font-weight: 600;
   color: #f2d495;
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   line-height: 1.1;
 }
 .phone-cd-lbl {
@@ -230,7 +241,7 @@
 }
 .phone-action-wrap {
   text-align: center;
-  margin: 4px 0 2px;
+  margin: 0;
 }
 .phone-rsvp-btn {
   display: inline-block;
@@ -244,7 +255,23 @@
   border-radius: 999px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
 }
-.phone-badge { background: linear-gradient(135deg,#efd397,#ba8135); color: #20170e; }
+.phone-badge { 
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg,#efd397,#ba8135); 
+  color: #20170e; 
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 0.52rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  z-index: 10;
+  border: 1px solid rgba(255,255,255,0.25);
+  white-space: nowrap;
+}
 
 .trust-bar { background: var(--paper); border-bottom: 1px solid rgba(126,91,36,.12); }
 .trust-content { max-width: 1320px; min-height: 72px; }
