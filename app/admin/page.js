@@ -2,6 +2,14 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
 
+// Los valores de la base de datos se conservan para no afectar cuentas ya
+// creadas. Esta etiqueta es solo la traducción comercial que ve el equipo.
+const NOMBRE_COMERCIAL_PLAN = {
+  plus: 'Clásico',
+  premium: 'Elegante',
+  exclusive: 'Imperial',
+}
+
 export default function AdminPanel() {
   const [user, setUser] = useState(null)
   const [profile, setProfile] = useState(null)
@@ -161,16 +169,16 @@ export default function AdminPanel() {
               <div className="stat-card primary"><div className="stat-number">{clients.length}</div><div className="stat-label">Clientes</div></div>
               <div className="stat-card"><div className="stat-number">{eventos.length}</div><div className="stat-label">Eventos</div></div>
               <div className="stat-card green"><div className="stat-number">{clients.filter(c => c.activo).length}</div><div className="stat-label">Activos</div></div>
-              <div className="stat-card yellow"><div className="stat-number">{clients.filter(c => c.plan === 'plus').length}</div><div className="stat-label">Plan Plus</div></div>
-              <div className="stat-card"><div className="stat-number">{clients.filter(c => c.plan === 'premium').length}</div><div className="stat-label">Plan Premium</div></div>
-              <div className="stat-card red"><div className="stat-number">{clients.filter(c => c.plan === 'exclusive').length}</div><div className="stat-label">Plan Exclusive</div></div>
+              <div className="stat-card yellow"><div className="stat-number">{clients.filter(c => c.plan === 'plus').length}</div><div className="stat-label">Plan Clásico</div></div>
+              <div className="stat-card"><div className="stat-number">{clients.filter(c => c.plan === 'premium').length}</div><div className="stat-label">Plan Elegante</div></div>
+              <div className="stat-card red"><div className="stat-number">{clients.filter(c => c.plan === 'exclusive').length}</div><div className="stat-label">Plan Imperial</div></div>
             </div>
             <div className="recent-section">
               <h3>Últimos Clientes</h3>
               {clients.slice(0, 5).map(c => (
                 <div key={c.id} className="recent-item">
                   <span>{c.nombre || c.email?.replace('@festejia.local', '')}</span>
-                  <span className={`plan-badge ${c.plan}`}>{c.plan}</span>
+                  <span className={`plan-badge ${c.plan}`}>{NOMBRE_COMERCIAL_PLAN[c.plan] || c.plan}</span>
                 </div>
               ))}
               {clients.length === 0 && <p className="empty">No hay clientes aún.</p>}
@@ -202,9 +210,9 @@ export default function AdminPanel() {
                   <div>
                     <label>Plan</label>
                     <select value={newClient.plan} onChange={e => setNewClient({...newClient, plan: e.target.value})}>
-                      <option value="plus">Plus ($45)</option>
-                      <option value="premium">Premium ($90)</option>
-                      <option value="exclusive">Exclusive ($150)</option>
+                      <option value="plus">Clásico ($45)</option>
+                      <option value="premium">Elegante ($90)</option>
+                      <option value="exclusive">Imperial ($150)</option>
                     </select>
                   </div>
                   <div>
@@ -246,7 +254,7 @@ export default function AdminPanel() {
                     <tr key={client.id}>
                       <td className="client-name">{client.nombre || '-'}</td>
                       <td>{client.email?.replace('@festejia.local', '') || '-'}</td>
-                      <td><span className={`plan-badge ${client.plan}`}>{client.plan}</span></td>
+                      <td><span className={`plan-badge ${client.plan}`}>{NOMBRE_COMERCIAL_PLAN[client.plan] || client.plan}</span></td>
                       <td>
                         <span className={`status-dot ${client.activo ? 'active' : 'inactive'}`}>
                           {client.activo ? 'Activo' : 'Inactivo'}
