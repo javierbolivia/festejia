@@ -44,10 +44,15 @@
 .design-card:nth-child(odd) { transform: translateY(28px); }
 .design-card:hover { transform: translateY(-8px) !important; box-shadow: 0 28px 52px rgba(39,26,9,.16); }
 .design-preview { padding: 16px 16px 4px; background: linear-gradient(135deg,#eee7da,#faf8f3); }
-.design-phone { width: 100%; height: 250px; border-radius: 12px 12px 4px 4px; border: 5px solid #1b1814; position: relative; overflow: hidden; box-shadow: 0 15px 30px rgba(15,12,9,.24); }
-.design-phone::before { content: ''; position: absolute; inset: 0; background: linear-gradient(145deg,rgba(255,255,255,.46),transparent 38%),linear-gradient(0deg,rgba(18,13,9,.15),transparent 48%); }
-.design-phone::after { content: 'Festejia'; position: absolute; left: 14px; bottom: 15px; color: rgba(255,255,255,.82); font-family: var(--font-display); font-size: 1.25rem; font-style: italic; }
-.design-phone-name { position: relative; z-index: 1; display: block; padding: 19px 15px; color: rgba(25,18,11,.82); font-family: var(--font-display); font-size: 1.15rem; font-style: italic; }
+.design-phone { width: 100%; height: 350px; border-radius: 12px 12px 4px 4px; border: 5px solid #1b1814; position: relative; overflow: hidden; box-shadow: 0 15px 30px rgba(15,12,9,.24); background-size: cover; background-position: center; }
+.design-phone::before { content: ''; position: absolute; inset: 0; background: linear-gradient(145deg,rgba(255,255,255,.18),transparent 38%),linear-gradient(0deg,rgba(18,13,9,.16),transparent 48%); z-index: 0; }
+.design-phone::after { content: 'Festejia'; position: absolute; left: 14px; bottom: 13px; z-index: 2; color: rgba(42,30,16,.72); font-family: var(--font-display); font-size: 1rem; font-style: italic; }
+.design-invitation-copy { position:absolute; z-index:1; inset:18% 10% 13%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; text-shadow:0 1px rgba(255,255,255,.28); }
+.design-invitation-eyebrow,.design-invitation-date,.design-invitation-note { font-size:.48rem; letter-spacing:.14em; text-transform:uppercase; font-weight:600; }
+.design-invitation-copy strong { font-family:var(--font-display); font-size:clamp(.95rem,1.7vw,1.35rem); font-weight:500; line-height:1.05; margin:9px 0; }
+.design-invitation-rule { width:36px; height:1px; margin:4px 0 10px; background:currentColor; opacity:.58; }
+.design-invitation-note { opacity:.75; margin-top:10px; font-size:.4rem; letter-spacing:.08em; }
+.design-phone-name { display:none; }
 .design-info { padding: 16px 18px 19px; }
 .feature-card { border: 1px solid rgba(124,86,31,.11); border-radius: 18px; background: rgba(255,255,255,.78); box-shadow: 0 10px 25px rgba(42,31,18,.04); }
 .feature-card:hover { border-color: rgba(190,142,65,.35); box-shadow: 0 24px 48px rgba(45,30,9,.11); }
@@ -111,7 +116,7 @@
 
 .brand-panel-mark { width: 36px; height: 36px; object-fit: cover; object-position: center; border-radius: 50%; mix-blend-mode: multiply; }
 .panel-logo,.sidebar-logo { display: inline-flex; align-items: center; gap: 9px; }
-@media (max-width:768px) { .hero { background-position:61% center; } .hero::before { background: linear-gradient(180deg,rgba(9,8,7,.6),rgba(9,8,7,.85) 55%,rgba(9,8,7,.94)); } .hero-content { gap:28px; } .hero-visual { display:none; } .hero-text { max-width:100%; } .hero-headline { max-width:none; } .hero-stats { justify-content:space-between; gap:12px; } .design-card:nth-child(odd) { transform:none; } .design-phone { height:190px; } .designs-grid { gap:12px; } .category-hero { padding:100px 20px 40px; } .category-hero-content { grid-template-columns:1fr; text-align:center; } .category-subtitle { margin:0 auto; } .category-demo-wrap { justify-self:center; width:min(76vw,300px); transform:none; margin-top:8px; } .category-section-heading { margin-bottom:28px; } .category-grid { gap:14px; } .category-card:nth-child(even),.category-card:hover:nth-child(even) { transform:none; } .category-card { padding:9px 9px 15px; } .category-phone { height:170px; border-width:4px; padding:9px; } .category-card h3 { font-size:1.05rem; } .category-card p { font-size:.72rem; } .category-cta { padding:64px 20px; } .contact-demo { height:125px; } }
+@media (max-width:768px) { .hero { background-position:61% center; } .hero::before { background: linear-gradient(180deg,rgba(9,8,7,.6),rgba(9,8,7,.85) 55%,rgba(9,8,7,.94)); } .hero-content { gap:28px; } .hero-visual { display:none; } .hero-text { max-width:100%; } .hero-headline { max-width:none; } .hero-stats { justify-content:space-between; gap:12px; } .design-card:nth-child(odd) { transform:none; } .design-phone { height:230px; } .designs-grid { gap:12px; } .design-invitation-copy { inset:15% 8% 13%; } .category-hero { padding:100px 20px 40px; } .category-hero-content { grid-template-columns:1fr; text-align:center; } .category-subtitle { margin:0 auto; } .category-demo-wrap { justify-self:center; width:min(76vw,300px); transform:none; margin-top:8px; } .category-section-heading { margin-bottom:28px; } .category-grid { gap:14px; } .category-card:nth-child(even),.category-card:hover:nth-child(even) { transform:none; } .category-card { padding:9px 9px 15px; } .category-phone { height:170px; border-width:4px; padding:9px; } .category-card h3 { font-size:1.05rem; } .category-card p { font-size:.72rem; } .category-cta { padding:64px 20px; } .contact-demo { height:125px; } }
 @media (prefers-reduced-motion:no-preference) { .hero::before { animation:heroBreath 9s ease-in-out infinite alternate; } .hero-phone { animation:phoneHover 6s ease-in-out infinite; } }
 @keyframes heroBreath { to { opacity:.82; } }
 @keyframes phoneHover { 50% { transform:rotate(2deg) translateY(-8px); } }

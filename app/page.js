@@ -288,18 +288,25 @@ export default function Home() {
         </div>
         <div className="designs-grid">
           {[
-            { name: 'Serenata', color: '#e8d5b0', desc: 'Clásica y romántica' },
-            { name: 'Aurora', color: '#d4b8c4', desc: 'Suave y delicada' },
-            { name: 'Jardín', color: '#c8d8c0', desc: 'Natural y fresca' },
-            { name: 'Allegria', color: '#80958E', desc: 'Moderna y vibrante' },
-            { name: 'Napoli', color: '#d4a574', desc: 'Cálida y mediterránea' },
-            { name: 'Terra', color: '#a08060', desc: 'Orgánica y terrenal' },
-            { name: 'Rose Gold', color: '#b76e79', desc: 'Lujosa y femenina' },
-            { name: 'Euforia', color: '#6b8dad', desc: 'Elegante y serena' },
+            { name: 'Serenata', color: '#e8d5b0', desc: 'Clásica y romántica', image: '/coleccion-serenata-v1.png', couple: 'Emma & Daniel', date: '22 · 08 · 2026', text: '#6e5125' },
+            { name: 'Aurora', color: '#d4b8c4', desc: 'Suave y delicada', image: '/coleccion-aurora-v1.png', couple: 'Valeria & Mateo', date: '12 · 09 · 2026', text: '#7e5167' },
+            { name: 'Jardín', color: '#c8d8c0', desc: 'Natural y fresca', image: '/coleccion-jardin-v1.png', couple: 'Sofía & Lucas', date: '03 · 10 · 2026', text: '#40513c' },
+            { name: 'Allegria', color: '#80958E', desc: 'Moderna y vibrante', image: '/coleccion-allegria-v1.png', couple: 'Mía & Andrés', date: '17 · 10 · 2026', text: '#fff7e8' },
+            { name: 'Napoli', color: '#d4a574', desc: 'Cálida y mediterránea', image: '/coleccion-napoli-v1.png', couple: 'Isabella & Marco', date: '24 · 10 · 2026', text: '#78502a' },
+            { name: 'Terra', color: '#a08060', desc: 'Orgánica y terrenal', image: '/coleccion-terra-v1.png', couple: 'Clara & Tomás', date: '07 · 11 · 2026', text: '#5a3824' },
+            { name: 'Rose Gold', color: '#b76e79', desc: 'Lujosa y femenina', image: '/coleccion-rose-gold-v1.png', couple: 'Renata & Julián', date: '14 · 11 · 2026', text: '#8f4f57' },
+            { name: 'Euforia', color: '#6b8dad', desc: 'Elegante y serena', image: '/coleccion-euforia-v1.png', couple: 'Elena & Gabriel', date: '28 · 11 · 2026', text: '#536779' },
           ].map((design, i) => (
             <div className="design-card stagger-child" key={i}>
               <div className="design-preview">
-                <div className="design-phone" style={{background: `linear-gradient(135deg, ${design.color}, ${design.color}dd)`}}>
+                <div className="design-phone" style={{ backgroundImage: `url(${design.image})` }}>
+                  <div className="design-invitation-copy" style={{ color: design.text }}>
+                    <span className="design-invitation-eyebrow">Nuestra boda</span>
+                    <strong>{design.couple}</strong>
+                    <span className="design-invitation-rule"></span>
+                    <span className="design-invitation-date">{design.date}</span>
+                    <span className="design-invitation-note">Una celebración para recordar</span>
+                  </div>
                   <span className="design-phone-name">{design.name}</span>
                 </div>
               </div>
