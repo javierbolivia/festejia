@@ -204,7 +204,8 @@ function TestimonialCarousel() {
 }
 
 export default function Home() {
-  const [currency, setCurrency] = useState('BOB')
+  const [currencyMode, setCurrencyMode] = useState('local') // 'local' o 'usd'
+  const [detectedCode, setDetectedCode] = useState('BOB')
   const [rates, setRates] = useState({})
   const [mobileMenu, setMobileMenu] = useState(false)
   const [heroVisible, setHeroVisible] = useState(false)
@@ -224,9 +225,9 @@ export default function Home() {
   const stat3 = useCounter(8, 800)
 
   useEffect(() => {
-    // Detectar divisa por país del usuario
+    // Detectar divisa por país del visitante automáticamente
     const detected = detectUserCurrency()
-    if (detected) setCurrency(detected)
+    if (detected) setDetectedCode(detected)
 
     // Cargar tipos de cambio actualizados en vivo
     const fetchRates = () => {
@@ -263,6 +264,38 @@ export default function Home() {
       observer.disconnect()
     }
   }, [])
+
+  const localCurrency = getCurrencyMeta(detectedCode)
+  const isUSDCountry = detectedCode === 'USD'
+
+  const localCurrencyLabel = detectedCode === 'BOB'
+    ? 'Bs. Bolivianos'
+    : detectedCode === 'PEN'
+    ? 'S/ Soles'
+    : detectedCode === 'MXN'
+    ? 'MX$ Pesos'
+    : detectedCode === 'COP'
+    ? 'COL$ Pesos'
+    : detectedCode === 'CLP'
+    ? 'CLP$ Pesos'
+    : detectedCode === 'ARS'
+    ? 'AR$ Pesos'
+    : detectedCode === 'EUR'
+    ? '€ Euros'
+    : `${localCurrency.symbol} ${localCurrency.name}`
+
+  const getDisplayPrice = (usdAmount) => {
+    if (currencyMode === 'usd' || isUSDCountry) {
+      return {
+        currency: 'USD',
+        amount: usdAmount,
+      }
+    }
+    return {
+      currency: localCurrency.symbol,
+      amount: new Intl.NumberFormat('es-BO').format(convertPrice(usdAmount, detectedCode, rates)),
+    }
+  }
 
   const handleContactSubmit = (e) => {
     e.preventDefault()
@@ -485,60 +518,23 @@ export default function Home() {
           <h2 className="section-title stagger-child">Elige tu Paquete Ideal</h2>
           <p className="section-subtitle stagger-child">Todos incluyen diseño profesional, soporte personalizado y envíos ilimitados</p>
         </div>
-        {/* SELECTOR DE DIVISAS MULTI-PAÍS */}
-        <div className="currency-selector-container stagger-child">
-          <div className="currency-pills">
-            {['BOB', 'USD', 'PEN', 'MXN', 'COP', 'ARS', 'CLP', 'BRL'].map((code) => {
-              const cur = getCurrencyMeta(code)
-              return (
-                <button
-                  key={code}
-                  type="button"
-                  className={`currency-pill-btn ${currency === code ? 'active' : ''}`}
-                  onClick={() => setCurrency(code)}
-                >
-                  <span>{cur.flag}</span>
-                  <span>{cur.code} ({cur.symbol})</span>
-                </button>
-              )
-            })}
-            <div className="currency-dropdown-wrap">
-              <select
-                className="currency-dropdown-select"
-                value={currency}
-                onChange={(e) => { if (e.target.value) setCurrency(e.target.value) }}
-                aria-label="Más países de Latinoamérica y el mundo"
-              >
-                <optgroup label="Latinoamérica">
-                  {Object.entries(LATAM_CURRENCIES).map(([code, cur]) => (
-                    <option key={code} value={code}>
-                      {cur.flag} {cur.country} - {cur.name} ({cur.symbol})
-                    </option>
-                  ))}
-                </optgroup>
-                <optgroup label="Norteamérica y Europa">
-                  {Object.entries(GLOBAL_CURRENCIES).map(([code, cur]) => (
-                    <option key={code} value={code}>
-                      {cur.flag} {cur.country} - {cur.name} ({cur.symbol})
-                    </option>
-                  ))}
-                </optgroup>
-              </select>
-              <span className="currency-dropdown-icon">▼</span>
-            </div>
-          </div>
-
-          <div className="currency-info-badge">
-            <span>✦</span>
-            <span>
-              {currency === 'BOB' 
-                ? `Tasa real de mercado para Bolivia: 1 USD = ${rates.BOB || BOB_MARKET_RATE} Bs. (Actualizada)` 
-                : currency === 'USD'
-                ? `Precios base internacional en Dólares (USD) · Se actualiza en vivo a la divisa de cada país`
-                : `Tasa internacional en vivo: 1 USD = ${rates[currency] ? (rates[currency] >= 100 ? new Intl.NumberFormat('es-BO').format(Math.round(rates[currency])) : rates[currency].toFixed(2)) : getCurrencyMeta(currency).defaultRate} ${getCurrencyMeta(currency).symbol} · Actualizada cada hora`
-              }
-            </span>
-          </div>
+        <div className="currency-toggle">
+          {!isUSDCountry && (
+            <button 
+              type="button"
+              className={currencyMode === 'local' ? 'active' : ''} 
+              onClick={() => setCurrencyMode('local')}
+            >
+              {localCurrencyLabel}
+            </button>
+          )}
+          <button 
+            type="button"
+            className={currencyMode === 'usd' || isUSDCountry ? 'active' : ''} 
+            onClick={() => setCurrencyMode('usd')}
+          >
+            USD Dólares
+          </button>
         </div>
 
         <div className="pricing-grid">
@@ -550,8 +546,8 @@ export default function Home() {
               <p className="pricing-desc">Elige un diseño de nuestra colección y personaliza la información de tu evento.</p>
             </div>
             <div className="pricing-price">
-              <span className="price-currency">{getCurrencyMeta(currency).symbol}</span>
-              <span className="price-amount">{new Intl.NumberFormat('es-BO').format(convertPrice(45, currency, rates))}</span>
+              <span className="price-currency">{getDisplayPrice(45).currency}</span>
+              <span className="price-amount">{getDisplayPrice(45).amount}</span>
             </div>
             <ul className="pricing-features">
               <li className="included">Diseño profesional de colección</li>
@@ -588,8 +584,8 @@ export default function Home() {
               <span className="swatch-label">Tu paleta, tu estilo</span>
             </div>
             <div className="pricing-price">
-              <span className="price-currency">{getCurrencyMeta(currency).symbol}</span>
-              <span className="price-amount">{new Intl.NumberFormat('es-BO').format(convertPrice(75, currency, rates))}</span>
+              <span className="price-currency">{getDisplayPrice(75).currency}</span>
+              <span className="price-amount">{getDisplayPrice(75).amount}</span>
             </div>
             <ul className="pricing-features">
               <li className="included highlight">Todo lo del plan Clásico</li>
@@ -619,8 +615,8 @@ export default function Home() {
               <p className="pricing-desc">Creamos una experiencia única desde cero según tu visión. Sin plantillas. Sin límites.</p>
             </div>
             <div className="pricing-price">
-              <span className="price-currency">{getCurrencyMeta(currency).symbol}</span>
-              <span className="price-amount">{new Intl.NumberFormat('es-BO').format(convertPrice(110, currency, rates))}</span>
+              <span className="price-currency">{getDisplayPrice(110).currency}</span>
+              <span className="price-amount">{getDisplayPrice(110).amount}</span>
             </div>
             <div className="imperial-benefits">
               <div className="imperial-benefit crown">👑 Diseño creado 100% desde cero</div>
@@ -650,7 +646,10 @@ export default function Home() {
         </div>
         <div className="pricing-note">
           <p className="note-highlight">
-            Reserva con {formatPrice(convertPrice(15, currency, rates), currency)} &mdash; Paga el resto cuando tu invitación esté lista
+            {currencyMode === 'usd' || isUSDCountry
+              ? 'Reserva con $15 USD — Paga el resto cuando tu invitación esté lista'
+              : `Reserva con ${formatPrice(convertPrice(15, detectedCode, rates), detectedCode)} — Paga el resto cuando tu invitación esté lista`
+            }
           </p>
         </div>
       </section>
@@ -755,7 +754,12 @@ export default function Home() {
                 <span className="addon-svg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" dangerouslySetInnerHTML={{__html: service.icon}} /></span>
               </div>
               <div className="addon-info"><h4>{service.name}</h4><p>{service.desc}</p></div>
-              <span className="addon-price">+{formatPrice(convertPrice(service.usd, currency, rates), currency)}</span>
+              <span className="addon-price">
+                +{currencyMode === 'usd' || isUSDCountry 
+                  ? `$${service.usd} USD` 
+                  : formatPrice(convertPrice(service.usd, detectedCode, rates), detectedCode)
+                }
+              </span>
             </div>
           ))}
         </div>
