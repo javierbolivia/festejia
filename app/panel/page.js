@@ -23,6 +23,13 @@ export default function Panel() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { window.location.href = '/login'; return }
     setUser(user)
+    const { data: expressProfile } = await supabase
+      .from('express_clientes')
+      .select('id')
+      .eq('id', user.id)
+      .maybeSingle()
+    if (expressProfile) { window.location.href = '/express/dashboard'; return }
+
 
     const { data: prof } = await supabase.from('profiles').select('role,plan').eq('id', user.id).single()
     if (prof && prof.role === 'admin') { window.location.href = '/admin'; return }
