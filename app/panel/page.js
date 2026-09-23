@@ -186,7 +186,7 @@ export default function Panel() {
   return (
     <div className="panel-page">
       <header className="panel-header">
-        <a href="/" className="panel-logo">Feste<span>jia</span></a>
+          <a href="/" className="panel-logo"><img src="/isotipo.png" alt="" className="brand-panel-mark" />Feste<span>jia</span></a>
         <div className="panel-header-right">
           <span>{user?.email}</span>
           <button onClick={logout}>Salir</button>

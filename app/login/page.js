@@ -55,7 +55,7 @@ export default function Login() {
   return (
     <div className="login-page">
       <nav className="navbar">
-        <a href="/" className="nav-logo">Feste<span>jia</span></a>
+        <a href="/" className="nav-logo"><img src="/isotipo.png" alt="" className="brand-panel-mark" />Feste<span>jia</span></a>
       </nav>
 
       <div className="login-container">

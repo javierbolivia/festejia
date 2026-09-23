@@ -143,7 +143,7 @@ export default function AdminPanel() {
     <div className="admin-page">
       {/* SIDEBAR */}
       <aside className="admin-sidebar">
-        <div className="sidebar-logo">Feste<span>jia</span></div>
+        <div className="sidebar-logo"><img src="/isotipo.png" alt="" className="brand-panel-mark" />Feste<span>jia</span></div>
         <p className="sidebar-role">ADMINISTRADOR</p>
         <nav className="sidebar-nav">
           <button className={tab === 'dashboard' ? 'active' : ''} onClick={() => setTab('dashboard')}>📊 Dashboard</button>

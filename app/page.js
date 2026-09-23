@@ -274,8 +274,8 @@ export default function Home() {
       {/* TRUST */}
       <section className="trust-bar reveal-section">
         <div className="trust-content">
-          <p>Más de <strong>500 parejas</strong> han confiado en nosotros para su día especial</p>
-          <div className="trust-stars">★★★★★ <span>4.9/5 en satisfacción</span></div>
+          <p>Diseño a medida, atención humana y una experiencia impecable en cada pantalla.</p>
+          <div className="trust-stars">✦ <span>Hecho para compartir, confirmar y celebrar</span></div>
         </div>
       </section>
 
@@ -679,7 +679,7 @@ export default function Home() {
             <div className="footer-col"><h5>Empresa</h5><a href="#planes">Planes</a><a href="#galeria">Diseños</a><a href="#faq">FAQ</a><a href="#contacto">Contacto</a></div>
           </div>
         </div>
-        <div className="footer-bottom"><p>&copy; 2025 Festejia. Todos los derechos reservados.</p></div>
+        <div className="footer-bottom"><p>&copy; {new Date().getFullYear()} Festejia. Todos los derechos reservados.</p></div>
       </footer>
 
       {/* WHATSAPP */}
