@@ -265,7 +265,11 @@ export default function Panel() {
             <div className="toolbar">
               <button className="btn-add" onClick={() => setShowForm(!showForm)}>+ Agregar Invitado ({invitados.length}/{getLimiteInvitados()})</button>
               {canUseFeature('excel') && <button className="btn-export" onClick={exportExcel}>📥 Exportar Excel</button>}
-              <a href={getInvitationLink({nombre_completo:'Vista Previa', num_pases: 2, mesa: '', id: 'preview'})} target="_blank" className="btn-preview">👁️ Ver Invitación</a>
+              {invitados[0] ? (
+                <a href={getInvitationLink(invitados[0])} target="_blank" rel="noreferrer" className="btn-preview">👁️ Ver invitación</a>
+              ) : (
+                <button type="button" className="btn-preview" disabled title="Agrega un invitado para ver una invitación real">👁️ Sin invitación aún</button>
+              )}
               <input className="search-input" placeholder="Buscar por nombre..." value={search} onChange={e => setSearch(e.target.value)} />
               <select className="filter-select" value={filter} onChange={e => setFilter(e.target.value)}>
                 <option value="todos">Todos</option>
@@ -457,6 +461,7 @@ export default function Panel() {
         .progress-bar { height: 8px; background: #f0f0f0; border-radius: 4px; overflow: hidden; }
         .progress-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #16a34a); border-radius: 4px; transition: width 0.5s; }
         .progress-detail { display: flex; gap: 1.5rem; margin-top: 0.5rem; font-size: 0.75rem; }
+        .btn-preview:disabled { background: #a8a8b8; cursor: not-allowed; }
         .pg-green { color: #22c55e; }
         .pg-yellow { color: #eab308; }
         .pg-red { color: #ef4444; }
