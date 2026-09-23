@@ -115,4 +115,12 @@ Este archivo es un registro cronológico append-only de todas las operaciones re
   - `app/page.js`: Galería principal focalizada exclusivamente en los **8 diseños originales** (`Serenata`, `Aurora`, `Jardín`, `Allegria`, `Napoli`, `Terra`, `Rose Gold`, `Euforia`), sin mockups de otras ocasiones en la portada. Las demás categorías (15 Años, Graduaciones, Bautizos) se mantienen ordenadas en sus rutas específicas (`/quince`, `/graduaciones`, `/bautizos`).
 - **Verificación técnica**: `npm run build` compiló en 643ms con 0 errores en las 26 rutas.
 
+## [2026-09-23] wiki-sync | Sincronización Integral de la Wiki ("memoria JAVIER")
+- **Conceptos**: Creación de [[componente-cuenta-regresiva]] y registro formal en el MOC [[index]].
+- **Síntesis**: Actualización de [[festejia-guia-desarrollo-web]] (componentes modulares de interfaz y tipografía de lujo).
+- **Modelos**: Refinamiento de [[catalogo-colecciones-modelos]] aclarando el enfoque de la portada en los 8 diseños de boda y el rol de las subpáginas dedicadas.
+- **Historial**: Sincronización de [[festejia-16-infraestructura-historial]] con todos los commits recientes.
+- **Salud de Enlaces**: 100% de enlaces bidireccionales resueltos sin notas rotas.
+
+
 

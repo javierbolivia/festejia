@@ -26,6 +26,8 @@ Este documento constituye la ficha técnica y artística de todos los **18 model
 | **Euforia** | Serena, elegante y minimalista | Azul crepuscular (`#6b8dad`), Ceniza suave (`#d9e2ec`) | Elena & Gabriel | 28 · 11 · 2026 |
 
 ### Mecánica de Interacción en la Web (`/bodas` y `/`)
+- **Enfoque de Portada (`/`)**: La página principal presenta de forma exclusiva y destacada los **8 diseños de boda** para mantener la portada ágil, elegante y libre de saturación visual.
+- **Páginas de Ocasión Dedicadas**: Los modelos de XV Años, Graduaciones y Bautizos se exploran en sus respectivas rutas (`/quince`, `/graduaciones`, `/bautizos`) mediante el componente unificado `CategoryPage`.
 - **Efecto Hover**: Elevación de tarjeta (`transform: translateY(-6px)`), brillo perimetral en tono champagne.
 - **Modal de Vista Previa**: Al hacer clic, se abre una maqueta interactiva simulando la pantalla de un smartphone con la música y animaciones del modelo.
 - **Botón de Conversión Directa**:
