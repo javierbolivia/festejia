@@ -317,7 +317,7 @@ export default function Home() {
       {/* NAV */}
       <nav className="navbar">
         <div className="nav-container">
-          <a href="/" className="nav-logo" aria-label="Festejia">
+          <a href="/" className="nav-logo logo-glow" aria-label="Festejia">
             <img src="/isotipo.png" alt="Festejia" className="nav-isotipo" />
           </a>
           <button className="nav-toggle" onClick={() => setMobileMenu(!mobileMenu)} aria-label="Menú">
@@ -341,9 +341,11 @@ export default function Home() {
         <div className="hero-overlay"></div>
         <div className={`hero-content ${heroVisible ? 'hero-animate' : ''}`}>
           <div className="hero-text">
-            <img src="/logotipo.png" alt="Festejia" className="hero-logotipo hero-fade hero-delay-1" />
+            <div className="hero-logo-wrap hero-fade hero-delay-1">
+              <img src="/logotipo.png" alt="Festejia" className="hero-logotipo" />
+            </div>
             <h1 className="hero-headline hero-fade hero-delay-2">
-              Imagina el <em>recuerdo</em>,<br/>nosotros lo <em>creamos</em>
+              Imagina el <em className="liquid-gold-text">recuerdo</em>,<br/>nosotros lo <em className="liquid-gold-text">creamos</em>
             </h1>
             <p className="hero-description hero-fade hero-delay-3">
               Invitaciones digitales exclusivas que transforman tu evento en una experiencia inolvidable desde el primer click.
@@ -362,12 +364,48 @@ export default function Home() {
             <div className="hero-phone">
               <div className="phone-notch"></div>
               <div className="phone-screen">
-                <div className="phone-content">
-                  <p className="phone-label">BIENVENIDOS A NUESTRA BODA</p>
-                  <h3 className="phone-names">José & Victoria</h3>
-                  <p className="phone-date">22 de Agosto, 2026</p>
-                  <div className="phone-divider"></div>
-                  <p className="phone-venue">Jardín Las Palmas</p>
+                <div className="phone-lux-container">
+                  <div className="phone-top-bar">
+                    <span className="phone-top-tag">NUESTRA BODA</span>
+                    <div className="phone-soundwave" title="Música incluida">
+                      <span className="phone-music-note">♫</span>
+                      <span className="sw-bar"></span>
+                      <span className="sw-bar"></span>
+                      <span className="sw-bar"></span>
+                      <span className="sw-bar"></span>
+                    </div>
+                  </div>
+
+                  <div className="phone-monogram">
+                    <span>J&V</span>
+                  </div>
+
+                  <div className="phone-content">
+                    <p className="phone-label">BIENVENIDOS A NUESTRA BODA</p>
+                    <h3 className="phone-names">José & Victoria</h3>
+                    <p className="phone-date">22 de Agosto, 2026</p>
+                    <div className="phone-divider"></div>
+                    <p className="phone-venue">Jardín Las Palmas</p>
+                  </div>
+
+                  <div className="phone-countdown-widget">
+                    <div className="phone-cd-item">
+                      <span className="phone-cd-num">142</span>
+                      <span className="phone-cd-lbl">DÍAS</span>
+                    </div>
+                    <div className="phone-cd-item">
+                      <span className="phone-cd-num">18</span>
+                      <span className="phone-cd-lbl">HORAS</span>
+                    </div>
+                    <div className="phone-cd-item">
+                      <span className="phone-cd-num">45</span>
+                      <span className="phone-cd-lbl">MIN</span>
+                    </div>
+                  </div>
+
+                  <div className="phone-action-wrap">
+                    <span className="phone-rsvp-btn">Confirmar Asistencia</span>
+                  </div>
                 </div>
               </div>
               <span className="phone-badge">DEMO</span>
