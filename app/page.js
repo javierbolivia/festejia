@@ -1,13 +1,24 @@
-﻿'use client'
+'use client'
 import { useState, useEffect, useRef } from 'react'
 import LiveDashboard from './LiveDashboard'
 import { ResponsiveVisual, PersonalizationVisual, ConfirmationVisual, AnimationsVisual, MapVisual, CountdownVisual } from './FeatureVisuals'
 import { WHATSAPP_NUMERO, waLink } from '../lib/config'
+import { 
+  CURRENCIES, 
+  LATAM_CURRENCIES, 
+  GLOBAL_CURRENCIES, 
+  BOB_MARKET_RATE, 
+  detectUserCurrency, 
+  convertPrice, 
+  formatPrice, 
+  getCurrencyMeta 
+} from '../lib/currency'
 
 function useCounter(target, duration = 2000) {
   const [count, setCount] = useState(0)
   const ref = useRef(null)
   const counted = useRef(false)
+  const timerRef = useRef(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
@@ -15,51 +26,70 @@ function useCounter(target, duration = 2000) {
         counted.current = true
         let start = 0
         const step = target / (duration / 16)
-        const timer = setInterval(() => {
+        timerRef.current = setInterval(() => {
           start += step
-          if (start >= target) { setCount(target); clearInterval(timer) }
-          else { setCount(Math.floor(start)) }
+          if (start >= target) { 
+            setCount(target)
+            clearInterval(timerRef.current) 
+          } else { 
+            setCount(Math.floor(start)) 
+          }
         }, 16)
       }
     }, { threshold: 0.5 })
     if (ref.current) observer.observe(ref.current)
-    return () => observer.disconnect()
+    return () => {
+      observer.disconnect()
+      if (timerRef.current) clearInterval(timerRef.current)
+    }
   }, [target, duration])
 
   return { count, ref }
 }
 
-function FaqAccordion() {
+const FAQ_ITEMS = [
+  // General
+  ['¿Qué es una invitación web?', 'Nuestras invitaciones son páginas web reales, interactivas con animaciones, música, cuenta regresiva, mapa y confirmación de asistencia. No es un PDF ni un diseño estático.', 'general'],
+  ['¿Qué incluye una invitación digital?', 'Cada invitación incluye un sitio web interactivo personalizado con música, cuenta regresiva, galería de fotos, ubicación con Google Maps, sistema de confirmación RSVP, compartir por WhatsApp y un diseño responsivo que funciona perfectamente en cualquier dispositivo.', 'general'],
+  ['¿Mis invitados necesitan instalar una app?', 'No. Los invitados simplemente abren la invitación desde cualquier navegador web. No se requiere ninguna aplicación ni registro.', 'general'],
+  ['¿Funciona bien en celulares?', 'Absolutamente. Están optimizadas para verse perfectamente en cualquier celular o computadora, iPhone, Android, tablets y escritorio.', 'general'],
+  ['¿Por qué elegir una invitación digital en vez de una impresa?', 'Las invitaciones digitales son más rápidas de compartir, interactivas, ecológicas y permiten seguimiento de RSVP en tiempo real, música, cuentas regresivas, mapas, galerías y actualizaciones instantáneas. Ofrecen una experiencia moderna, elegante y práctica.', 'general'],
+  ['¿Mi invitación es privada?', 'Sí. Cada invitación tiene su propio enlace privado. Algunos paquetes también permiten protección con contraseña para mayor privacidad.', 'general'],
+  ['¿Cuánto tiempo estará disponible mi invitación?', 'Tu invitación permanece activa según el paquete seleccionado. Si necesitas tiempo adicional, puedes solicitar una extensión.', 'general'],
+
+  // Personalización
+  ['¿Puedo personalizar la invitación con mi información?', 'Sí. Cada invitación se personaliza con tus nombres, fecha, hora, salón, fotos, colores, música y toda la información de tu evento. Nos aseguramos de que cada invitación refleje tu celebración.', 'personalizacion'],
+  ['¿Puedo personalizar cada invitación con nombre diferente?', 'Sí. En los planes Elegante e Imperial puedes generar invitaciones personalizadas ilimitadas con nombre y número de pases únicos para cada invitado.', 'personalizacion'],
+  ['¿Puedo elegir la música?', 'Sí. Puedes elegir la canción que desees para acompañar tu invitación y crear una experiencia única para tus invitados.', 'personalizacion'],
+  ['¿Puedo agregar más fotos?', 'Sí. Dependiendo del diseño y paquete seleccionado, puedes incluir múltiples fotos para crear una hermosa galería personalizada.', 'personalizacion'],
+  ['¿Puedo editar mi invitación después de la entrega?', 'Sí. Cambios menores como textos, horarios, ubicación o información de contacto pueden solicitarse según el paquete seleccionado.', 'personalizacion'],
+  ['¿Puedo cambiar de diseño una vez elegido?', 'Si la producción no ha comenzado, podemos ayudarte a seleccionar otro diseño. Una vez iniciada la personalización, los cambios dependerán del avance del proyecto.', 'personalizacion'],
+
+  // Confirmación
+  ['¿Los invitados pueden confirmar asistencia desde cualquier dispositivo?', 'Sí. El sistema RSVP funciona en teléfonos Android, iPhones, tablets y computadoras, permitiendo a los invitados confirmar su asistencia desde cualquier lugar.', 'confirmacion'],
+  ['¿Cómo funciona el Sistema de Confirmación?', 'Es un panel donde ves en tiempo real quién confirmó, quién está pendiente y quién rechazó. Incluye gestión de pases, mesas y envío directo por WhatsApp.', 'confirmacion'],
+  ['¿Los invitados pueden confirmar acompañantes adicionales?', 'Sí. Dependiendo de tu paquete, los invitados pueden confirmar acompañantes, facilitando la planificación del evento de manera más precisa.', 'confirmacion'],
+  ['¿Qué pasa si un invitado cambia su confirmación?', 'El sistema RSVP se actualiza automáticamente para que siempre tengas la información de asistencia más reciente.', 'confirmacion'],
+  ['¿Cómo recibo las confirmaciones?', 'Plan Clásico: por WhatsApp. Plan Elegante: en tu gestor de invitados online. Plan Imperial: en tu panel de administración privado.', 'confirmacion'],
+
+  // Pagos y Entrega
+  ['¿Cuánto tiempo tarda la entrega?', '5 a 7 días laborales. Con entrega express: 48 horas garantizadas.', 'pagos'],
+  ['¿Puedo pedir una invitación con urgencia?', 'Sí. Ofrecemos entrega express para clientes que necesitan su invitación en menor tiempo, sujeto a disponibilidad.', 'pagos'],
+  ['¿Cómo comparto mi invitación?', 'Una vez completada tu invitación, recibirás un enlace privado que puedes compartir fácilmente por WhatsApp, Facebook, Instagram, Telegram, email o cualquier otra plataforma.', 'pagos'],
+  ['¿Qué formas de pago aceptan?', 'Transferencia bancaria, QR, tarjeta de crédito/débito, PayPal, Binance (USDC) y otros métodos de pago dependiendo de tu país.', 'pagos'],
+  ['¿Qué pasa si necesito ayuda?', 'Nuestro equipo te asistirá durante todo el proceso por WhatsApp, respondiendo cualquier duda antes y después de la entrega.', 'pagos'],
+]
+
+function FaqAccordion({ activeCategory = 'todas' }) {
   const [openIndex, setOpenIndex] = useState(null)
-  const faqs = [
-    ['¿Qué es una invitación web?', 'Nuestras invitaciones son páginas web reales, interactivas con animaciones, música, cuenta regresiva, mapa y confirmación de asistencia. No es un PDF ni un diseño estático.'],
-    ['¿Qué incluye una invitación digital?', 'Cada invitación incluye un sitio web interactivo personalizado con música, cuenta regresiva, galería de fotos, ubicación con Google Maps, sistema de confirmación RSVP, compartir por WhatsApp y un diseño responsivo que funciona perfectamente en cualquier dispositivo.'],
-    ['¿Puedo personalizar la invitación con mi información?', 'Sí. Cada invitación se personaliza con tus nombres, fecha, hora, salón, fotos, colores, música y toda la información de tu evento. Nos aseguramos de que cada invitación refleje tu celebración.'],
-    ['¿Puedo personalizar cada invitación con nombre diferente?', 'Sí. En los planes Elegante e Imperial puedes generar invitaciones personalizadas ilimitadas con nombre y número de pases únicos para cada invitado.'],
-    ['¿Puedo elegir la música?', 'Sí. Puedes elegir la canción que desees para acompañar tu invitación y crear una experiencia única para tus invitados.'],
-    ['¿Puedo agregar más fotos?', 'Sí. Dependiendo del diseño y paquete seleccionado, puedes incluir múltiples fotos para crear una hermosa galería personalizada.'],
-    ['¿Cómo comparto mi invitación?', 'Una vez completada tu invitación, recibirás un enlace privado que puedes compartir fácilmente por WhatsApp, Facebook, Instagram, Telegram, email o cualquier otra plataforma.'],
-    ['¿Mis invitados necesitan instalar una app?', 'No. Los invitados simplemente abren la invitación desde cualquier navegador web. No se requiere ninguna aplicación ni registro.'],
-    ['¿Los invitados pueden confirmar asistencia desde cualquier dispositivo?', 'Sí. El sistema RSVP funciona en teléfonos Android, iPhones, tablets y computadoras, permitiendo a los invitados confirmar su asistencia desde cualquier lugar.'],
-    ['¿Cómo funciona el Sistema de Confirmación?', 'Es un panel donde ves en tiempo real quién confirmó, quién está pendiente y quién rechazó. Incluye gestión de pases, mesas y envío directo por WhatsApp.'],
-    ['¿Los invitados pueden confirmar acompañantes adicionales?', 'Sí. Dependiendo de tu paquete, los invitados pueden confirmar acompañantes, facilitando la planificación del evento de manera más precisa.'],
-    ['¿Qué pasa si un invitado cambia su confirmación?', 'El sistema RSVP se actualiza automáticamente para que siempre tengas la información de asistencia más reciente.'],
-    ['¿Cómo recibo las confirmaciones?', 'Plan Clásico: por WhatsApp. Plan Elegante: en tu gestor de invitados online. Plan Imperial: en tu panel de administración privado.'],
-    ['¿Puedo editar mi invitación después de la entrega?', 'Sí. Cambios menores como textos, horarios, ubicación o información de contacto pueden solicitarse según el paquete seleccionado.'],
-    ['¿Mi invitación es privada?', 'Sí. Cada invitación tiene su propio enlace privado. Algunos paquetes también permiten protección con contraseña para mayor privacidad.'],
-    ['¿Cuánto tiempo estará disponible mi invitación?', 'Tu invitación permanece activa según el paquete seleccionado. Si necesitas tiempo adicional, puedes solicitar una extensión.'],
-    ['¿Cuánto tiempo tarda la entrega?', '5 a 7 días laborales. Con entrega express: 48 horas garantizadas.'],
-    ['¿Puedo pedir una invitación con urgencia?', 'Sí. Ofrecemos entrega express para clientes que necesitan su invitación en menor tiempo, sujeto a disponibilidad.'],
-    ['¿Funciona bien en celulares?', 'Absolutamente. Están optimizadas para verse perfectamente en cualquier celular o computadora, iPhone, Android, tablets y escritorio.'],
-    ['¿Por qué elegir una invitación digital en vez de una impresa?', 'Las invitaciones digitales son más rápidas de compartir, interactivas, ecológicas y permiten seguimiento de RSVP en tiempo real, música, cuentas regresivas, mapas, galerías y actualizaciones instantáneas. Ofrecen una experiencia moderna, elegante y práctica.'],
-    ['¿Qué formas de pago aceptan?', 'Transferencia bancaria, QR, tarjeta de crédito/débito, PayPal, Binance (USDC) y otros métodos de pago dependiendo de tu país.'],
-    ['¿Puedo cambiar de diseño una vez elegido?', 'Si la producción no ha comenzado, podemos ayudarte a seleccionar otro diseño. Una vez iniciada la personalización, los cambios dependerán del avance del proyecto.'],
-    ['¿Qué pasa si necesito ayuda?', 'Nuestro equipo te asistirá durante todo el proceso por WhatsApp, respondiendo cualquier duda antes y después de la entrega.'],
-  ]
+  
+  const filteredFaqs = activeCategory === 'todas'
+    ? FAQ_ITEMS
+    : FAQ_ITEMS.filter(item => item[2] === activeCategory)
 
   return (
     <div className="faq-list" role="region" aria-label="Preguntas frecuentes">
-      {faqs.map(([q, a], i) => (
+      {filteredFaqs.map(([q, a], i) => (
         <div className={`faq-item stagger-child ${openIndex === i ? 'open' : ''}`} key={i}>
           <button
             className="faq-trigger"
@@ -174,20 +204,45 @@ function TestimonialCarousel() {
 }
 
 export default function Home() {
-  const [currency, setCurrency] = useState('usd')
+  const [currency, setCurrency] = useState('BOB')
+  const [rates, setRates] = useState({})
   const [mobileMenu, setMobileMenu] = useState(false)
   const [heroVisible, setHeroVisible] = useState(false)
+  const [modalDesign, setModalDesign] = useState(null)
+  const [selectedPlan, setSelectedPlan] = useState(null)
+  const [faqCategory, setFaqCategory] = useState('todas')
+
+  // Formulario de contacto
+  const [formNombre, setFormNombre] = useState('')
+  const [formPais, setFormPais] = useState('')
+  const [formEmail, setFormEmail] = useState('')
+  const [formEvento, setFormEvento] = useState('')
+  const [formMensaje, setFormMensaje] = useState('')
 
   const stat1 = useCounter(500, 2000)
   const stat2 = useCounter(98, 1500)
   const stat3 = useCounter(8, 800)
 
-  const prices = {
-    usd: { clasico: 45, elegante: 75, imperial: 110 },
-    bs: { clasico: 450, elegante: 700, imperial: 950 }
-  }
-
   useEffect(() => {
+    // Detectar divisa por país del usuario
+    const detected = detectUserCurrency()
+    if (detected) setCurrency(detected)
+
+    // Cargar tipos de cambio actualizados en vivo
+    const fetchRates = () => {
+      fetch('/api/currency')
+        .then(res => res.json())
+        .then(data => {
+          if (data?.rates) setRates(data.rates)
+        })
+        .catch(err => console.warn('Aviso: usando tasas de respaldo locales:', err))
+    }
+
+    fetchRates()
+    // Actualización continua cada 1 hora para reflejar fluctuaciones cambiarias
+    const intervalId = setInterval(fetchRates, 3600000)
+    window.addEventListener('focus', fetchRates)
+
     setTimeout(() => setHeroVisible(true), 100)
 
     const observer = new IntersectionObserver((entries) => {
@@ -202,8 +257,27 @@ export default function Home() {
       })
     }, { threshold: 0.08 })
     document.querySelectorAll('.reveal-section').forEach(el => observer.observe(el))
-    return () => observer.disconnect()
+    return () => {
+      clearInterval(intervalId)
+      window.removeEventListener('focus', fetchRates)
+      observer.disconnect()
+    }
   }, [])
+
+  const handleContactSubmit = (e) => {
+    e.preventDefault()
+    const partes = []
+    partes.push(`Hola Festejia! Mi nombre es ${formNombre.trim() || 'un cliente'}`)
+    if (formPais.trim()) partes.push(`desde ${formPais.trim()}`)
+    if (formEvento) partes.push(`para mi evento de ${formEvento}`)
+    if (selectedPlan) partes.push(`(interesado en el Plan ${selectedPlan})`)
+    partes.push(`.`)
+    if (formMensaje.trim()) partes.push(`\n\nDetalles: ${formMensaje.trim()}`)
+    if (formEmail.trim()) partes.push(`\n\nCorreo de contacto: ${formEmail.trim()}`)
+
+    const textoFinal = partes.join(' ')
+    window.open(waLink(textoFinal), '_blank')
+  }
 
   return (
     <>
@@ -217,23 +291,20 @@ export default function Home() {
             <span></span><span></span><span></span>
           </button>
           <ul className={`nav-links ${mobileMenu ? 'active' : ''}`}>
-            <li><a href="/bodas">Bodas</a></li>
-            <li><a href="/quince">15 Años</a></li>
-            <li><a href="/graduaciones">Graduaciones</a></li>
-            <li><a href="/bautizos">Bautizos</a></li>
-            <li><a href="#planes">Planes</a></li>
-            <li><a href="/express" className="nav-express-link">Festejia Express</a></li>
-            <li><a href="#contacto">Contacto</a></li>
-            <li><a href="/login" className="nav-cta">Iniciar Sesión</a></li>
+            <li><a href="/bodas" onClick={() => setMobileMenu(false)}>Bodas</a></li>
+            <li><a href="/quince" onClick={() => setMobileMenu(false)}>15 Años</a></li>
+            <li><a href="/graduaciones" onClick={() => setMobileMenu(false)}>Graduaciones</a></li>
+            <li><a href="/bautizos" onClick={() => setMobileMenu(false)}>Bautizos</a></li>
+            <li><a href="#planes" onClick={() => setMobileMenu(false)}>Planes</a></li>
+            <li><a href="/express" className="nav-express-link" onClick={() => setMobileMenu(false)}>Festejia Express</a></li>
+            <li><a href="#contacto" onClick={() => setMobileMenu(false)}>Contacto</a></li>
+            <li><a href="/login" className="nav-cta" onClick={() => setMobileMenu(false)}>Iniciar Sesión</a></li>
           </ul>
         </div>
       </nav>
 
       {/* HERO */}
       <section className="hero">
-        <video className="hero-video-bg" autoPlay muted loop playsInline poster="/hero-poster.jpg">
-          <source src="/hero-bg.mp4" type="video/mp4" />
-        </video>
         <div className="hero-overlay"></div>
         <div className={`hero-content ${heroVisible ? 'hero-animate' : ''}`}>
           <div className="hero-text">
@@ -298,15 +369,23 @@ export default function Home() {
             { name: 'Rose Gold', color: '#b76e79', desc: 'Lujosa y femenina', image: '/coleccion-rose-gold-v1.png', couple: 'Renata & Julián', date: '14 · 11 · 2026', text: '#8f4f57' },
             { name: 'Euforia', color: '#6b8dad', desc: 'Elegante y serena', image: '/coleccion-euforia-v1.png', couple: 'Elena & Gabriel', date: '28 · 11 · 2026', text: '#536779' },
           ].map((design, i) => (
-            <div className="design-card stagger-child" key={i}>
+            <div 
+              className="design-card stagger-child clickable" 
+              key={i}
+              onClick={() => setModalDesign(design)}
+              role="button"
+              tabIndex="0"
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setModalDesign(design) }}
+              aria-label={`Ver detalles del diseño ${design.name}`}
+            >
               <div className="design-preview">
                 <div className="design-phone" style={{ backgroundImage: `url(${design.image})` }}>
                   <div className="design-invitation-copy" style={{ color: design.text }}>
-                    <span className="design-invitation-eyebrow">Nuestra boda</span>
+                    <span className="design-invitation-eyebrow">Nuestra celebración</span>
                     <strong>{design.couple}</strong>
                     <span className="design-invitation-rule"></span>
                     <span className="design-invitation-date">{design.date}</span>
-                    <span className="design-invitation-note">Una celebración para recordar</span>
+                    <span className="design-invitation-note">Una experiencia para recordar</span>
                   </div>
                   <span className="design-phone-name">{design.name}</span>
                 </div>
@@ -314,6 +393,7 @@ export default function Home() {
               <div className="design-info">
                 <h4>{design.name}</h4>
                 <p>{design.desc}</p>
+                <span className="design-card-action">✦ Ver detalles y cotizar</span>
               </div>
             </div>
           ))}
@@ -405,10 +485,62 @@ export default function Home() {
           <h2 className="section-title stagger-child">Elige tu Paquete Ideal</h2>
           <p className="section-subtitle stagger-child">Todos incluyen diseño profesional, soporte personalizado y envíos ilimitados</p>
         </div>
-        <div className="currency-toggle">
-          <button className={currency === 'bs' ? 'active' : ''} onClick={() => setCurrency('bs')}>Bs. Bolivianos</button>
-          <button className={currency === 'usd' ? 'active' : ''} onClick={() => setCurrency('usd')}>USD Dólares</button>
+        {/* SELECTOR DE DIVISAS MULTI-PAÍS */}
+        <div className="currency-selector-container stagger-child">
+          <div className="currency-pills">
+            {['BOB', 'USD', 'PEN', 'MXN', 'COP', 'ARS', 'CLP', 'BRL'].map((code) => {
+              const cur = getCurrencyMeta(code)
+              return (
+                <button
+                  key={code}
+                  type="button"
+                  className={`currency-pill-btn ${currency === code ? 'active' : ''}`}
+                  onClick={() => setCurrency(code)}
+                >
+                  <span>{cur.flag}</span>
+                  <span>{cur.code} ({cur.symbol})</span>
+                </button>
+              )
+            })}
+            <div className="currency-dropdown-wrap">
+              <select
+                className="currency-dropdown-select"
+                value={currency}
+                onChange={(e) => { if (e.target.value) setCurrency(e.target.value) }}
+                aria-label="Más países de Latinoamérica y el mundo"
+              >
+                <optgroup label="Latinoamérica">
+                  {Object.entries(LATAM_CURRENCIES).map(([code, cur]) => (
+                    <option key={code} value={code}>
+                      {cur.flag} {cur.country} - {cur.name} ({cur.symbol})
+                    </option>
+                  ))}
+                </optgroup>
+                <optgroup label="Norteamérica y Europa">
+                  {Object.entries(GLOBAL_CURRENCIES).map(([code, cur]) => (
+                    <option key={code} value={code}>
+                      {cur.flag} {cur.country} - {cur.name} ({cur.symbol})
+                    </option>
+                  ))}
+                </optgroup>
+              </select>
+              <span className="currency-dropdown-icon">▼</span>
+            </div>
+          </div>
+
+          <div className="currency-info-badge">
+            <span>✦</span>
+            <span>
+              {currency === 'BOB' 
+                ? `Tasa real de mercado para Bolivia: 1 USD = ${rates.BOB || BOB_MARKET_RATE} Bs. (Actualizada)` 
+                : currency === 'USD'
+                ? `Precios base internacional en Dólares (USD) · Se actualiza en vivo a la divisa de cada país`
+                : `Tasa internacional en vivo: 1 USD = ${rates[currency] ? (rates[currency] >= 100 ? new Intl.NumberFormat('es-BO').format(Math.round(rates[currency])) : rates[currency].toFixed(2)) : getCurrencyMeta(currency).defaultRate} ${getCurrencyMeta(currency).symbol} · Actualizada cada hora`
+              }
+            </span>
+          </div>
         </div>
+
         <div className="pricing-grid">
           <div className="pricing-card stagger-child">
             <div className="pricing-level-indicator"><span className="level-dot"></span><span className="level-dot"></span><span className="level-dot faded"></span></div>
@@ -417,7 +549,10 @@ export default function Home() {
               <p className="pricing-tagline">Listo, elegante y simple</p>
               <p className="pricing-desc">Elige un diseño de nuestra colección y personaliza la información de tu evento.</p>
             </div>
-            <div className="pricing-price"><span className="price-currency">{currency === 'usd' ? 'USD' : 'Bs.'}</span><span className="price-amount">{prices[currency].clasico}</span></div>
+            <div className="pricing-price">
+              <span className="price-currency">{getCurrencyMeta(currency).symbol}</span>
+              <span className="price-amount">{new Intl.NumberFormat('es-BO').format(convertPrice(45, currency, rates))}</span>
+            </div>
             <ul className="pricing-features">
               <li className="included">Diseño profesional de colección</li>
               <li className="included">Información de tu evento</li>
@@ -429,7 +564,13 @@ export default function Home() {
               <li className="included">Envíos ilimitados</li>
               <li className="included">Confirmación por WhatsApp</li>
             </ul>
-            <a href="#contacto" className="btn-plan">Reservar</a>
+            <a 
+              href="#contacto" 
+              className="btn-plan"
+              onClick={() => setSelectedPlan('Clásico')}
+            >
+              Reservar Clásico
+            </a>
           </div>
           <div className="pricing-card featured stagger-child">
             <div className="pricing-badge">Más Popular</div>
@@ -446,7 +587,10 @@ export default function Home() {
               <span className="swatch" style={{background: '#3a5a7a'}}></span>
               <span className="swatch-label">Tu paleta, tu estilo</span>
             </div>
-            <div className="pricing-price"><span className="price-currency">{currency === 'usd' ? 'USD' : 'Bs.'}</span><span className="price-amount">{prices[currency].elegante}</span></div>
+            <div className="pricing-price">
+              <span className="price-currency">{getCurrencyMeta(currency).symbol}</span>
+              <span className="price-amount">{new Intl.NumberFormat('es-BO').format(convertPrice(75, currency, rates))}</span>
+            </div>
             <ul className="pricing-features">
               <li className="included highlight">Todo lo del plan Clásico</li>
               <li className="included">Personalización de colores</li>
@@ -457,7 +601,13 @@ export default function Home() {
               <li className="included">Agendar en Google Calendar</li>
               <li className="included">Gestor de invitados online</li>
             </ul>
-            <a href="#contacto" className="btn-plan featured">Reservar</a>
+            <a 
+              href="#contacto" 
+              className="btn-plan featured"
+              onClick={() => setSelectedPlan('Elegante')}
+            >
+              Reservar Elegante
+            </a>
           </div>
           <div className="pricing-card imperial stagger-child">
             <div className="pricing-badge imperial-badge">Experiencia Exclusiva</div>
@@ -468,7 +618,10 @@ export default function Home() {
               <p className="pricing-tagline">No es otra invitación. Es tu historia hecha arte digital.</p>
               <p className="pricing-desc">Creamos una experiencia única desde cero según tu visión. Sin plantillas. Sin límites.</p>
             </div>
-            <div className="pricing-price"><span className="price-currency">{currency === 'usd' ? 'USD' : 'Bs.'}</span><span className="price-amount">{prices[currency].imperial}</span></div>
+            <div className="pricing-price">
+              <span className="price-currency">{getCurrencyMeta(currency).symbol}</span>
+              <span className="price-amount">{new Intl.NumberFormat('es-BO').format(convertPrice(110, currency, rates))}</span>
+            </div>
             <div className="imperial-benefits">
               <div className="imperial-benefit crown">👑 Diseño creado 100% desde cero</div>
               <div className="imperial-benefit">⭐ Animaciones únicas para tu evento</div>
@@ -485,11 +638,21 @@ export default function Home() {
               <li className="included">Galería de fotos (max 20)</li>
               <li className="included">Soporte prioritario dedicado</li>
             </ul>
-            <a href="#contacto" className="btn-plan imperial">Crear mi Invitación Exclusiva</a>
+            <a 
+              href="#contacto" 
+              className="btn-plan imperial"
+              onClick={() => setSelectedPlan('Imperial')}
+            >
+              Crear mi Invitación Exclusiva
+            </a>
             <p className="imperial-footer-note">Cada proyecto es único. Plazas limitadas por mes.</p>
           </div>
         </div>
-        <div className="pricing-note"><p className="note-highlight">Reserva con Bs. 100 &mdash; Paga el resto cuando tu invitación esté lista</p></div>
+        <div className="pricing-note">
+          <p className="note-highlight">
+            Reserva con {formatPrice(convertPrice(15, currency, rates), currency)} &mdash; Paga el resto cuando tu invitación esté lista
+          </p>
+        </div>
       </section>
 
       {/* COMPARISON */}
@@ -579,20 +742,20 @@ export default function Home() {
         </div>
         <div className="addons-grid">
           {[
-            { name: 'Personalización Total', desc: 'Diseño desde cero, reflejo fiel de tu evento.', price: 100, icon: '<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>' },
-            { name: 'Entrega Express', desc: 'Tu invitación completa en 48 horas garantizadas.', price: 30, icon: '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>' },
-            { name: 'Menú de Navegación', desc: 'Secciones claras para mejor experiencia.', price: 15, icon: '<path d="M4 6h16M4 12h16M4 18h10"/>' },
-            { name: 'Save the Date', desc: 'Mini sitio con contador y pre-confirmación.', price: 30, icon: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>' },
-            { name: 'Dominio Propio', desc: 'Tu web en www.nombrenovios.com', price: 120, icon: '<circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>' },
-            { name: 'Visibilidad Extendida', desc: '3 meses adicionales activa post-evento.', price: 30, icon: '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>' },
-            { name: 'Ajustes Post-Entrega', desc: 'Cambios menores después de la aprobación.', price: 10, icon: '<path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>' },
+            { name: 'Personalización Total', desc: 'Diseño desde cero, reflejo fiel de tu evento.', usd: 100, icon: '<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>' },
+            { name: 'Entrega Express', desc: 'Tu invitación completa en 48 horas garantizadas.', usd: 30, icon: '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>' },
+            { name: 'Menú de Navegación', desc: 'Secciones claras para mejor experiencia.', usd: 15, icon: '<path d="M4 6h16M4 12h16M4 18h10"/>' },
+            { name: 'Save the Date', desc: 'Mini sitio con contador y pre-confirmación.', usd: 30, icon: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>' },
+            { name: 'Dominio Propio', desc: 'Tu web en www.nombrenovios.com', usd: 120, icon: '<circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>' },
+            { name: 'Visibilidad Extendida', desc: '3 meses adicionales activa post-evento.', usd: 30, icon: '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>' },
+            { name: 'Ajustes Post-Entrega', desc: 'Cambios menores después de la aprobación.', usd: 10, icon: '<path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>' },
           ].map((service, i) => (
             <div className="addon-card stagger-child" key={i}>
               <div className="addon-icon-wrap" style={{animationDelay: `${i * 0.4}s`}}>
                 <span className="addon-svg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" dangerouslySetInnerHTML={{__html: service.icon}} /></span>
               </div>
               <div className="addon-info"><h4>{service.name}</h4><p>{service.desc}</p></div>
-              <span className="addon-price">+${service.price}</span>
+              <span className="addon-price">+{formatPrice(convertPrice(service.usd, currency, rates), currency)}</span>
             </div>
           ))}
         </div>
@@ -620,7 +783,25 @@ export default function Home() {
           <h2 className="section-title stagger-child">Preguntas Frecuentes</h2>
           <p className="section-subtitle stagger-child">Todo lo que necesitas saber sobre nuestras invitaciones digitales</p>
         </div>
-        <FaqAccordion />
+        <div className="faq-tabs stagger-child">
+          {[
+            { id: 'todas', label: 'Todas' },
+            { id: 'general', label: 'General' },
+            { id: 'personalizacion', label: 'Personalización' },
+            { id: 'confirmacion', label: 'Sistema y Confirmación' },
+            { id: 'pagos', label: 'Tiempos y Pagos' },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              type="button"
+              className={`faq-tab-btn ${faqCategory === tab.id ? 'active' : ''}`}
+              onClick={() => setFaqCategory(tab.id)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+        <FaqAccordion activeCategory={faqCategory} />
       </section>
 
       {/* CONTACT */}
@@ -656,14 +837,58 @@ export default function Home() {
             </div>
           </div>
           <div className="contact-form-wrap stagger-child">
-            <form className="contact-form" onSubmit={(e) => { e.preventDefault(); window.open(waLink('Hola Festejia! Quiero información sobre invitaciones digitales.'), '_blank') }}>
-              <div className="form-group"><input type="text" placeholder="Tu nombre" required /></div>
-              <div className="form-row"><input type="text" placeholder="País" /><input type="email" placeholder="Email" /></div>
-              <div className="form-group">
-                <select defaultValue=""><option value="" disabled>Tipo de evento</option><option>Boda</option><option>XV Años</option><option>Graduación</option><option>Bautizo</option><option>Otro</option></select>
+            {selectedPlan && (
+              <div className="selected-plan-banner">
+                <span>Plan pre-seleccionado: <strong>{selectedPlan}</strong></span>
+                <button type="button" onClick={() => setSelectedPlan(null)} title="Quitar selección">✕</button>
               </div>
-              <div className="form-group"><textarea placeholder="Cuéntanos sobre tu evento..." rows="4"></textarea></div>
-              <button type="submit" className="btn-submit">Enviar Mensaje</button>
+            )}
+            <form className="contact-form" onSubmit={handleContactSubmit}>
+              <div className="form-group">
+                <input 
+                  type="text" 
+                  placeholder="Tu nombre" 
+                  required 
+                  value={formNombre}
+                  onChange={(e) => setFormNombre(e.target.value)}
+                />
+              </div>
+              <div className="form-row">
+                <input 
+                  type="text" 
+                  placeholder="País (ej. Bolivia, México, Perú...)" 
+                  value={formPais}
+                  onChange={(e) => setFormPais(e.target.value)}
+                />
+                <input 
+                  type="email" 
+                  placeholder="Email de contacto" 
+                  value={formEmail}
+                  onChange={(e) => setFormEmail(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <select 
+                  value={formEvento} 
+                  onChange={(e) => setFormEvento(e.target.value)}
+                >
+                  <option value="" disabled>Tipo de evento</option>
+                  <option value="Boda">Boda</option>
+                  <option value="XV Años">XV Años</option>
+                  <option value="Graduación">Graduación</option>
+                  <option value="Bautizo">Bautizo</option>
+                  <option value="Cumpleaños / Otro">Otro evento</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <textarea 
+                  placeholder="Cuéntanos la fecha estimada, lugar o cualquier detalle sobre tu celebración..." 
+                  rows="4"
+                  value={formMensaje}
+                  onChange={(e) => setFormMensaje(e.target.value)}
+                ></textarea>
+              </div>
+              <button type="submit" className="btn-submit">Enviar Mensaje a WhatsApp</button>
             </form>
           </div>
         </div>
@@ -681,9 +906,9 @@ export default function Home() {
             <a href="/" className="footer-logo">Feste<span>jia</span></a>
             <p>Experiencias digitales para momentos irrepetibles</p>
             <div className="footer-social">
-              <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
-              <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
-              <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
+              <a href="https://facebook.com/festejiadigital" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+              <a href="https://instagram.com/festejiadigital" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+              <a href="https://tiktok.com/@festejiadigital" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
             </div>
           </div>
           <div className="footer-links-grid">
@@ -693,6 +918,63 @@ export default function Home() {
         </div>
         <div className="footer-bottom"><p>&copy; {new Date().getFullYear()} Festejia. Todos los derechos reservados.</p></div>
       </footer>
+
+      {/* MODAL DETALLES DE DISEÑO */}
+      {modalDesign && (
+        <div className="design-modal-overlay" onClick={() => setModalDesign(null)}>
+          <div className="design-modal" onClick={e => e.stopPropagation()}>
+            <div className="design-modal-header">
+              <h3>Diseño {modalDesign.name}</h3>
+              <button 
+                type="button" 
+                className="design-modal-close" 
+                onClick={() => setModalDesign(null)}
+                aria-label="Cerrar modal"
+              >
+                &times;
+              </button>
+            </div>
+            <div className="design-modal-body">
+              <div 
+                className="design-modal-preview" 
+                style={{ 
+                  backgroundImage: `url(${modalDesign.image})`,
+                  color: modalDesign.text 
+                }}
+              >
+                <div style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(4px)', padding: '12px 18px', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                  <span style={{ fontSize: '0.65rem', letterSpacing: '0.15em', textTransform: 'uppercase', display: 'block', color: '#888' }}>Nuestra celebración</span>
+                  <strong style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', display: 'block', margin: '4px 0', color: '#1a1612' }}>{modalDesign.couple}</strong>
+                  <span style={{ fontSize: '0.75rem', display: 'block', color: '#555' }}>{modalDesign.date}</span>
+                </div>
+              </div>
+              <p className="design-modal-desc">
+                <strong>{modalDesign.name}:</strong> {modalDesign.desc}. Este diseño puede personalizarse al 100% con los colores, tipografías, música, fotos, itinerario y mapa de tu celebración.
+              </p>
+            </div>
+            <div className="design-modal-footer">
+              <a 
+                href={waLink(`Hola Festejia! Me gustó el diseño "${modalDesign.name}" y quisiera cotizarlo para mi evento.`)} 
+                className="btn-primary" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                onClick={() => setModalDesign(null)}
+                style={{ textAlign: 'center' }}
+              >
+                Cotizar este Diseño por WhatsApp
+              </a>
+              <button 
+                type="button" 
+                className="btn-ghost" 
+                onClick={() => setModalDesign(null)}
+                style={{ textAlign: 'center' }}
+              >
+                Seguir explorando
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* WHATSAPP */}
       <a href={waLink('Hola Festejia! Me interesa una invitación digital.')} className="whatsapp-float" target="_blank" rel="noopener noreferrer">
