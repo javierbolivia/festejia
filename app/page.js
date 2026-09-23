@@ -265,6 +265,25 @@ export default function Home() {
     }
   }, [])
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        if (modalDesign) setModalDesign(null)
+        if (mobileMenu) setMobileMenu(false)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    if (modalDesign) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = ''
+    }
+  }, [modalDesign, mobileMenu])
+
   const localCurrency = getCurrencyMeta(detectedCode)
   const isUSDCountry = detectedCode === 'USD'
 
@@ -963,7 +982,7 @@ export default function Home() {
       {/* MODAL DETALLES DE DISEÑO */}
       {modalDesign && (
         <div className="design-modal-overlay" onClick={() => setModalDesign(null)}>
-          <div className="design-modal" onClick={e => e.stopPropagation()}>
+          <div className="design-modal design-modal-content" onClick={e => e.stopPropagation()}>
             <div className="design-modal-header">
               <h3>Diseño {modalDesign.name}</h3>
               <button 
