@@ -107,16 +107,12 @@ Este archivo es un registro cronológico append-only de todas las operaciones re
 - **Características**: Cálculo preciso por segundo (Días, Horas, Minutos, Segundos), prevención de mismatch de hidratación SSR, adornos de rombo y filigrana editorial, variantes marfil y oscura (obsidiana), y estado especial de evento alcanzado.
 - **Verificación**: `next build` compilado exitosamente con 0 errores en 610ms.
 
-## [2026-09-23] feature | Portada: Tipografía de Lujo, Métrica 18+ y Galería con Pestañas
-- **Conceptos aplicados**: [[sistema-diseno-editorial]] (Cormorant Garamond oficial de Google Fonts) y [[catalogo-colecciones-modelos]] (18 modelos en 4 ocasiones).
-- **Archivos actualizados**:
-  - `app/layout.js`: Inclusión de `Cormorant Garamond` (pesos 400 a 700 e itálicas) en Google Fonts.
-  - `app/globals.css`: `--font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;` aplicado a todos los encabezados y display; estilos para `.designs-tabs`, `.designs-tab-btn`, `.design-category-badge` y `.dark-phone`.
-  - `app/page.js`:
-    - Contador del Hero `stat3` actualizado a `18+ DISEÑOS` con animación `useCounter(18, 1000)`.
-    - Selector interactivo de pestañas por ocasión: `[ Todas (18) | Bodas (8) | 15 Años (4) | Graduaciones (3) | Bautizos (3) ]`.
-    - Catálogo completo `DESIGNS_CATALOG` con los 18 modelos, sus colores, datos demo y enlaces personalizados de cotización a WhatsApp.
-    - Modal de diseño enriquecido con badge de categoría y textos contextuales según el evento.
-- **Verificación técnica**: `npm run build` compiló en 677ms con 0 errores en las 26 rutas.
+## [2026-09-23] feature | Portada: Tipografía de Lujo Cormorant Garamond y Enfoque en 8 Modelos
+- **Conceptos aplicados**: [[sistema-diseno-editorial]] (Cormorant Garamond oficial de Google Fonts en app/layout.js y globals.css).
+- **Alcance de la Portada**:
+  - `app/layout.js`: Inclusión de `Cormorant Garamond` (pesos 400 a 700 e itálicas) en Google Fonts para máxima elegancia editorial.
+  - `app/globals.css`: `--font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;` en todos los encabezados y display.
+  - `app/page.js`: Galería principal focalizada exclusivamente en los **8 diseños originales** (`Serenata`, `Aurora`, `Jardín`, `Allegria`, `Napoli`, `Terra`, `Rose Gold`, `Euforia`), sin mockups de otras ocasiones en la portada. Las demás categorías (15 Años, Graduaciones, Bautizos) se mantienen ordenadas en sus rutas específicas (`/quince`, `/graduaciones`, `/bautizos`).
+- **Verificación técnica**: `npm run build` compiló en 643ms con 0 errores en las 26 rutas.
 
 
