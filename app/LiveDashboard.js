@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
+import { useVisibleInterval } from '../lib/useVisibleInterval'
 
 const NAMES = [
   'María González', 'Carlos Pérez', 'Andrea López', 'Daniel Rojas',
@@ -27,44 +28,67 @@ export default function LiveDashboard() {
   const [qrFlash, setQrFlash] = useState(false)
   const [notification, setNotification] = useState(null)
   const tickRef = useRef(0)
+  // Corrección de auditoría (hallazgo 1.4): cada tick del interval podía
+  // crear hasta 2 setTimeout adicionales (QR flash, notificación) que nunca
+  // se registraban para limpieza. El cleanup solo hacía clearInterval, no
+  // clearTimeout de esos timers internos — si el usuario navegaba fuera de
+  // la landing dentro de esa ventana de hasta 2.5s, React emitía warning de
+  // "setState sobre componente desmontado" y el timer quedaba huérfano.
+  const timeoutsRef = useRef([])
 
+  function tick() {
+    tickRef.current++
+    const nameIdx = Math.floor(Math.random() * NAMES.length)
+    const name = NAMES[nameIdx]
+    const actIdx = Math.floor(Math.random() * ACTIVITIES.length)
+    const activity = ACTIVITIES[actIdx]
+
+    // Update counters
+    if (activity.type === 'confirm' || activity.type === 'guests' || activity.type === 'vip') {
+      setConfirmed(c => c + 1)
+      setPending(p => Math.max(0, p - 1))
+    } else if (activity.type === 'scan' || activity.type === 'qr') {
+      // QR flash
+      setQrFlash(true)
+      timeoutsRef.current.push(setTimeout(() => setQrFlash(false), 1500))
+    } else if (activity.type === 'table') {
+      setConfirmed(c => c + 1)
+    }
+
+    // Add to feed
+    const msg = activity.template(name)
+    setFeed(prev => [{ id: Date.now(), msg, type: activity.type }, ...prev].slice(0, 4))
+
+    // Notification every 3 ticks
+    if (tickRef.current % 3 === 0) {
+      const notifs = ['Nuevo invitado confirmado', 'Mesa actualizada', 'Nuevo pase generado', 'Código QR enviado']
+      setNotification(notifs[Math.floor(Math.random() * notifs.length)])
+      timeoutsRef.current.push(setTimeout(() => setNotification(null), 2500))
+    }
+  }
+
+  // Corrección de auditoría (hallazgo 4.4): antes el setInterval corría
+  // indefinidamente durante toda la sesión, incluso si el usuario nunca
+  // llegaba a ver esta sección (o ya scrolleó más allá de ella). Ahora se
+  // pausa fuera del viewport mediante useVisibleInterval — ver hallazgo 4.3
+  // y lib/useVisibleInterval.js para el mismo patrón aplicado en
+  // FeatureVisuals.js.
+  const ref = useVisibleInterval(tick, 3000)
+
+  // Limpieza de los setTimeout internos (QR flash, notificación) al
+  // desmontar el componente — independiente de si la sección sigue visible
+  // o no, porque estos timers ya fueron disparados por un tick anterior y
+  // deben completarse o cancelarse junto con el ciclo de vida del componente,
+  // no junto con cada pausa/reanudación por scroll.
   useEffect(() => {
-    const interval = setInterval(() => {
-      tickRef.current++
-      const nameIdx = Math.floor(Math.random() * NAMES.length)
-      const name = NAMES[nameIdx]
-      const actIdx = Math.floor(Math.random() * ACTIVITIES.length)
-      const activity = ACTIVITIES[actIdx]
-
-      // Update counters
-      if (activity.type === 'confirm' || activity.type === 'guests' || activity.type === 'vip') {
-        setConfirmed(c => c + 1)
-        setPending(p => Math.max(0, p - 1))
-      } else if (activity.type === 'scan' || activity.type === 'qr') {
-        // QR flash
-        setQrFlash(true)
-        setTimeout(() => setQrFlash(false), 1500)
-      } else if (activity.type === 'table') {
-        setConfirmed(c => c + 1)
-      }
-
-      // Add to feed
-      const msg = activity.template(name)
-      setFeed(prev => [{ id: Date.now(), msg, type: activity.type }, ...prev].slice(0, 4))
-
-      // Notification every 3 ticks
-      if (tickRef.current % 3 === 0) {
-        const notifs = ['Nuevo invitado confirmado', 'Mesa actualizada', 'Nuevo pase generado', 'Código QR enviado']
-        setNotification(notifs[Math.floor(Math.random() * notifs.length)])
-        setTimeout(() => setNotification(null), 2500)
-      }
-    }, 3000)
-
-    return () => clearInterval(interval)
+    return () => {
+      timeoutsRef.current.forEach(clearTimeout)
+      timeoutsRef.current = []
+    }
   }, [])
 
   return (
-    <div className="live-dashboard">
+    <div className="live-dashboard" ref={ref}>
       {/* Window chrome */}
       <div className="dash-window">
         <div className="dash-chrome">

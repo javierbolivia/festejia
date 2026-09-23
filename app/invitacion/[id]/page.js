@@ -1,9 +1,8 @@
-import { createClient } from '@supabase/supabase-js'
-
-const supabase = createClient(
-  'https://xzkxutllxkdrugjvflco.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6a3h1dGxseGtkcnVnanZmbGNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NTE0MTgsImV4cCI6MjEwMDUyNzQxOH0.s3icP7S33TEWVL77edSFe8svSgC2AqTQe3lB0WYDrXk'
-)
+// Corrección de auditoría (hallazgo 2.2): antes este archivo creaba su propio
+// cliente Supabase con URL y anon key duplicadas como literales, en vez de
+// reutilizar el cliente centralizado de lib/supabase.js. Mismo cliente, sin
+// segunda fuente de verdad de las credenciales.
+import { supabase } from '../../../lib/supabase'
 
 export async function generateMetadata({ params }) {
   const { id } = await params

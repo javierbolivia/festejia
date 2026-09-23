@@ -1731,10 +1731,45 @@ document.addEventListener('DOMContentLoaded', function() {
         var mensaje=msg?msg.value:'';
         if(invitadoId){
           fetch(SU+'/rest/v1/invitados?id=eq.'+invitadoId,{method:'PATCH',headers:Object.assign({'Content-Type':'application/json','Prefer':'return=minimal'},H),body:JSON.stringify({estado:estado,mensaje_invitado:mensaje,fecha_confirmacion:new Date().toISOString()})})
-          .then(function(){mostrarExito(estado);}).catch(function(){mostrarExito(estado);});
+          .then(function(){enviarNotificacion(estado,mensaje);mostrarExito(estado);}).catch(function(){mostrarExito(estado);});
         }else{mostrarExito(estado);}
       });
     },2000);
+  }
+
+  function enviarNotificacion(estado,mensaje){
+    if(!eventoId)return;
+    fetch(SU+'/rest/v1/eventos?id=eq.'+eventoId+'&select=user_id',{headers:H})
+    .then(function(r){return r.json();}).then(function(ev){
+      if(!ev||!ev[0]||!ev[0].user_id)return;
+      var userId=ev[0].user_id;
+      var tipo=estado==='confirmado'?'confirmacion':'rechazo';
+      var icono=estado==='confirmado'?'✅':'❌';
+      var titulo=estado==='confirmado'?(nombre+' confirmó su asistencia'):(nombre+' no podrá asistir');
+      var desc=mensaje?('Mensaje: "'+mensaje+'"'):'';
+      fetch(SU+'/rest/v1/notificaciones',{method:'POST',headers:Object.assign({'Content-Type':'application/json','Prefer':'return=minimal'},H),body:JSON.stringify({user_id:userId,evento_id:eventoId,tipo:tipo,titulo:titulo,descripcion:desc,icono:icono,leida:false,metadata:{invitado_id:invitadoId,invitado_nombre:nombre}})}).catch(function(){});
+      if(mensaje&&mensaje.trim()){
+        fetch(SU+'/rest/v1/notificaciones',{method:'POST',headers:Object.assign({'Content-Type':'application/json','Prefer':'return=minimal'},H),body:JSON.stringify({user_id:userId,evento_id:eventoId,tipo:'mensaje',titulo:nombre+' dejó un mensaje',descripcion:'"'+mensaje+'"',icono:'💬',leida:false,metadata:{invitado_id:invitadoId,invitado_nombre:nombre}})}).catch(function(){});
+      }
+      fetch(SU+'/rest/v1/invitados?evento_id=eq.'+eventoId+'&select=estado',{headers:H})
+      .then(function(r){return r.json();}).then(function(invs){
+        if(!invs)return;
+        var total=invs.length;var conf=invs.filter(function(i){return i.estado==='confirmado'}).length;
+        var pct=total>0?Math.round((conf/total)*100):0;
+        var hitos=[{u:100,t:'hito_100',i:'👑',tt:'¡Lista completa! 100% de confirmaciones'},{u:75,t:'hito_75',i:'🥳',tt:'¡Excelente! Ya tienes el 75% confirmado'},{u:50,t:'hito_50',i:'🎊',tt:'¡La mitad confirmó! Alcanzaste el 50%'},{u:25,t:'hito_25',i:'🎉',tt:'¡Alcanzaste el 25% de confirmaciones!'}];
+        for(var h=0;h<hitos.length;h++){
+          if(pct>=hitos[h].u){
+            fetch(SU+'/rest/v1/notificaciones?evento_id=eq.'+eventoId+'&tipo=eq.'+hitos[h].t+'&select=id&limit=1',{headers:H})
+            .then(function(r){return r.json();}).then(function(ex){return function(existing){
+              if(!existing||existing.length===0){
+                fetch(SU+'/rest/v1/notificaciones',{method:'POST',headers:Object.assign({'Content-Type':'application/json','Prefer':'return=minimal'},H),body:JSON.stringify({user_id:userId,evento_id:eventoId,tipo:hitos[h].t,titulo:hitos[h].tt,descripcion:'',icono:hitos[h].i,leida:false,metadata:{porcentaje:pct}})}).catch(function(){});
+              }
+            }(ex)}.bind(null)).catch(function(){});
+            break;
+          }
+        }
+      }).catch(function(){});
+    }).catch(function(){});
   }
 
   function mostrarExito(estado){

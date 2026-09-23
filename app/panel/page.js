@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useCallback, memo } from 'react'
 import { supabase } from '../../lib/supabase'
 
 export default function Panel() {
@@ -16,13 +16,50 @@ export default function Panel() {
   const [editingEvento, setEditingEvento] = useState(null)
   const [editingGuest, setEditingGuest] = useState(null)
   const [profile, setProfile] = useState(null)
+  const [notificaciones, setNotificaciones] = useState([])
+  const [showNotif, setShowNotif] = useState(false)
 
   useEffect(() => { checkUser() }, [])
+
+  // Suscripción a notificaciones en tiempo real
+  useEffect(() => {
+    if (!user) return
+    // Cargar notificaciones existentes
+    supabase.from('notificaciones').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(30)
+      .then(({ data }) => { if (data) setNotificaciones(data) })
+
+    // Escuchar nuevas notificaciones en tiempo real
+    const channel = supabase.channel('notif-' + user.id)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notificaciones', filter: 'user_id=eq.' + user.id }, (payload) => {
+        setNotificaciones(prev => [payload.new, ...prev].slice(0, 50))
+      })
+      .subscribe()
+
+    // También escuchar cambios en invitados para actualizar stats en tiempo real.
+    // Filtrado por evento_id (antes escuchaba TODA la tabla sin filtro: cada
+    // escritura de CUALQUIER cliente de la plataforma disparaba un refetch en
+    // el panel de TODOS los demás clientes con la pestaña abierta — ver
+    // auditoría, hallazgo 4.2). Solo se suscribe una vez que hay evento cargado.
+    let channelInv = null
+    if (evento) {
+      channelInv = supabase.channel('invitados-realtime-' + evento.id)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'invitados', filter: 'evento_id=eq.' + evento.id }, () => {
+          loadInvitados(evento.id)
+        })
+        .subscribe()
+    }
+
+    return () => {
+      supabase.removeChannel(channel)
+      if (channelInv) supabase.removeChannel(channelInv)
+    }
+  }, [user, evento])
 
   async function checkUser() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { window.location.href = '/login'; return }
     setUser(user)
+
     const { data: expressProfile } = await supabase
       .from('express_clientes')
       .select('id')
@@ -30,9 +67,15 @@ export default function Panel() {
       .maybeSingle()
     if (expressProfile) { window.location.href = '/express/dashboard'; return }
 
-
     const { data: prof } = await supabase.from('profiles').select('role,plan').eq('id', user.id).single()
-    if (prof && prof.role === 'admin') { window.location.href = '/admin'; return }
+    if (prof?.role === 'admin') { window.location.href = '/admin'; return }
+    // El panel completo es exclusivo de los planes Premium y Exclusive.
+    // También evita que una cuenta Express (que no tiene profile Premium)
+    // pueda crear eventos Premium entrando directamente por esta URL.
+    if (prof?.role !== 'client' || !['premium', 'exclusive'].includes(prof.plan)) {
+      window.location.href = '/gestor'
+      return
+    }
     setProfile(prof)
 
     await loadEvento(user.id)
@@ -71,18 +114,26 @@ export default function Panel() {
     }
   }
 
-  async function updateGuest(id, updates) {
+  // Corrección de auditoría (hallazgo 4.1): antes updateGuest/deleteGuest/
+  // saveEditGuest se redefinían en cada render (referencias nuevas) y
+  // dependían de `invitados`/`editingGuest` capturados por closure. Ahora
+  // usan useCallback + setState funcional (el "prev =>" recibe siempre el
+  // valor más reciente sin necesitar `invitados` en las dependencias), así
+  // la referencia de la función se mantiene estable entre renders — condición
+  // necesaria para que React.memo en GuestRow (más abajo) evite re-renders
+  // innecesarios de cada fila cuando el usuario escribe en el buscador.
+  const updateGuest = useCallback(async (id, updates) => {
     await supabase.from('invitados').update(updates).eq('id', id)
-    setInvitados(invitados.map(g => g.id === id ? { ...g, ...updates } : g))
-  }
+    setInvitados(prev => prev.map(g => g.id === id ? { ...g, ...updates } : g))
+  }, [])
 
-  async function deleteGuest(id) {
+  const deleteGuest = useCallback(async (id) => {
     if (!confirm('¿Eliminar este invitado?')) return
     await supabase.from('invitados').delete().eq('id', id)
-    setInvitados(invitados.filter(g => g.id !== id))
-  }
+    setInvitados(prev => prev.filter(g => g.id !== id))
+  }, [])
 
-  async function saveEditGuest(e) {
+  const saveEditGuest = useCallback(async (e) => {
     e.preventDefault()
     if (!editingGuest) return
     await supabase.from('invitados').update({
@@ -90,9 +141,9 @@ export default function Panel() {
       num_pases: editingGuest.num_pases,
       mesa: editingGuest.mesa
     }).eq('id', editingGuest.id)
-    setInvitados(invitados.map(g => g.id === editingGuest.id ? { ...g, ...editingGuest } : g))
+    setInvitados(prev => prev.map(g => g.id === editingGuest.id ? { ...g, ...editingGuest } : g))
     setEditingGuest(null)
-  }
+  }, [editingGuest])
 
   function getLimiteInvitados() {
     if (profile?.plan === 'exclusive') return 9999
@@ -112,7 +163,6 @@ export default function Panel() {
     e.preventDefault()
     await supabase.from('eventos').update(editingEvento).eq('id', evento.id)
     setEvento(editingEvento)
-    setShowConfig(false)
     alert('Configuración guardada')
   }
 
@@ -120,20 +170,20 @@ export default function Panel() {
     return `https://www.festejia.com/invitacion/${guest.id}`
   }
 
-  function copyInvitation(guest) {
+  const copyInvitation = useCallback((guest) => {
     const link = getInvitationLink(guest)
     const mensaje = evento?.mensaje_personalizado || 'Estás invitado a nuestra celebración. Confirma tu asistencia.'
     const text = `${mensaje}\n\n${link}`
     navigator.clipboard.writeText(text)
     alert('Link copiado al portapapeles')
-  }
+  }, [evento])
 
-  function shareWhatsApp(guest) {
+  const shareWhatsApp = useCallback((guest) => {
     const link = getInvitationLink(guest)
     const mensaje = evento?.mensaje_personalizado || 'Estás invitado a nuestra celebración. Confirma tu asistencia.'
     const text = encodeURIComponent(`${mensaje}\n\n${link}`)
     window.open(`https://wa.me/?text=${text}`, '_blank')
-  }
+  }, [evento])
 
   function exportExcel() {
     let csv = 'Nombre,Pases,Mesa,Estado,Enviada,Fecha Confirmación,Mensaje\n'
@@ -156,10 +206,52 @@ export default function Panel() {
     await updateGuest(id, { ingreso: false, fecha_salida: new Date().toISOString() })
   }
 
+  async function marcarLeida(id) {
+    await supabase.from('notificaciones').update({ leida: true }).eq('id', id)
+    setNotificaciones(notificaciones.map(n => n.id === id ? { ...n, leida: true } : n))
+  }
+
+  async function marcarTodasLeidas() {
+    await supabase.from('notificaciones').update({ leida: true }).eq('user_id', user.id).eq('leida', false)
+    setNotificaciones(notificaciones.map(n => ({ ...n, leida: true })))
+  }
+
+  function tiempoRelativo(fecha) {
+    const diff = Date.now() - new Date(fecha).getTime()
+    const mins = Math.floor(diff / 60000)
+    if (mins < 1) return 'Ahora'
+    if (mins < 60) return `Hace ${mins} min`
+    const hrs = Math.floor(mins / 60)
+    if (hrs < 24) return `Hace ${hrs}h`
+    const dias = Math.floor(hrs / 24)
+    return `Hace ${dias}d`
+  }
+
+  const notifsNoLeidas = notificaciones.filter(n => !n.leida).length
+
   async function logout() {
     await supabase.auth.signOut()
     window.location.href = '/login'
   }
+
+  // Corrección de auditoría (hallazgo 4.1): antes filteredInvitados se
+  // recalculaba en CADA render sin memoizar. Con useMemo, solo se recalcula
+  // cuando invitados/filter/search realmente cambian — cada tecla en el
+  // buscador ya no dispara un filtro completo si ninguna de esas tres
+  // dependencias cambió por otra razón. Debe declararse antes del
+  // `if (loading) return` porque los hooks no pueden ejecutarse después de
+  // un return condicional (reglas de hooks de React).
+  const filteredInvitados = useMemo(() => {
+    return invitados.filter(g => {
+      if (filter === 'confirmado' && g.estado !== 'confirmado') return false
+      if (filter === 'pendiente' && g.estado !== 'pendiente') return false
+      if (filter === 'rechazado' && g.estado !== 'rechazado') return false
+      if (filter === 'enviada' && !g.invitacion_enviada) return false
+      if (filter === 'no_enviada' && g.invitacion_enviada) return false
+      if (search && !g.nombre_completo.toLowerCase().includes(search.toLowerCase())) return false
+      return true
+    })
+  }, [invitados, filter, search])
 
   if (loading) return <div style={{display:'flex',justifyContent:'center',alignItems:'center',minHeight:'100vh',fontSize:'1rem',color:'#666'}}>Cargando...</div>
 
@@ -173,21 +265,38 @@ export default function Panel() {
   const porcentajeConfirmado = invitados.length > 0 ? Math.round((confirmed / invitados.length) * 100) : 0
   const mensajes = invitados.filter(g => g.mensaje_invitado).map(g => ({ nombre: g.nombre_completo, mensaje: g.mensaje_invitado, estado: g.estado }))
 
-  const filteredInvitados = invitados.filter(g => {
-    if (filter === 'confirmado' && g.estado !== 'confirmado') return false
-    if (filter === 'pendiente' && g.estado !== 'pendiente') return false
-    if (filter === 'rechazado' && g.estado !== 'rechazado') return false
-    if (filter === 'enviada' && !g.invitacion_enviada) return false
-    if (filter === 'no_enviada' && g.invitacion_enviada) return false
-    if (search && !g.nombre_completo.toLowerCase().includes(search.toLowerCase())) return false
-    return true
-  })
-
   return (
     <div className="panel-page">
       <header className="panel-header">
           <a href="/" className="panel-logo"><img src="/isotipo.png" alt="" className="brand-panel-mark" />Feste<span>jia</span></a>
         <div className="panel-header-right">
+          <div className="notif-wrapper">
+            <button className="notif-bell" onClick={() => setShowNotif(!showNotif)}>
+              🔔{notifsNoLeidas > 0 && <span className="notif-count">{notifsNoLeidas}</span>}
+            </button>
+            {showNotif && (
+              <div className="notif-dropdown">
+                <div className="notif-header">
+                  <strong>Notificaciones</strong>
+                  {notifsNoLeidas > 0 && <button className="notif-mark-all" onClick={marcarTodasLeidas}>Marcar todas</button>}
+                </div>
+                <div className="notif-list">
+                  {notificaciones.length === 0 && <p className="notif-empty">Sin notificaciones</p>}
+                  {notificaciones.map(n => (
+                    <div key={n.id} className={`notif-item ${n.leida ? 'leida' : ''}`} onClick={() => !n.leida && marcarLeida(n.id)}>
+                      <span className="notif-icon">{n.icono}</span>
+                      <div className="notif-body">
+                        <p className="notif-titulo">{n.titulo}</p>
+                        {n.descripcion && <p className="notif-desc">{n.descripcion}</p>}
+                        <span className="notif-time">{tiempoRelativo(n.created_at)}</span>
+                      </div>
+                      {!n.leida && <span className="notif-dot"></span>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
           <span>{user?.email}</span>
           <button onClick={logout}>Salir</button>
         </div>
@@ -312,32 +421,18 @@ export default function Panel() {
                 </thead>
                 <tbody>
                   {filteredInvitados.map(g => (
-                    <tr key={g.id}>
-                      <td className="name-cell">{editingGuest?.id === g.id ? <input value={editingGuest.nombre_completo} onChange={e => setEditingGuest({...editingGuest, nombre_completo: e.target.value})} className="edit-input" /> : g.nombre_completo}</td>
-                      <td>{editingGuest?.id === g.id ? <input type="number" min="1" value={editingGuest.num_pases} onChange={e => setEditingGuest({...editingGuest, num_pases: parseInt(e.target.value)||1})} className="edit-input-sm" /> : g.num_pases}</td>
-                      <td>{editingGuest?.id === g.id ? <input value={editingGuest.mesa||''} onChange={e => setEditingGuest({...editingGuest, mesa: e.target.value})} className="edit-input-sm" /> : (g.mesa || '-')}</td>
-                      <td><span className={`badge ${g.estado}`}>{g.estado}</span></td>
-                      <td>
-                        <button className={`sent-btn ${g.invitacion_enviada ? 'yes' : ''}`} onClick={() => updateGuest(g.id, { invitacion_enviada: !g.invitacion_enviada })}>
-                          {g.invitacion_enviada ? '✓ Sí' : '○ No'}
-                        </button>
-                      </td>
-                      <td className="actions-cell">
-                        {editingGuest?.id === g.id ? (
-                          <>
-                            <button onClick={saveEditGuest} title="Guardar">💾</button>
-                            <button onClick={() => setEditingGuest(null)} title="Cancelar">✖</button>
-                          </>
-                        ) : (
-                          <>
-                            <button onClick={() => setEditingGuest({...g})} title="Editar">✏️</button>
-                            <button onClick={() => copyInvitation(g)} title="Copiar link">📋</button>
-                            <button onClick={() => shareWhatsApp(g)} title="WhatsApp">💬</button>
-                            <button onClick={() => deleteGuest(g.id)} title="Eliminar">🗑️</button>
-                          </>
-                        )}
-                      </td>
-                    </tr>
+                    <GuestRow
+                      key={g.id}
+                      guest={g}
+                      isEditing={editingGuest?.id === g.id}
+                      editingGuest={editingGuest}
+                      setEditingGuest={setEditingGuest}
+                      onSave={saveEditGuest}
+                      onUpdate={updateGuest}
+                      onCopy={copyInvitation}
+                      onShare={shareWhatsApp}
+                      onDelete={deleteGuest}
+                    />
                   ))}
                 </tbody>
               </table>
@@ -403,6 +498,24 @@ export default function Panel() {
         .panel-header-right { display: flex; align-items: center; gap: 1rem; }
         .panel-header-right span { color: rgba(255,255,255,0.6); font-size: 0.8rem; }
         .panel-header-right button { background: none; border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-size: 0.75rem; }
+        .notif-wrapper { position: relative; }
+        .notif-bell { background: none; border: none; font-size: 1.2rem; cursor: pointer; position: relative; padding: 0.3rem; }
+        .notif-count { position: absolute; top: -4px; right: -6px; background: #ef4444; color: white; font-size: 0.55rem; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .notif-dropdown { position: absolute; top: 100%; right: 0; width: 340px; max-height: 420px; background: white; border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,0.2); z-index: 9999; overflow: hidden; margin-top: 0.5rem; }
+        .notif-header { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1rem; border-bottom: 1px solid #f0f0f0; }
+        .notif-header strong { font-size: 0.85rem; color: #1a1a1a; }
+        .notif-mark-all { background: none; border: none; color: #c9a96e; font-size: 0.7rem; cursor: pointer; font-weight: 500; }
+        .notif-list { max-height: 360px; overflow-y: auto; }
+        .notif-empty { text-align: center; padding: 2rem; color: #999; font-size: 0.8rem; }
+        .notif-item { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.7rem 1rem; border-bottom: 1px solid #f8f8f8; cursor: pointer; transition: background 0.15s; }
+        .notif-item:hover { background: #f9f9f9; }
+        .notif-item.leida { opacity: 0.5; }
+        .notif-icon { font-size: 1.1rem; min-width: 24px; }
+        .notif-body { flex: 1; }
+        .notif-titulo { font-size: 0.8rem; font-weight: 500; color: #1a1a1a; margin: 0 0 2px; }
+        .notif-desc { font-size: 0.72rem; color: #666; margin: 0 0 2px; }
+        .notif-time { font-size: 0.65rem; color: #999; }
+        .notif-dot { width: 8px; height: 8px; background: #c9a96e; border-radius: 50%; min-width: 8px; margin-top: 4px; }
         .panel-body { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
         .event-card { background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
         .event-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
@@ -468,11 +581,11 @@ export default function Panel() {
         .progress-bar { height: 8px; background: #f0f0f0; border-radius: 4px; overflow: hidden; }
         .progress-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #16a34a); border-radius: 4px; transition: width 0.5s; }
         .progress-detail { display: flex; gap: 1.5rem; margin-top: 0.5rem; font-size: 0.75rem; }
-        .btn-preview:disabled { background: #a8a8b8; cursor: not-allowed; }
         .pg-green { color: #22c55e; }
         .pg-yellow { color: #eab308; }
         .pg-red { color: #ef4444; }
         .btn-preview { background: #6366f1; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; text-decoration: none; display: inline-block; }
+        .btn-preview:disabled { background: #a8a8b8; cursor: not-allowed; }
         .edit-input { padding: 0.3rem; border: 1.5px solid #c9a96e; border-radius: 4px; font-size: 0.8rem; width: 100%; }
         .edit-input-sm { padding: 0.3rem; border: 1.5px solid #c9a96e; border-radius: 4px; font-size: 0.8rem; width: 60px; }
         .mensajes-section h3 { font-size: 1.2rem; margin-bottom: 1rem; }
@@ -494,3 +607,55 @@ export default function Panel() {
     </div>
   )
 }
+
+// Corrección de auditoría (hallazgo 4.1): fila de invitado extraída como
+// componente propio envuelto en React.memo. Junto con los callbacks
+// estabilizados vía useCallback en Panel (updateGuest, onSave, onCopy,
+// onShare, onDelete), esto evita que CADA fila de la tabla se vuelva a
+// renderizar cuando el usuario simplemente escribe en el buscador o cambia
+// el filtro — solo se re-renderizan las filas cuyas props realmente
+// cambiaron. Antes cada fila se definía inline dentro del .map(), sin
+// ninguna posibilidad de evitar su re-render.
+const GuestRow = memo(function GuestRow({ guest, isEditing, editingGuest, setEditingGuest, onSave, onUpdate, onCopy, onShare, onDelete }) {
+  const g = guest
+  return (
+    <tr>
+      <td className="name-cell">
+        {isEditing
+          ? <input value={editingGuest.nombre_completo} onChange={e => setEditingGuest({ ...editingGuest, nombre_completo: e.target.value })} className="edit-input" />
+          : g.nombre_completo}
+      </td>
+      <td>
+        {isEditing
+          ? <input type="number" min="1" value={editingGuest.num_pases} onChange={e => setEditingGuest({ ...editingGuest, num_pases: parseInt(e.target.value) || 1 })} className="edit-input-sm" />
+          : g.num_pases}
+      </td>
+      <td>
+        {isEditing
+          ? <input value={editingGuest.mesa || ''} onChange={e => setEditingGuest({ ...editingGuest, mesa: e.target.value })} className="edit-input-sm" />
+          : (g.mesa || '-')}
+      </td>
+      <td><span className={`badge ${g.estado}`}>{g.estado}</span></td>
+      <td>
+        <button className={`sent-btn ${g.invitacion_enviada ? 'yes' : ''}`} onClick={() => onUpdate(g.id, { invitacion_enviada: !g.invitacion_enviada })}>
+          {g.invitacion_enviada ? '✓ Sí' : '○ No'}
+        </button>
+      </td>
+      <td className="actions-cell">
+        {isEditing ? (
+          <>
+            <button onClick={onSave} title="Guardar">💾</button>
+            <button onClick={() => setEditingGuest(null)} title="Cancelar">✖</button>
+          </>
+        ) : (
+          <>
+            <button onClick={() => setEditingGuest({ ...g })} title="Editar">✏️</button>
+            <button onClick={() => onCopy(g)} title="Copiar link">📋</button>
+            <button onClick={() => onShare(g)} title="WhatsApp">💬</button>
+            <button onClick={() => onDelete(g.id)} title="Eliminar">🗑️</button>
+          </>
+        )}
+      </td>
+    </tr>
+  )
+})

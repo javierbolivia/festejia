@@ -4,8 +4,7 @@ import { useParams } from 'next/navigation'
 import { supabase } from '../../../../../lib/supabase'
 import {
   obtenerInvitacionPorId,
-  fijarSlugSiDisponible,
-  marcarPendientePago,
+  prepararParaPublicar,
 } from '../../../../../lib/express/queries'
 import { iniciarPagoPublicacion, iniciarPagoCorreccionExtra } from '../../../../../lib/express/payments'
 import { generarSlug, tieneCorreccionesDisponibles } from '../../../../../lib/express/validation'
@@ -41,13 +40,23 @@ export default function ExpressEditor() {
 
   async function handleSolicitarPublicar() {
     setPublicando(true)
+    setMensaje('')
 
+    // Corrección de auditoría (hallazgos 6.1 y 6.2): antes esto eran dos
+    // escrituras secuenciales sin verificar error (solo se destructuraba
+    // `data`), pudiendo dejar la invitación con slug fijado pero sin pasar
+    // a pendiente_pago si la segunda llamada fallaba. Ahora es una sola
+    // escritura atómica, y su error SÍ se verifica antes de continuar.
     const slugBase = generarSlug(invitacion.nombre1, invitacion.nombre2)
-    const { data: conSlug } = await fijarSlugSiDisponible(invitacion.id, user.id, slugBase)
-    const { data: pendiente } = await marcarPendientePago(invitacion.id, user.id)
+    const { data: actualizada, error } = await prepararParaPublicar(invitacion.id, user.id, slugBase)
 
-    const invitacionActualizada = { ...invitacion, ...conSlug, ...pendiente }
-    setInvitacion(invitacionActualizada)
+    if (error || !actualizada) {
+      setMensaje('No se pudo preparar la publicación. Intenta de nuevo en unos segundos.')
+      setPublicando(false)
+      return
+    }
+
+    setInvitacion((prev) => ({ ...prev, ...actualizada }))
 
     await iniciarPagoPublicacion({
       invitacionId: invitacion.id,
@@ -103,6 +112,10 @@ export default function ExpressEditor() {
 
       {publicando && <div className="express-banner">Procesando publicación...</div>}
 
+      {mensaje && !publicando && (
+        <div className="express-banner express-banner-error">{mensaje}</div>
+      )}
+
       <EditorEngine
         invitacion={invitacion}
         userId={user.id}
@@ -116,6 +129,7 @@ export default function ExpressEditor() {
         .express-banner { padding: 1rem 1.2rem; border-radius: 10px; margin-bottom: 1.2rem; font-size: 0.85rem; }
         .express-banner-warning { background: #fef9c3; color: #854d0e; }
         .express-banner-success { background: #dcfce7; color: #166534; }
+        .express-banner-error { background: #fee2e2; color: #991b1b; }
       `}</style>
     </ExpressDashboardLayout>
   )

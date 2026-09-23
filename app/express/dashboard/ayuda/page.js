@@ -1,5 +1,6 @@
 'use client'
 import ExpressDashboardLayout from '../ExpressDashboardLayout'
+import { waLink } from '../../../../lib/config'
 
 const FAQ = [
   {
@@ -47,7 +48,7 @@ export default function ExpressAyuda() {
       <div className="express-help-contact">
         <p>¿Tienes otra pregunta?</p>
         <a
-          href="https://wa.me/59100000000?text=Hola%20Festejia%20Express!%20Tengo%20una%20duda."
+          href={waLink('Hola Festejia Express! Tengo una duda.')}
           target="_blank"
           rel="noopener noreferrer"
           className="express-btn-primary"
